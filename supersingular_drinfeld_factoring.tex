@@ -432,7 +432,7 @@ runtime subquadratic in $n$. Incorporating Algorithm \ref{alg:hasse-inv} in Algo
 \section{Efficient computation of the Hasse invariant lift}
 \label{sec:hasse}
 
-In this section we devise an efficient algorithm to compute the Hasse invariant lift. We let $\K = \F_q[x]/h(x)$ and define $\xi$ as the image of $x$ in $\K$. The recursion \ref{eisenstein_recurrence} for computing $r_{\phi,n}(x)$ can be written as
+In this section we devise an efficient algorithm to compute the Hasse invariant lift. We let $\K = \F_q[x]/f(x)$ and define $\xi$ as the image of $x$ in $\K$. The recursion \ref{eisenstein_recurrence} for computing $r_{\phi,n}(x)$ can be written as
 \[
 \begin{bmatrix}
 r_{\phi,k - 1} \\
@@ -476,11 +476,10 @@ r_{\phi,1} \\
 %for a given positive integer $m$. Although the following algorithm works for any $m$, we set $m = 
 %n$ for the sake of simplicity, specially when analyzing the runtime complexity. 
 %Define the linear map $\tau: \K \to \K$ given by $\tau(f) = f^q$ for any $f$ in $\K$. We can extend the action of $\tau$ to the polynomial ring $\mathscr{M}_2(\K)[Y]$ by leaving $Y$ fixed and acting on the coefficient matrices entry-wise.
-Extend the $\F_q$-linear $q^{th}$-power Frobenius map $\tau: \K \to \K$ to the polynomial ring $\mathscr{M}_2(\K)[Y]$ by leaving $Y$ fixed and acting on the 
-coefficient matrices entry-wise.
+Extend the $\F_q$-linear $q^{th}$-power Frobenius map $\tau: \K \to \K$ to the polynomial ring $\mathscr{M}_2(\K)[Y]$ by leaving $Y$ fixed and acting on the coefficient matrices entry-wise.
 Let
 \[
-\alpha := 
+\mathcal{A} := 
 \begin{bmatrix}
 0 & 1 \\
 -\tau(\xi)\Delta & \tau(g)
@@ -491,24 +490,27 @@ Let
 \Delta & 0
 \end{bmatrix} Y ~ \in ~ \mathscr{M}_2(\K)[Y].
 \]
-For a $\gamma \in \mathscr{M}_2(\K)[Y]$ and a $\zeta \in \K$, let $\gamma(\zeta)$ denote the image of $\gamma$ under the substitution \[Y \longmapsto \begin{bmatrix}
-\zeta & 0 \\
-0 & \zeta
-\end{bmatrix}.\]
-Then, for any $k \ge 1$, we have $$A_k = \tau^{k - 2}(\alpha)(\xi).$$
+For a $\mathcal{M} \in \mathscr{M}_2(\K)[Y]$ and a $\zeta \in \K$, let $\mathcal{M}(\zeta)$ denote the image of $\mathcal{M}$ under the substitution 
+\[Y \longmapsto 
+\begin{bmatrix}
+	\zeta & 0 \\
+	0 & \zeta
+\end{bmatrix}.
+\]
+Then, for any $k \ge 1$, we have $$A_k = \tau^{k - 2}(\mathcal{A})(\xi).$$
 Let $\ell := \lceil n^\beta \rceil$, $m := \lceil n / \ell \rceil$ and define 
-\[\beta := \tau^{\ell-1}(\alpha) \cdots \tau(\alpha) \alpha.\]
+\[\mathcal{B} := \tau^{\ell-1}(\mathcal{A}) \cdots \tau(\mathcal{A}) \mathcal{A}.\]
 It follows from the above that 
-\[\beta(\xi) = A_{\ell-1}A_{\ell - 2} \cdots A_2.\]
+\[\mathcal{B}(\xi) = A_{\ell-1}A_{\ell - 2} \cdots A_2.\]
 More generally, using the fact that for all $i, j$
-\[A_{i + j} = \tau^{i + j}(\alpha)(\xi) = \tau^j\Big(\tau^i(\alpha)\big( \tau^{-j}(\xi)\big)\Big),\]
+\[A_{i + j} = \tau^{i + j}(\mathcal{A})(\xi) = \tau^j\Big(\tau^i(\mathcal{A})\big( \tau^{-j}(\xi)\big)\Big),\]
 we deduce for all $i \ge 1$ that 
-\[\tau^{i}\Big(\beta \big( \tau^{-i}(\xi)\big) \Big) = A_{i + \ell-1} \cdots A_{i + 1}A_i.\]
+\[\tau^{i}\Big(\mathcal{B} \big( \tau^{-i}(\xi)\big) \Big) = A_{i + \ell-1} \cdots A_{i + 1}A_i.\]
 
 In particular, $B_n$ can be computed as the product of the following values, 
 \[
-\beta \big(\xi\big), \tau^{\ell}\Big(\beta \big( \tau^{-\ell}(\xi)\big) \Big), \dots, 
-\tau^{m \ell}\Big(\beta \big( \tau^{-m \ell}(\xi)\big) \Big).
+\mathcal{B} \big(\xi\big), \tau^{\ell}\Big(\mathcal{B} \big( \tau^{-\ell}(\xi)\big) \Big), \dots, 
+\tau^{m \ell}\Big(\mathcal{B} \big( \tau^{-m \ell}(\xi)\big) \Big).
 \]
 This suggest Algorithm \ref{alg:hasse-inv} for computing $B_n$.
 
@@ -520,13 +522,13 @@ This suggest Algorithm \ref{alg:hasse-inv} for computing $B_n$.
 		\ENSURE The $n$-th Hasse invariant lift $r_{\phi,n}(x)$ modulo $f(x)$.
 		\STATE Let $\ell := \lceil n^\beta \rceil$, and let $m := \lceil n / \ell \rceil$
 		\STATE\label{step:hasse-2}
-		Compute $\beta = \tau^{\ell-1}(\alpha) \cdots \tau(\alpha) \alpha$
+		Compute $\mathcal{B} = \tau^{\ell-1}(\mathcal{A}) \cdots \tau(\mathcal{A}) \mathcal{A}$
 		\STATE\label{step:hasse-3}
 		For $0 \le i \le m$, \\
 		compute $\xi_i = \tau^{-i\ell}(\xi)$
 		\STATE\label{step:hasse-4}
 		For $0 \le i \le m$, \\
-		compute $\beta_i = \beta(\xi_i)$
+		compute $\beta_i = \mathcal{B}(\xi_i)$
 		\STATE\label{step:hasse-5}
 		For $1 \le i \le m$ \\
 		compute $t_i = \tau^{i\ell}(\beta_i)$
