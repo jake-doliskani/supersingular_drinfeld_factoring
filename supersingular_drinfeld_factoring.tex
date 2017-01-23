@@ -162,47 +162,117 @@
 We present a novel randomized algorithm to factor polynomials over a finite field $\F_q$ of odd characteristic using rank $2$ Drinfeld modules with complex multiplication. The main idea is to compute a lift of the Hasse invariant (modulo the polynomial $f(x) \in \F_q[x]$ to be factored) with respect to a random Drinfeld module $\phi$ with complex multiplication. Factors of $f(x)$ supported on prime ideals with supersingular reduction at $\phi$ have vanishing Hasse invariant and can be separated from the rest.\\ \\
 
 
-%\noindent The crux of our algorithm is computing the Hasse invariant lift.
-\noindent Incorporating a Drinfeld module analogue of Deligne's congruence, we devise an intricate method to compute the Hasse invariant lift, which turns out to be the crux of our algorithm. The resulting expected runtime of $n^{3/2+o(1)} (\log q)^{1+o(1)}+n^{1+o(1)} (\log q)^{2+o(1)}$ to factor polynomials of degree $n$ over $\F_q$ matches the fastest previously known algorithm, the Kedlaya-Umans implementation of the Kaltofen-Shoup algorithm. In comparison, our algorithm has the distinction of not requiring separate distinct degree and equal degree factorization phases, potentially leading to a faster implementation. We augment our theoretical results with a subquadratic implementation of our algorithm that from preliminary experimentation appears to the fastest way to factor polynomials over finite fields.
+% The crux of our algorithm is computing the Hasse invariant lift.
+ Incorporating a Drinfeld module analogue of Deligne's congruence, we devise an intricate method to 
+ compute the Hasse invariant lift, which turns out to be the crux of our algorithm. The resulting 
+ expected runtime of $n^{3/2+o(1)} (\log q)^{1+o(1)}+n^{1+o(1)} (\log q)^{2+o(1)}$ to factor 
+ polynomials of degree $n$ over $\F_q$ matches the fastest previously known algorithm, the 
+ Kedlaya-Umans implementation of the Kaltofen-Shoup algorithm. In comparison, our algorithm has the 
+ distinction of not requiring separate distinct degree and equal degree factorization phases, 
+ potentially leading to a faster implementation. We augment our theoretical results with a 
+ subquadratic implementation of our algorithm that from preliminary experimentation appears to the 
+ fastest way to factor polynomials over finite fields.
 
-%\noindent A Drinfeld module analogue of Deligne's congruence plays a key role in computing the Hasse invariant lift. We devise an intricate algorithm to compute the Hasse invariant lift yielding an expected runtime of $n^{3/2+o(1)} (\log q)^{1+o(1)}+n^{1+o(1)} (\log q)^{2+o(1)}$ to factor polynomials of degree $n$ over $\F_q$. This matches the fastest previously known algorithm, the Kedlaya-Umans implementation of the Kaltofen-Shoup algorithm. Unlike the Kaltofen\\ \\
+% A Drinfeld module analogue of Deligne's congruence plays a key role in computing the Hasse 
+%invariant lift. We devise an intricate algorithm to compute the Hasse invariant lift yielding an 
+%expected runtime of $n^{3/2+o(1)} (\log q)^{1+o(1)}+n^{1+o(1)} (\log q)^{2+o(1)}$ to factor 
+%polynomials of degree $n$ over $\F_q$. This matches the fastest previously known algorithm, the 
+%Kedlaya-Umans implementation of the Kaltofen-Shoup algorithm. Unlike the Kaltofen\\ \\
  
 %We present two algorithms based on this idea. The first algorithm  chooses Drinfeld modules with complex multiplication at random and has a quadratic expected run time. The second is a deterministic algorithm with $O(\sqrt{p})$ run time dependence on the characteristic $p$ of $\F_q$.
 \end{abstract}
 
 \section{Introduction}
 %\subsection{Randomized Polynomial Factorization over Finite Fields}
-Let $q$ be a power of a an odd prime $p$ and let $\F_q$ denote the finite field with $q$ elements. The univariate polynomial factorization problem over $\F_q$ is,\\
+Let $q$ be a power of a an odd prime $p$ and let $\F_q$ denote the finite field with $q$ elements. 
+The univariate polynomial factorization problem over $\F_q$ is,
 \begin{itemize}
- \item \textsc{Polynomial Factorization:} \textit{Given a monic $f(x) \in \mathbb{F}_q[x]$ of degree $n$, write $f(x)$ as a product of its monic irreducible factors.}\\
+ \item \textsc{Polynomial Factorization:} \textit{Given a monic $f(x) \in \mathbb{F}_q[x]$ of 
+ degree $n$, write $f(x)$ as a product of its monic irreducible factors.}
 \end{itemize}
-Without loss of generality, we may assume that $f(x)$ is squarefree \cite{knu,yun}, that is, does not contain a square of an irreducible polynomial as a factor. Berlekamp showed that \textsc{Polynomial Factorization} can be solved in randomized polynomial time \cite{ber} and there is an extensive line of research \cite{cz,gs,ks} leading to the fastest known algorithm \cite{ku} with expected run time $n^{3/2+o(1)} (\log q)^{1+o(1)}+n^{1+o(1)} (\log q)^{2+o(1)}$. As to if the exponent $3/2$ in $n$ can be lowered remains an outstanding open question.\\
-
-%The soft $\widetilde{O}$ notation suppresses $n^{o(1)}$ and $\log^{o(1)} q$ terms for ease of exposition.\\ \\
-The use of Drinfeld modules to factor polynomials over finite fields originated with Panchishkin and Potemine \cite{pp} whose algorithm was rediscovered by van der Heiden \cite{vdH}. These algorithms, along with the second author's Drinfeld module black box Berlekamp algorithm \cite{nar} are in spirit Drinfeld module analogues of Lenstra's elliptic curve method to factor integers \cite{len}. The Drinfeld module degree estimation algorithm of \cite{nar} uses Euler-Poincare charactersitics of Drinfeld modules to estimate the factor degrees in distinct degree factorization. A feature common to the aforementioned algorithms is their use of random Drinfeld modules, which typically don't have complex multiplication. We propose a novel algorithm for \textsc{Polynomial Factorization} using Drinfeld modules with complex multiplication matching the state of the art expected running time of $n^{3/2+o(1)} (\log q)^{1+o(1)}+n^{1+o(1)} (\log q)^{2+o(1)}$.\\
 
 
-\noindent The algorithm constructs a random rank $2$ Drinfeld module $\phi$ with complex multiplication by an imaginary quadratic extension of the rational function field $\F_q(x)$  with class number $1$. At roughly half of the prime ideals $\p$ in $\F_q[x]$, $\phi$ has supersingular reduction. The Hasse invariant of $\phi$ at a prime ideal $\p$ vanishes if and only if $\phi$ has supersingular reduction at $\p$. A Drinfeld module analogue of Deligne's congruence, due to Gekeler \cite{gek}, allows us to compute a certain lift of Hasse invariants modulo the polynomial $f(x)$ we are attempting to factor. As a consequence, this lift vanishes exactly modulo the irreducible factors of $f(x)$ that correspond to the primes with supersingular reduction. In summary, we get to separate the irreducible factors corresponding to primes with supersingular reductions from those with ordinary reduction.\\
+Without loss of generality, we may assume that $f(x)$ is squarefree \cite{knu,yun}, that is, does 
+not contain a square of an irreducible polynomial as a factor. Berlekamp showed that 
+\textsc{Polynomial Factorization} can be solved in randomized polynomial time \cite{ber} and there 
+is an extensive line of research \cite{cz,gs,ks,ku} with the best known bound due to \cite{ku}. \\
+
+The use of Drinfeld modules to factor polynomials over finite fields originated with Panchishkin 
+and Potemine \cite{pp} whose algorithm was rediscovered by van der Heiden \cite{vdH}. These 
+algorithms, along with the second author's Drinfeld module black box Berlekamp algorithm \cite{nar} 
+are in spirit Drinfeld module analogues of Lenstra's elliptic curve method to factor integers 
+\cite{len}. The Drinfeld module degree estimation algorithm of \cite{nar} uses Euler-Poincare 
+charactersitics of Drinfeld modules to estimate the factor degrees in distinct degree 
+factorization. A feature common to the aforementioned algorithms is their use of random Drinfeld 
+modules, which typically don't have complex multiplication. \\
 
 
-\noindent The crux of the algorithm is the computation of the Hasse invariant lift modulo $f(x)$. We exploit a recursive formula for the lift that arises in Gekeler's proof of a Drinfeld module variant of Deligne's congruence \cite{gek}. Our strategy is to first phrase the recurrence in matrix form with entries being polynomials modulo $f(x)$. We then observe that solving the recurrence amounts to computing the product of a carefully constructed sequence of matrices twited by the Frobenius action. The final step is to construct a polynomial with matrix coefficients, whose evaluations allow us to rapidly compute the aformentioned product. The evaluations are computed using a fast multipoint evaluation algorithm.\\
+In this paper we take a different approach. We construct random rank $2$ Drinfeld modules $\phi$ 
+with complex multiplication by an imaginary quadratic extension of the rational function field 
+$\F_q(x)$  with class number $1$. At roughly half of the prime ideals $\p$ in $\F_q[x]$, $\phi$ 
+has supersingular reduction. The Hasse invariant of $\phi$ at a prime ideal $\p$ vanishes if and 
+only if $\phi$ has supersingular reduction at $\p$. A Drinfeld module analogue of Deligne's 
+congruence, due to Gekeler \cite{gek}, allows us to compute a certain lift of Hasse invariants 
+modulo the polynomial $f(x)$ we are attempting to factor. As a consequence, this lift vanishes 
+exactly modulo the irreducible factors of $f(x)$ that correspond to the primes with supersingular 
+reduction. In summary, we get to separate the irreducible factors corresponding to primes with 
+supersingular reductions from those with ordinary reduction.
 
-\noindent PRACTICAL IMPLICATIONS.\\ \\
+
+\paragraph{Complexit model.}
+We will consider two different complexity models in our runtime analysis: \textit{Algebraic 
+model}, and \textit{Boolean model}. In the former we count the number of operations $+, \times, 
+\div$ in the field $\F_q$ while in the latter we count the number of bit operations. The complexity 
+upper bounds for polynomial multiplication and modular composition are denoted by $\MM(n), \CC(n)$ 
+respectively. In the algebraic model we have $\MM(n) \in O(n\log(n)\log\log(n))$
+\cite{Schonhage1971}, and $\CC(n) \in O(n^{(\omega+1)/2})$ \cite{BrKu78}, where $\omega$ comes 
+from the cost $O(n^\omega)$ of square matrix multiplication. We can always take $\omega \le 2.37$ 
+\cite{CoWi90} which gives $\CC(n) \in O(n^{1.69})$.
+
+In the boolean model, the modular composition can be done in $O(n^{1 + \varepsilon}\log q^{1 + 
+o(1)})$ bit operations \cite{ku}. In this case, the best polynomial factorization algorithm has the 
+expected run time of $n^{3/2+o(1)} (\log q)^{1+o(1)}+n^{1+o(1)} (\log q)^{2+o(1)}$ bit operations. 
+As to if the exponent $3/2$ in $n$ can be lowered remains an outstanding open question.
 
 
+\paragraph{Main result.}
+The crux of our algorithm is the computation of the Hasse invariant lift modulo $f(x)$. We exploit 
+a recursive formula for the lift that arises in Gekeler's proof of a Drinfeld module variant of 
+Deligne's congruence \cite{gek}. Our strategy is to first phrase the recurrence in matrix form with 
+entries being polynomials modulo $f(x)$. We then observe that solving the recurrence amounts to 
+computing the product of a carefully constructed sequence of matrices twited by the Frobenius 
+action. The final step is to construct a polynomial with matrix coefficients, whose evaluations 
+allow us to rapidly compute the aformentioned product. The evaluations are computed using a fast 
+multipoint evaluation algorithm. Our main result can be summarized as:
+
+\begin{theorem}
+	\label{theorem:main}
+	Given a polynomial $f(x)$ of degree $n$ over $\F_q$, there exits a probabilistic algorithm for 
+	factoring $f$ using
+	\begin{itemize}
+		\item $O(n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)})$ bit operations, or
+		\item $O(n^{1.815}\log q)$ operations in $\F_q$.
+	\end{itemize}
+\end{theorem}
 
 
+The paper is organized as follows. In \S~\ref{drinfeld_section}, Drinfeld modules are introduced 
+and the general algorithmic strategy is outlined with emphasis on the role played by Hasse 
+invariants and Deligne's congruence. In \S~\ref{randomized_section}, a high level description of 
+our algorithm and its rigorous analysis using function field arithmetic is presented. Fast 
+computation of the Hasse invariant lift, analysis of the complexity of the algorithm and its 
+practical implications are in \S~\ref{sec:hasse}. 
+ 
+ 
 
-
-%The algorithm itself is stated in a simple iterative form with no reference to Drinfeld modules although Drinfeld modules are critical in its conception and analysis. The run time complexity is identical to that of the commonly used Cantor-Zassenhaus \cite{cz} algorithm. Although slower than subquadratic time algorithms such as \cite{ks,ku}, unlike these subquadratic algorithms we do not rely on fast modular composition or fast matrix multiplication. This should make our algorithm easy to implement in practice.\\ \\
-%The question of whether \textsc{Polynomial Factorization} is in deterministic polynomial time is a central outstanding open problem. Berlekamp \cite{ber1} reduced \textsc{Polynomial Factorization} to finding roots of a polynomial in a prime order finite field and through this reduction proposed a deterministic algorithm. Shoup was the first to prove rigorous unconditional run time bounds for Berlekamp's deterministic algorithm and its variants \cite{sho}. The most difficult and hence interesting setting for these deterministic algorithms is when the underlying field $\F_q$ is of large prime order. That is $q=p$ is a large prime. In this case, Shoup's bound establishes the best known unconditional deterministic run time bound of $\widetilde{O}(\sqrt{p})$ suppressing the dependence on the degree of the polynomial factored. Assuming the generalized Riemann hypothesis, quasi polynomial time algorithms (c.f.\cite{evd}) and in certain special cases, polynomial time algorithms (c.f. \cite{hua}) are known. \\ \\
-%Our second algorithm is an unconditional deterministic algorithm for \textsc{Polynomial Factorization} using Drinfeld modules with complex multiplication. Instead of picking Drinfeld modules with complex multiplication at random, we fix a natural ordering. The rest of the algorithm is nearly identical to the earlier randomized version. 
-%Remarkably, we were able to translate Shoup's proof to apply to our algorithm. We prove a worst case running time of $\widetilde{O}(\sqrt{p})$, again suppressing the dependence on the degree of the polynomial factored.\\ \\
-%Curiously, our deterministic algorithm applies directly to the equal degree factorization problem: that is to factor a given a monic square free polynomial all of whose irreducible factors are of the same degree. Prior deterministic algorithms relied on reductions to the root finding problem, either through linear algebra or other means.\\ \\ 
-\noindent The paper is organized as follows. In \S~\ref{drinfeld_section}, Drinfeld modules are introduced and the general algorithmic strategy is outlined with emphasis on the role played by Hasse invariants and Deligne's congruence. In \S~\ref{randomized_section}, a high level description of our algorithm and its rigorous analysis using function field arithmetic is presented. Fast computation of the Hasse invariant lift, analysis of the complexity of the algorithm and its practical implications are in \S~\ref{sec:hasse}. 
- % In \S~\ref{deterministic_section}, we present and analyze the deterministic version.
 \section{Rank-2 Drinfeld Modules}\label{drinfeld_section}
-\noindent Let $A=\F_q[x]$ denote the polynomial ring in the indeterminate $x$ and let $K$ be a field with a non zero ring homomorphism $\gamma:A \rightarrow K$. Necessarily, $K$ contains $\F_q$ as a subfield. Fix an algebraic closure $\bar{K}$ of $K$ and let $\tau: \bar{K} \longrightarrow \bar{K}$ denote the $q^{th}$ power Frobenius endomorphism. The ring of endomorphisms of the additive group scheme $\mathbb{G}_a$ over $K$ can be identified with the skew polynomial ring $K\langle \tau \rangle$ where $\tau$ satisfies the commutation rule $\forall u \in K, \tau u = u^q \tau$.
+ Let $A=\F_q[x]$ denote the polynomial ring in the indeterminate $x$ and let $K$ be a field with a 
+ non zero ring homomorphism $\gamma:A \rightarrow K$. Necessarily, $K$ contains $\F_q$ as a 
+ subfield. Fix an algebraic closure $\bar{K}$ of $K$ and let $\tau: \bar{K} \longrightarrow 
+ \bar{K}$ denote the $q^{th}$ power Frobenius endomorphism. The ring of endomorphisms of the 
+ additive group scheme $\mathbb{G}_a$ over $K$ can be identified with the skew polynomial ring 
+ $K\langle \tau \rangle$ where $\tau$ satisfies the commutation rule $\forall u \in K, \tau u = u^q 
+ \tau$.
 A rank-2 Drinfeld module over $K$ is (the $A$-module structure on $\mathbb{G}_a$ given by) a ring homomorphism
 $$\phi : A \longrightarrow K\langle \tau \rangle$$ 
 $$\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x \longmapsto \gamma(x) + g_\phi \tau + \Delta_\phi \tau^2$$
@@ -215,7 +285,14 @@ For a prime ideal $\p \subset A$, if $\Delta_\phi$ is non zero modulo $\p$, then
 and the image of $a \in A$ under $\phi/\p$ is denoted by $(\phi/\p)_a$. Even if $\Delta_{\phi}$ is zero modulo $\p$, one can still obtain the reduction $(\phi/\p)$ of $\phi$ at $\p$ through minimal models of $\phi$ (c.f. \cite{gek1}). We refrain from addressing this case since our algorithms do not require it.\\ \\
 %As before, the Drinfeld module $\phi/\p$ endows a new $A$-module structure (denoted by $\ph(L)$) to every $A$-algebra $L$ over the algebraic closure of $\F_\p$ through the $A$-action $$\forall f \in L, \forall a \in A, a*f = \ph_a(f)$$ and for every direct product $L \times L^\prime$ of $A$-algebras over the algebraic closure of $\F_\p$, $$\ph(L \times L^\prime) \cong \ph(L) \oplus \ph(L^\prime).$$
 %Further, for every $A$-algebra $L$ over the algebraic closure of $\F_\p$, $\phi(L) \cong \ph(L)$.\\ \\
-For $f(x) \in A$, denote by $(f(x))$ the ideal generated by $f(x)$ and by $\deg(f)$ the degree of $f(x)$. For a non zero ideal $\f \subset A$, let $\deg(\f)$ denote the degree of its monic generator. For $f(x),g(x) \in A$, by $\gcd(f(x),g(x))$ we mean the monic generator of the ideal generated by $f(x)$ and $g(x)$. Abusing notation, by $\gcd(\alpha,f(x))$ for some $f(x) \in A, \alpha \in A/(f(x))$ we really mean the gcd of $f(x)$ and a lift of $\alpha$ to $A$.
+For $f(x) \in A$, denote by $(f(x))$ the ideal generated by $f(x)$ and by $\deg(f)$ the degree of 
+$f(x)$. For a non zero ideal $\f \subset A$, let $\deg(\f)$ denote the degree of its monic 
+generator. For $f(x),g(x) \in A$, by $\gcd(f(x),g(x))$ we mean the monic generator of the ideal 
+generated by $f(x)$ and $g(x)$. Abusing notation, by $\gcd(\alpha,f(x))$ for some $f(x) \in A, 
+\alpha \in A/(f(x))$ we really mean the gcd of $f(x)$ and a lift of $\alpha$ to $A$.
+
+
+
 \section{Hasse Invariants and Deligne's Congruence}
 Let $\p \subset A$ be a prime not dividing $\Delta_\phi$. Let $p \in A$ be the monic generator of $\p$. The Hasse invariant $h_{\phi,\p}(x) \in A$ of $\phi$ at $\p$ is the coefficient of $\tau^{\deg(p)}$ in the expansion $$\ph_p  = \sum_{i=0}^{2\deg(p)} h_i(\ph)(x) \tau^i \in A\langle \tau \rangle.$$
 %and it is related to the Frobenius trace by
@@ -240,12 +317,28 @@ Likewise, if $\phi$ does not have supersingular reduction at a $\p$ of degree $k
 \begin{equation}\label{supersingular_nonzero}
  r_{\phi,j}(x) \neq 0 \mod \p , \forall j \geq k.
 \end{equation}
-This suggests that we could use a Drineld module $\phi$ in a polynomial factorization algorithm to separate supersingular primes from those that are not. For most Drinfeld modules, the density of supersingular primes is too small for this to work. However, for a special class, Drinfeld modules with complex multiplication, the density of supersingular primes is $1/2$. 
+This suggests that we could use a Drineld module $\phi$ in a polynomial factorization algorithm to 
+separate supersingular primes from those that are not. For most Drinfeld modules, the density of 
+supersingular primes is too small for this to work. However, for a special class, Drinfeld modules 
+with complex multiplication, the density of supersingular primes is $1/2$. 
+
+
 \section{Drinfeld Modules with Complex Multiplication}\label{randomized_section}
 A Drinfeld module $\phi$ is said to have complex multiplication by an imaginary quadratic extension $L/\F_q(x)$ if $End_{\F_q(x)}(\phi)\otimes_A \F_q(x) \cong L$. By imaginary, we mean the prime $(1/x)$ at infinity in $\F_q(x)$ does not split in $L$. For a $\phi$ with complex multiplication by $L/\F_q(x)$, a prime $\p$ that is unramified in $L/\F_q(x)$  is supersingular if and only if $\p$ is inert in $L/\F_q(x)$.\\ \\
-This suggests the following  strategy to factor a monic square free polynomial $f(x) \in A$. Say $f(x)$ factors into monic irreducibles as $f(x) = \prod_i p_i(x)$. Pick a Drinfeld module $\phi$ with complex multiplication by some imaginary quadratic extension $L/\F_q(x)$. Compute $r_{\phi,k}(x) \mod (f(x))$ for some $k \leq \deg(f)$. By equations \ref{supersingular_zero} and \ref{supersingular_nonzero}, $$\gcd(r_{\phi,k}(x) \mod (f(x)), f(x)) = \prod_{(p_i)\ inert\ in\ L/\F_q(x), \deg(p_i)\leq k}p_i(x)$$ is a factor of $f$. Since for every degree, roughly half the primes of that degree are inert in $L/\F_q(x)$, the factorization  thus obtained is likely to be non trivial. 
+This suggests the following  strategy to factor a monic square free polynomial $f(x) \in A$. Say 
+$f(x)$ factors into monic irreducibles as $f(x) = \prod_i p_i(x)$. Pick a Drinfeld module $\phi$ 
+with complex multiplication by some imaginary quadratic extension $L/\F_q(x)$. Compute 
+$r_{\phi,k}(x) \mod (f(x))$ for some $k \leq \deg(f)$. By equations \ref{supersingular_zero} and 
+\ref{supersingular_nonzero}, $$\gcd(r_{\phi,k}(x) \mod (f(x)), f(x)) = \prod_{(p_i)\ inert\ in\ 
+L/\F_q(x), \deg(p_i)\leq k}p_i(x)$$ is a factor of $f$. Since for every degree, roughly half the 
+primes of that degree are inert in $L/\F_q(x)$, the factorization  thus obtained is likely to be 
+non trivial. 
+
+
 \section{Randomized Polynomial Factorization using Drinfeld Modules with Complex Multiplication}
-\subsection{Constructing Drinfeld Modules with Complex Multiplication}\label{drinfeld_construction_subsection}
+\subsection{Constructing Drinfeld Modules with Complex 
+Multiplication}\label{drinfeld_construction_subsection}
+
 Our strategy is to pick an $a \in \F_q$ at random and construct a Drinfeld module $\phi$ with complex multiplication by the imaginary quadratic extension $\F_q(x)(\sqrt{d(x)})$ of discriminant $d(x):=x-a$. From \cite{dor}, the Drinfeld module $\phi^\prime$ with $$g_{\phi^\prime}(x):=\sqrt{d(x)}+\left(\sqrt{d(x)}\right)^q, \D_{\phi^\prime}(x) := 1$$ has complex multiplication by $\F_q(x)(\sqrt{d(x)})$.\\ \\
 However, $\phi^\prime$ has the disadvantage of not being defined over $A$ since $g_{\phi^\prime}(x) \notin A$.\\ \\
 We construct an alternate $\phi$, that is isomorphic to $\phi^\prime$ but defined over $A$. The $J$-invariant \cite{gek} of $\phi^\prime$ is $$J_{\phi^\prime}(x) := \frac{g_{\phi^\prime}(x)^{q+1}}{\D_{\phi^\prime}(x)} = d(x)^{\frac{q+1}{2}}\left(1+d(x)^{\frac{q-1}{2}}\right)^{q+1}.$$
@@ -280,42 +373,39 @@ We now state our randomized algorithm to factor polynomials over finite fields u
 \end{remark}
 
 
-%\begin{algorithm}[H]
-%\caption{Polynomial Factorization}\label{factoring_algorithm}
-%\begin{algorithmic}[1]
+The irreducibility test in Step $1$ can be performed in $O(\CC(n)\log n + \MM(n)\log q)$ operations 
+in $\F_q$ \cite{vzGG}, or $O(n^{1+o(1)} (\log q)^{2+o(1)})$ bit operations. In Step $2$, all the 
+linear factors of $f(x)$ are found and removed using a root finding algorithm. It takes 
+$O(\MM(n)\log n \log(nq))$ operations in $\F_q$ \cite{vzGG}, or $O(n^{1+o(1)} (\log q)^{2+o(1)})$ 
+bit operations. \\
 
-%\INPUT Monic square free $f(x) \in A$, positive integer $m \leq \deg(f).$%$m \leq \sqrt{q}/2$.
-%\OUTPUT Monic irreducible factors of $f(x)$ of degree at most $m$.
-%\State Perform root finding and output (and remove) all linear factors of $f(x)$.
-%\State Pick $a \in \F_q$ uniformly at random and set 
-%\LineComment $d(x):=x-a$.
-%\LineComment $g_\phi(x):=d(x)(1+d(x)^{\frac{q-1}{2}})$.
-%\LineComment $\D_\phi(x):=d(x)^{\frac{q+1}{2}}(1+d(x)^{\frac{q-1}{2}})^{q+1}$.
-%\State Initialize:
-%\LineComment $r_0(x):=  1 \mod f(x), r_1(x):=  g_\phi(x) \mod f(x)$. %\LineComment $g_0(x):=  1 \mod f(x)$,
-%\LineComment Using multipoint evaluation, for $k \in \{1,2,\ldots,m\}$  compute
-%$$g_\phi(x)^{q^k} \mod f(x), \D_\phi(x)^{q^k} \mod f(x), x^{q^k} \mod f(x).$$
-%\LineComment Set $f_{ss}(x): = 1,f_{or}(x): =1 ,m_{ss}:=1 $ and $m_{or}:=1$.
-%\State For $k = 2$ to $m$
-%\LineComment Compute $$r_k(x) := g_\phi(x)^{q^{k-1}}r_{k-1}(x) - (x^{q^{k-1}}-x) \D_\phi(x)^{q^{k-2}} r_{k-2}(x) \mod f(x).$$
-%\LineComment If $\gcd(r_{k}(x),f(x))$ has degree $k$, mark it as an output.
-%\LineComment Else, $f_{ss}(x):= f_{ss}(x)\gcd(r_{k}(x),f(x))$ and $m_{ss} := k$.
-%\LineComment If $\gcd(x^{q^k}-x,f(x))/\gcd(r_{k}(x),f(x))$ has degree $k$, mark it as an output.
-%\LineComment Else, $f_{or}(x):= f_{or}(x)\gcd(x^{q^k}-x,f(x))/\gcd(r_{k}(x),f(x))$ and $m_{or} := k$.
-%\State Recursively call $(f_{ss}(x),m_{ss})$ and $(f_{or}(x),m_{or})$ to factor $f_{ss}(x)$ and $f_{or}(x)$.
-%\end{algorithmic}
-%\end{algorithm}
-The irreducibility test in Step $1$ can be done performed in $n^{1+o(1)} (\log q)^{2+o(1)}$ time \cite{ku}.\\ 
+ In Step $3$, we choose $a \in \F_q$ at random and construct a Drinfeld module $\phi$ with complex 
+ multiplication by $\F_q(x)(\sqrt{x-a})$. The primes that divide $\D_\phi(x)$ are precisely 
+ $\{(x-b),  b \in \F_q, \sqrt{b-a} \notin \F_q\} \cup \{(d(x))\}$. We might run into issues of bad 
+ reduction if the polynomial $f(x)$ to be factored had roots. It is to prevent this, we performed 
+ root finding in Step $2$. \\
 
-\noindent In Step $2$, all the linear factors of $f(x)$ are found and removed using a root finding algorithm. It takes $n^{1+o(1)} (\log q)^{2+o(1)}$ time using the iterated Frobenius algorithm of von zur Gathen and Shoup \cite{gs} implemented using the Kedlaya-Umans \cite{ku} fast modular composition. \\
-
-\noindent In Step $3$, we choose $a \in \F_q$ at random and construct a Drinfeld module $\phi$ with complex multiplication by $\F_q(x)(\sqrt{x-a})$. The primes that divide $\D_\phi(x)$ are precisely $\{(x-b),  b \in \F_q, \sqrt{b-a} \notin \F_q\} \cup \{(d(x))\}$. We might run into issues of bad reduction if the polynomial $f(x)$ to be factored had roots. It is to prevent this, we performed root finding in Step $2$. \\
-
-\noindent In Step $4$, from the recurrence \ref{eisenstein_recurrence}, we indeed compute the $n^{th}$ Hasse invariant lift $r_{\phi,n}(x)$ modulo $f(x)$. By Deligne's congruence \ref{deligne_congruence}, a degree $k$ monic irreducible factor $p(x)$ of $f(x)$ divides $r_k(x)$ if and only if $(p(x))$ is supersingular with respect to $\phi$. In particular, $\gcd(r_{\phi,k}(x),f(x))$ is the product of all degree $k$ irreducible factors of $f(x)$ that are supersingular with respect to $\phi$. Further, by equations \ref{supersingular_zero} and \ref{supersingular_nonzero}, $\gcd(r_{\phi,k}(x),f(x))$ is the product of all degree at most $k$ irreducible factors of $f(x)$ that are supersingular with respect to $\phi$. In particular, $(f_1(x) =) \gcd(r_{\phi,k}(x),f(x))$ is the product of irreducible factors of $f(x)$ that are supersingular with respect to $\phi$. Thus our algorithm separates the irreducible factors supported at the supersingular primes from those supported at the ordinary primes. All that remains to argue is that for a Drinfeld module chosen as randomly in Algorithm \ref{factoring_algorithm}, this split is random enough to ensure that the recursion depth is logarithmic in $n$.\\ 
+ In Step $4$, from the recurrence \ref{eisenstein_recurrence}, we indeed compute the $n^{th}$ Hasse 
+ invariant lift $r_{\phi,n}(x)$ modulo $f(x)$. By Deligne's congruence \ref{deligne_congruence}, a 
+ degree $k$ monic irreducible factor $p(x)$ of $f(x)$ divides $r_k(x)$ if and only if $(p(x))$ is 
+ supersingular with respect to $\phi$. In particular, $\gcd(r_{\phi,k}(x),f(x))$ is the product of 
+ all degree $k$ irreducible factors of $f(x)$ that are supersingular with respect to $\phi$. 
+ Further, by equations \ref{supersingular_zero} and \ref{supersingular_nonzero}, 
+ $\gcd(r_{\phi,k}(x),f(x))$ is the product of all degree at most $k$ irreducible factors of $f(x)$ 
+ that are supersingular with respect to $\phi$. In particular, $(f_1(x) =) 
+ \gcd(r_{\phi,k}(x),f(x))$ is the product of irreducible factors of $f(x)$ that are supersingular 
+ with respect to $\phi$. Thus our algorithm separates the irreducible factors supported at the 
+ supersingular primes from those supported at the ordinary primes. All that remains to argue is 
+ that for a Drinfeld module chosen as randomly in Algorithm \ref{factoring_algorithm}, this split 
+ is random enough to ensure that the recursion depth is logarithmic in $n$.\\ 
 
 %Hence at iteration $k$ in Step $4$, by Deligne's congruence \ref{deligne_congruence}, a degree $k$ monic irreducible factor $p(x)$ of $f(x)$ divides $r_k(x)$ if and only if $(p(x))$ is supersingular with respect to $\phi$. In particular, $\gcd(r_k(x),f(x))$ is the product of all degree $k$ irreducible factors of $f(x)$ that are supersingular with respect to $\phi$. If there is only one such factor, we output it. Else, the product is multiplied to $f_{ss}(x)$ to be split recursively later. Likewise, at iteration $k$ in Step $4$, $\gcd(x^{q^k}-x,f(x))/\gcd(r_{k}(x),f(x))$ is the product of all degree $k$ irreducible factors of $f(x)$ that are ordinary with respect to $\phi$. If there is only one such factor, we output it. Else, the product is multiplied to $f_{or}(x)$ to be split recursively later.\\ 
 
-\noindent The following Lemma \ref{splitting_lemma} states that any two distinct factors of $f(x)$ of the same degree are neither both supersingular nor both ordinary with probability $1/2$. This ensures that the splitting into supersingular and ordinary factors in Step $4$ is random enough that the recursion depth of our algorithm is logarithmic in $n$. For the lemma to apply to Algorithm \ref{factoring_algorithm}, we need to assume $\sqrt{q} \geq n$.  
+ The following Lemma \ref{splitting_lemma} states that any two distinct factors of $f(x)$ of the 
+ same degree are neither both supersingular nor both ordinary with probability $1/2$. This ensures 
+ that the splitting into supersingular and ordinary factors in Step $4$ is random enough that the 
+ recursion depth of our algorithm is logarithmic in $n$. For the lemma to apply to Algorithm 
+ \ref{factoring_algorithm}, we need to assume $\sqrt{q} \geq n$.  
 The assumption $\sqrt{q} \geq  n$ in Algorithm \ref{factoring_algorithm} can thankfully be made without loss of generality in theory. For if $\sqrt{q} < n$, we might choose to factor over a slightly larger field $\F_{q^\prime}$ where $q^\prime$ is the smallest power of $q$ such that $\sqrt{q^\prime} > n$ and still recover the factorization over $\F_q$ (c.f. \cite[Remark 3.2]{nar}). Further, the running times are only affected by logarithmic factors. In practice, we recommend running Algorithm \ref{factoring_algorithm} as is and take Lemma \ref{splitting_lemma} as strong evidence for the recursion depth to be logarithmic in $n$.
 
 
@@ -329,10 +419,15 @@ For $i\in\{0,1\}$, let $K_i:=\F_q(x)(\alpha_i)$ be the hyperelliptic extension o
 $$ \left|N - \frac{q}{2} \right| \leq 2 g(K_1K_2)\sqrt{q}$$
 where $g(K_1K_2)$ is the genus of $K_1K_2$. By the Riemann-Hurwitz genus formula, $g(K_1K_2) = k-1 \leq \sqrt{q}/2$. Hence when $a \in \F_q$ is chosen at random, $(x-a)$ is neither totally inert nor totally split in $K_1K_2$ with probability close to $1/2$. 
 \end{proof}
-In summary, we have thus proven that Algorithm \ref{factoring_algorithm} is correct and that it has expected recursion depth logarithmic in $n$. Further, the bottleneck is Step $4$, the computation of the Hasse invariant lift. A naive computation relying on recurrence \ref{eisenstein_recurrence} would lead to a runtime dependence quadratic in $n$. In the forthcoming section we describe a deterministic algorithm Algorithm \ref{alg:hasse-inv} to compute the Hasse invariant lift with runtime exponent $3/2$ in $n$. Incorporating Algorithm \ref{alg:hasse-inv} in Algorithm  \ref{factoring_algorithm} thus leads to our main theorem.
+In summary, we have thus proven that Algorithm \ref{factoring_algorithm} is correct and that it has 
+expected recursion depth logarithmic in $n$. Further, the bottleneck is Step $4$, the computation 
+of the Hasse invariant lift. A naive computation relying on recurrence \ref{eisenstein_recurrence} 
+would lead to a runtime dependence quadratic in $n$. In the forthcoming section we describe a 
+deterministic algorithm Algorithm \ref{alg:hasse-inv} to compute the Hasse invariant lift with 
+runtime subquadratic in $n$. Incorporating Algorithm \ref{alg:hasse-inv} in Algorithm 
+\ref{factoring_algorithm} thus leads to Theorem \ref{theorem:main}.
 
-\begin{theorem} In $n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)}$ expected time, Algorithm \ref{factoring_algorithm} factors degree $n$ polynomials over $\F_q$ where $\sqrt{q} \geq n$. 
-\end{theorem}
+
 
 \section{Efficient computation of the Hasse invariant lift}
 \label{sec:hasse}
@@ -401,9 +496,7 @@ For a $\gamma \in \mathscr{M}_2(\K)[Y]$ and a $\zeta \in \K$, let $\gamma(\zeta)
 0 & \zeta
 \end{bmatrix}.\]
 Then, for any $k \ge 1$, we have $$A_k = \tau^{k - 2}(\alpha)(\xi).$$
-Let $\ell := \lceil \sqrt{n} \rceil$, $m := \lceil n / \ell \rceil$ and
-%Let $\ell = \lceil n^\beta \rceil$, and let $m = \lceil n / \ell \rceil$ for some $0 \le \beta \le 1$ which we will choose later. 
-define %the polynomial matrix of degree at most $\ell$,
+Let $\ell := \lceil n^\beta \rceil$, $m := \lceil n / \ell \rceil$ and define 
 \[\beta := \tau^{\ell-1}(\alpha) \cdots \tau(\alpha) \alpha.\]
 It follows from the above that 
 \[\beta(\xi) = A_{\ell-1}A_{\ell - 2} \cdots A_2.\]
@@ -425,7 +518,7 @@ This suggest Algorithm \ref{alg:hasse-inv} for computing $B_n$.
 	\begin{algorithmic}[1]
 		\REQUIRE A degree $n$ polynomial $f(x)$ and the coefficients $\Delta(x), g(x)$ (modulo $f(x)$) of a Drinfeld module $\phi$.
 		\ENSURE The $n$-th Hasse invariant lift $r_{\phi,n}(x)$ modulo $f(x)$.
-		\STATE Let $\ell := \lceil \sqrt{n} \rceil$, and let $m := \lceil n / \ell \rceil$
+		\STATE Let $\ell := \lceil n^\beta \rceil$, and let $m := \lceil n / \ell \rceil$
 		\STATE\label{step:hasse-2}
 		Compute $\beta = \tau^{\ell-1}(\alpha) \cdots \tau(\alpha) \alpha$
 		\STATE\label{step:hasse-3}
@@ -441,39 +534,69 @@ This suggest Algorithm \ref{alg:hasse-inv} for computing $B_n$.
 	\end{algorithmic}
 \end{algorithm}
 
-\noindent The correctness of the algorithm follows from the preceding remarks. We next analyse its complexity. Curiously, each of the steps \ref{step:hasse-2}, \ref{step:hasse-3},  \ref{step:hasse-4} and \ref{step:hasse-5} can each be performed in $n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)}$. time. We next briefly sketch how.\\ 
+ The correctness of the algorithm follows from the preceding remarks. The next two subsections 
+ analyze its complexity in both boolean and algebraic models.
+ 
 
-\noindent Step \ref{step:hasse-2} is performed recursively. Given $\tau^{\lfloor\ell/2\rfloor}(\alpha)\tau^{\lfloor\ell/2\rfloor-1}\ldots\tau(\alpha) \alpha$, it takes one $\tau^{\lfloor\ell/2\rfloor}$ map (and a constant number of multiplications) in $\mathscr{M}_2(\K)[Y]$ to compute $\tau^{\ell-1}(\alpha)\tau^{\ell-2}\ldots\tau(\alpha)\alpha$. The $\tau^{\lfloor\ell/2\rfloor}$ power map is computed using the iterated Frobenius algorithm of von zur Gathen and Shoup \cite{gs} implemented using fast modular composition \cite{ku}. Step \ref{step:hasse-3} is performed using \cite[Lemma 3]{ks} implemented using fast modular composition \cite{ku}. Step \ref{step:hasse-5} is nearly identical, except its performed over $\mathscr{M}_2(\K)$. Step \ref{step:hasse-4} is performed using multipoint evaluation \cite{vzGG}. In summary, we have proven 
+\subsection{Complexity in an algebraic model}
+
+In this subsection we prove the following:
 \begin{theorem}
 	\label{theo:hasse-inv}
-	There is a deterministic algorithm that given a monic squarefree polynomial $f(x) \in \F_q[x]$ of degree $n$ and the coefficients $g_\phi(x),\Delta_{\phi}(x)$ modulo $f(x)$ of a Drinfeld module $\phi$ computes $r_{\phi,n}(x) \pmod {h(x)}$ in time
-	\[n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)}.\]
+	Algorithm \ref{alg:hasse-inv} runs in
+	\[O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega - 1) / 2} + n^{1 + \beta + o(1)}\log q)\] 
+	operations in $\F_q$, where $\omega$ is the matrix multiplication exponent. Taking $\omega 
+	\approx	2.375$ and $\beta \approx 0.815$, the above is $O(n^{1.815}\log q)$ operations in 
+	$\F_q$.
 \end{theorem}
 
-\subsection{Implementing the Hasse Invariant Algorithm in Practice}
-The fastest known algorithms for polynomial factorization, including our own, critically rely on the nearly linear time modular composition algorithm of Kedlaya-Umans \cite{ku} to achieve the $3/2$ exponent in degree. However the modular composition algorithm of Kedlaya-Umans is not currently practical and thus far has eluded all attempts at implementation. \\
-
-\noindent We next outline a fast practical implementation of our algorithm that does not use the Kedlaya-Umans algorithm. It is to our knowledge the first subquadratic implementation for the polynomial factorization problem and from preliminary experimentation appears to be the fastest. Again, in Algorithm \ref{factoring_algorithm}, all but the step for computing the Hasse invariant lift is trivial to implement. We next outline a practical version of our Hasse invariant lift algorithm and prove  
-
-\begin{theorem}
-	\label{theo:hasse-inv}
-	There exists a practical algorithm that given a monic squarefree polynomial $f(x) \in \F_q[x]$ of degree $n$ and the coefficients $g_\phi(x),\Delta_{\phi}(x)$ modulo $f(x)$ of a Drinfeld module $\phi$ computes $r_{\phi,n}(x) \pmod {h(x)}$ in time
-	\[O(n^{(\omega + 1) / 2 + (1 - b)(\omega - 1) / 2} + n^{1 + b + o(1)}\log q)\] operations in $\F_q$. Here $\omega$ is the matrix multiplication exponent which in current practice is $to do$ and $b$ is a parameter that may be chosen in the interval $0\leq b \leq 1$.	
-\end{theorem}
 \begin{proof}
-We chose Algorithm \ref{alg:hasse-inv} to compute the Hasse invariant lift. Each step however is carefully implemented as follows, to satisfy the claim of practicality in the theorem.\\ 
+Step \ref{step:hasse-2} is done using $\ell$ successive applications of the Frobenius and 
+multiplying the results. Here we do the Frobenius using binary-powering. The cost is 
+$O(\ell\MM(n)\log q + \MM(\ell n)) = O(n^{1 + \beta + o(1)}\log q)$ operations in $\F_q$.
 
-\noindent Step \ref{step:hasse-2} is done using $\ell$ successive applications of the Frobenius and multiplying the results. Here we do the Frobenius using binary-powering. The cost is $O(\ell\MM(n)\log q + \MM(\ell n)) = O(n^{1 + \beta + o(1)}\log q)$ operations in $\F_q$. \\
-
-\noindent Step \ref{step:hasse-3} is computed as follows. First we compute $g = \tau^{m\ell}(\xi)$ by 
+Step \ref{step:hasse-3} is computed as follows. First we compute $g = \tau^{m\ell}(\xi)$ by 
 computing $\tau(\xi)$ using binary-powering and then doing $\log (m\ell)$ modular polynomial compositions. This takes $O(\CC(n)\log n + \MM(n)\log q)$ operations in $\F_q$. Now we find $f \in \K$ such that \[f^{q^{m\ell}} = \tau^{m\ell}(f) = f(g) = \xi.\]
-In other words we find $f = \tau^{-m\ell}(\xi)$. This can be done using transposed modular composition with cost dominated by previous steps, see \cite{DeDoSc2014} for more details. So we have $\xi_m = f$, and other $\xi_i$ for $i < m$ can be computed using \cite[Lemma 3]{ks}. This takes $O(n^{(\omega + 1) / 2}n^{(1 - \beta)(\omega - 1) / 2}) = O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega - 1) / 2})$ operations in $\F_q$. \\
+In other words we find $f = \tau^{-m\ell}(\xi)$. This can be done using transposed modular 
+composition with cost dominated by previous steps, see \cite{DeDoSc2014} for more details. So we 
+have $\xi_m = f$, and other $\xi_i$ for $i < m$ can be computed using \cite[Lemma 3]{ks}. This 
+takes $O(n^{(\omega + 1) / 2}n^{(1 - \beta)(\omega - 1) / 2}) = O(n^{(\omega + 1) / 2 + (1 - 
+\beta)(\omega - 1) / 2})$ operations in $\F_q$.
 
-\noindent Step \ref{step:hasse-4} can be done using multipoint evaluation \cite{vzGG}. We are evaluating a polynomial of degree at most $\ell$ at $m$ points. This takes $O((\ell / m + \log m) \MM(m\ell)) = O(n^{2\beta + o(1)})$ operations in $\F_q$.\\ 
+Step \ref{step:hasse-4} can be done using multipoint evaluation \cite{vzGG}. We are evaluating a 
+polynomial of degree at most $\ell$ at $m$ points. This takes $O((\ell / m + \log m) \MM(m\ell)) = 
+O(n^{2\beta + o(1)})$ operations in $\F_q$.
 
-\noindent Step \ref{step:hasse-5} is again done using \cite[Lemma 3]{ks} at the cost of $O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega - 1) / 2})$ operations in $\F_q$. The cost of the product in the last step is dominated by the rest. %All in all, this proves the complexity claim in Theorem \ref{theo:hasse-inv}.
+ Step \ref{step:hasse-5} is again done using \cite[Lemma 3]{ks} at the cost of $O(n^{(\omega + 1) / 
+ 2 + (1 - \beta)(\omega - 1) / 2})$ operations in $\F_q$. The cost of the product in the last step 
+ is dominated by the rest. %All in all, this proves the complexity claim in Theorem 
+ %\ref{theo:hasse-inv}.
 \end{proof}
 
+
+\subsection{Complexity in a boolean model}
+
+In this subsection we set $\beta = 1/2$. Curiously, each of the steps \ref{step:hasse-2}, 
+\ref{step:hasse-3}, \ref{step:hasse-4} and \ref{step:hasse-5} can each be performed in 
+$n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)}$. time. We next briefly sketch 
+how.\\ 
+ 
+ Step \ref{step:hasse-2} is performed recursively. Given 
+ $\tau^{\lfloor\ell/2\rfloor}(\alpha)\tau^{\lfloor\ell/2\rfloor-1}\ldots\tau(\alpha) \alpha$, it 
+ takes one $\tau^{\lfloor\ell/2\rfloor}$ map (and a constant number of multiplications) in 
+ $\mathscr{M}_2(\K)[Y]$ to compute $\tau^{\ell-1}(\alpha)\tau^{\ell-2}\ldots\tau(\alpha)\alpha$. 
+ The $\tau^{\lfloor\ell/2\rfloor}$ power map is computed using the iterated Frobenius algorithm of 
+ von zur Gathen and Shoup \cite{gs} implemented using fast modular composition \cite{ku}. Step 
+ \ref{step:hasse-3} is performed using \cite[Lemma 3]{ks} implemented using fast modular 
+ composition \cite{ku}. Step \ref{step:hasse-5} is nearly identical, except its performed over 
+ $\mathscr{M}_2(\K)$. Step \ref{step:hasse-4} is performed using multipoint evaluation \cite{vzGG}. 
+ In summary, we have proven 
+ \begin{theorem}
+ 	\label{theo:hasse-inv}
+ 	Algorithm \ref{alg:hasse-inv} runs in 
+ 	\[O(n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)})\]
+ 	bit operations.
+ \end{theorem}
 
 
 
