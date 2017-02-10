@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[12pt]{article}
 
 \usepackage[margin = 1in]{geometry}
 \usepackage{graphicx}              
@@ -420,7 +420,19 @@ Let $p_1(x),p_2(x) \in A $ be two distinct monic irreducible polynomials of degr
 \begin{proof}
 Since $k > 1$ neither $(p_1(x))$ nor $(p_2(x))$ ramify in $\F_q(x)(\sqrt{x-a})$. Hence, the probability that exactly one of $(p_1(x))$ or $(p_2(x))$ is supersingular with respect to $\phi$ is precisely the probability that exactly one of $(p_1),(p_2)$ splits in $\F_q(x)(\sqrt{x-a})/\F_q(x)$.\\ \\
 %That is, exactly one of $(p_1),(p_2)$ splits in $\F_q(t)(\sqrt{d})/\F_q(t)$.
-For $i\in\{0,1\}$, let $K_i:=\F_q(x)(\alpha_i)$ be the hyperelliptic extension of $\F_q(t)$ obtained by adjoining a root $\alpha_i$ of $y^2-p_i(x)$. By quadratic reciprocity over function fields \cite{car}, since $p_1(x)$ and $p_2(x)$ have the same degree, exactly one of $(p_1(x)),(p_2(x))$ splits in $\F_q(x)(\sqrt{x-a})$ if and only if $x-a$ is split in exactly one of $K_1,K_2$. That is, $(x-a)$ is neither completely split nor completely inert in the composite $K_1K_2$. Since $p_1(x)$ and $p_2(x)$ are distinct, $K_1$ and $K_2$ are linearly disjoint over $\F_q(x)$. Further, $K_1K_2$ is Galois over $\F_q(t)$ with $$Gal(K_1K_2/\F_q(x)) \cong Gal(K_1/\F_q(x)) \times Gal(K_2/\F_q(x)) \cong \Z/2\Z \oplus \Z/2\Z.$$  For $(x-a)$ to be neither totally split nor totally inert, the Artin symbol $$((x-a),K_1K_2/\F_q(x)) \in Gal(K_1K_2/\F_q(x))$$ has to be either $(0,1)$ or $(1,0)$ under the isomorphism $Gal(K_1K_2/\F_q(x)) \cong \Z/2\Z \oplus \Z/2\Z$. Applying Chebotarev's density theorem, the number $N$ of degree one primes $\{(x-a),a\in \F_q\}$ that are neither totally inert nor totally split in $K_1K_2$ is bounded by 
+For $i\in\{0,1\}$, let $K_i:=\F_q(x)(\alpha_i)$ be the hyperelliptic extension of $\F_q(t)$ 
+obtained by adjoining a root $\alpha_i$ of $y^2-p_i(x)$. By quadratic reciprocity over function 
+fields \cite{carlitz1932}, since $p_1(x)$ and $p_2(x)$ have the same degree, exactly one of 
+$(p_1(x)),(p_2(x))$ splits in $\F_q(x)(\sqrt{x-a})$ if and only if $x-a$ is split in exactly one of 
+$K_1,K_2$. That is, $(x-a)$ is neither completely split nor completely inert in the composite 
+$K_1K_2$. Since $p_1(x)$ and $p_2(x)$ are distinct, $K_1$ and $K_2$ are linearly disjoint over 
+$\F_q(x)$. Further, $K_1K_2$ is Galois over $\F_q(t)$ with $$Gal(K_1K_2/\F_q(x)) \cong 
+Gal(K_1/\F_q(x)) \times Gal(K_2/\F_q(x)) \cong \Z/2\Z \oplus \Z/2\Z.$$  For $(x-a)$ to be neither 
+totally split nor totally inert, the Artin symbol $$((x-a),K_1K_2/\F_q(x)) \in 
+Gal(K_1K_2/\F_q(x))$$ has to be either $(0,1)$ or $(1,0)$ under the isomorphism 
+$Gal(K_1K_2/\F_q(x)) \cong \Z/2\Z \oplus \Z/2\Z$. Applying Chebotarev's density theorem, the number 
+$N$ of degree one primes $\{(x-a),a\in \F_q\}$ that are neither totally inert nor totally split in 
+$K_1K_2$ is bounded by 
 $$ \left|N - \frac{q}{2} \right| \leq 2 g(K_1K_2)\sqrt{q}$$
 where $g(K_1K_2)$ is the genus of $K_1K_2$. By the Riemann-Hurwitz genus formula, $g(K_1K_2) = k-1 \leq \sqrt{q}/2$. Hence when $a \in \F_q$ is chosen at random, $(x-a)$ is neither totally inert nor totally split in $K_1K_2$ with probability close to $1/2$. 
 \end{proof}
@@ -437,7 +449,9 @@ runtime subquadratic in $n$. Incorporating Algorithm \ref{alg:hasse-inv} in Algo
 \section{Efficient computation of the Hasse invariant lift}
 \label{sec:hasse}
 
-In this section we devise an efficient algorithm to compute the Hasse invariant lift. We let $\K = \F_q[x]/f(x)$ and define $\xi$ as the image of $x$ in $\K$. The recursion \ref{eisenstein_recurrence} for computing $r_{\phi,n}(x)$ can be written as
+In this section we devise an efficient algorithm to compute the Hasse invariant lift. We let $\K = 
+\F_q[x]/f(x)$ and define $\xi$ as the image of $x$ in $\K$. The recursion  
+\ref{eisenstein_recurrence} for computing $r_{\phi,n}(x)$ can be written as
 \[
 \begin{bmatrix}
 r_{\phi,k - 1} \\
@@ -529,15 +543,13 @@ This suggest Algorithm \ref{alg:hasse-inv} for computing $B_n$.
 		\STATE\label{step:hasse-2}
 		Compute $\mathcal{B} = \tau^{\ell-1}(\mathcal{A}) \cdots \tau(\mathcal{A}) \mathcal{A}$
 		\STATE\label{step:hasse-3}
-		For $0 \le i \le m$, \\
-		compute $\xi_i = \tau^{-i\ell}(\xi)$
+		Compute $\xi_i = \tau^{-i\ell}(\xi)$ for $0 \le i \le m$
 		\STATE\label{step:hasse-4}
-		For $0 \le i \le m$, \\
-		compute $\beta_i = \mathcal{B}(\xi_i)$
+		Compute $\beta_i = \mathcal{B}(\xi_i)$ for $0 \le i \le m$
 		\STATE\label{step:hasse-5}
-		For $1 \le i \le m$ \\
-		compute $t_i = \tau^{i\ell}(\beta_i)$
-		\RETURN $r_{\phi,n}$, by reading off from $B_n$ computed as the product $t_0t_1 \cdots t_m$.
+		Compute $t_i = \tau^{i\ell}(\beta_i)$ for $1 \le i \le m$
+		\RETURN\label{step:hasse-6} 
+		$r_{\phi,n}$, by reading off from $B_n$ computed as the product $t_0 t_1 \cdots t_m$.
 	\end{algorithmic}
 \end{algorithm}
 
@@ -547,7 +559,19 @@ This suggest Algorithm \ref{alg:hasse-inv} for computing $B_n$.
 
 \subsection{Complexity in an algebraic model}
 
+First we need a lemma from \cite{ks} for efficient simultaneous modular composition, which we 
+include here for convenience:
+
+\begin{lemma}[\cite{ks}]
+	\label{lemma:ks}
+	Given a polynomials $f \in \K[x]$ of degree $n$ over an arbitrary field $\K$, and polynomials 
+	$g_1, \dots, g_k, h \in \K[x]$ of degree less than $n$, where $k = O(n)$, we can compute 
+	\[ g_1(h) \bmod f, \dots, g_k(h) \bmod f \]
+	using $O(n^{(\omega + 1) / 2} k^{(\omega - 1) / 2})$ operations in $\K$.
+\end{lemma}
+
 In this subsection we prove the following:
+
 \begin{theorem}
 	\label{theo:hasse-inv}
 	Algorithm \ref{alg:hasse-inv} runs in
@@ -566,7 +590,7 @@ Step \ref{step:hasse-3} is computed as follows. First we compute $g = \tau^{m\el
 computing $\tau(\xi)$ using binary-powering and then doing $\log (m\ell)$ modular polynomial compositions. This takes $O(\CC(n)\log n + \MM(n)\log q)$ operations in $\F_q$. Now we find $f \in \K$ such that \[f^{q^{m\ell}} = \tau^{m\ell}(f) = f(g) = \xi.\]
 In other words we find $f = \tau^{-m\ell}(\xi)$. This can be done using transposed modular 
 composition with cost dominated by previous steps, see \cite{DeDoSc2014} for more details. So we 
-have $\xi_m = f$, and other $\xi_i$ for $i < m$ can be computed using \cite[Lemma 3]{ks}. This 
+have $\xi_m = f$, and other $\xi_i$ for $i < m$ can be computed using Lemma \ref{lemma:ks}. This 
 takes $O(n^{(\omega + 1) / 2}n^{(1 - \beta)(\omega - 1) / 2}) = O(n^{(\omega + 1) / 2 + (1 - 
 \beta)(\omega - 1) / 2})$ operations in $\F_q$.
 
@@ -574,10 +598,20 @@ Step \ref{step:hasse-4} can be done using multipoint evaluation \cite{vzGG}. We 
 polynomial of degree at most $\ell$ at $m$ points. This takes $O((\ell / m + \log m) \MM(m\ell)) = 
 O(n^{2\beta + o(1)})$ operations in $\F_q$.
 
- Step \ref{step:hasse-5} is again done using \cite[Lemma 3]{ks} at the cost of $O(n^{(\omega + 1) / 
- 2 + (1 - \beta)(\omega - 1) / 2})$ operations in $\F_q$. The cost of the product in the last step 
- is dominated by the rest. %All in all, this proves the complexity claim in Theorem 
- %\ref{theo:hasse-inv}.
+Step \ref{step:hasse-5} is done as follows. Assume we have the polynomials $h_i = 
+\tau^{i\ell}(\xi)$, $1 \le i \le m$ from the previous steps. One can compute these polynomials, if
+necessary, at the cost of $O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega - 1) / 2})$ using Lemma 
+\ref{lemma:ks}. Computing a value $\tau^{s\ell}(\beta_i)$ is equivalent to computing the modular 
+composition $\beta_i(h_s)$. Consider the list $\beta_1, \beta_2, \dots, \beta_m$. One can produce 
+all the powers $\tau^{\ell}(\beta_1), \dots, \tau^{m\ell}(\beta_m)$ only using composition with 
+$h_1, h_2, h_{2^2}, \dots, h_{2^d}$ where $d = \lfloor m \rfloor$. More precisely, all the 
+$\beta_i$ with the $k$-th bit of the binary representation of $i$ equal to '1' are composed with 
+$h_{2^k}$. There are $m / 2$ of these $\beta_i$. Therefore, $O(\log m)$ applications of Lemma 
+\ref{lemma:ks} at the cost of $O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega - 1) / 2})$ gives the 
+final result. 
+
+Step \ref{step:hasse-6} is done using $O(m\MM(n)) = O(n^{2 - \beta + o(1)})$ operations in $\F_q$ 
+which is dominated by the rest.
 \end{proof}
 
 
@@ -594,7 +628,7 @@ $\tau^{\lfloor\ell/2\rfloor}(\mathcal{A})\tau^{\lfloor\ell/2\rfloor-1}\ldots\tau
 multiplications) in $\mathscr{M}_2(\K)[Y]$ to compute $\tau^{\ell-1}(\mathcal{A}) \tau^{\ell-2} 
 \ldots \tau(\mathcal{A}) \mathcal{A}$. The $\tau^{\lfloor\ell/2\rfloor}$ power map is computed 
 using the iterated Frobenius algorithm of von zur Gathen and Shoup \cite{gs} implemented using fast 
-modular composition \cite{ku}. Step \ref{step:hasse-3} is performed using \cite[Lemma 3]{ks} 
+modular composition \cite{ku}. Step \ref{step:hasse-3} is performed using Lemma \ref{lemma:ks} 
 implemented using fast modular composition \cite{ku}. Step \ref{step:hasse-5} is nearly identical, 
 except its performed over $\mathscr{M}_2(\K)$. Step \ref{step:hasse-4} is performed using 
 multipoint evaluation \cite{vzGG}. In summary, we have proven 
