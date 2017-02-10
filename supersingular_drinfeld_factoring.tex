@@ -588,22 +588,22 @@ In this subsection we set $\beta = 1/2$. Curiously, each of the steps \ref{step:
 $n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)}$. time. We next briefly sketch 
 how.\\ 
  
- Step \ref{step:hasse-2} is performed recursively. Given 
- $\tau^{\lfloor\ell/2\rfloor}(\alpha)\tau^{\lfloor\ell/2\rfloor-1}\ldots\tau(\alpha) \alpha$, it 
- takes one $\tau^{\lfloor\ell/2\rfloor}$ map (and a constant number of multiplications) in 
- $\mathscr{M}_2(\K)[Y]$ to compute $\tau^{\ell-1}(\alpha)\tau^{\ell-2}\ldots\tau(\alpha)\alpha$. 
- The $\tau^{\lfloor\ell/2\rfloor}$ power map is computed using the iterated Frobenius algorithm of 
- von zur Gathen and Shoup \cite{gs} implemented using fast modular composition \cite{ku}. Step 
- \ref{step:hasse-3} is performed using \cite[Lemma 3]{ks} implemented using fast modular 
- composition \cite{ku}. Step \ref{step:hasse-5} is nearly identical, except its performed over 
- $\mathscr{M}_2(\K)$. Step \ref{step:hasse-4} is performed using multipoint evaluation \cite{vzGG}. 
- In summary, we have proven 
- \begin{theorem}
- 	\label{theo:hasse-inv}
- 	Algorithm \ref{alg:hasse-inv} runs in 
- 	\[O(n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)})\]
- 	bit operations.
- \end{theorem}
+Step \ref{step:hasse-2} is performed recursively. Given 
+$\tau^{\lfloor\ell/2\rfloor}(\mathcal{A})\tau^{\lfloor\ell/2\rfloor-1}\ldots\tau(\mathcal{A}) 
+\mathcal{A}$, it takes one $\tau^{\lfloor\ell/2\rfloor}$ map (and a constant number of 
+multiplications) in $\mathscr{M}_2(\K)[Y]$ to compute $\tau^{\ell-1}(\mathcal{A}) \tau^{\ell-2} 
+\ldots \tau(\mathcal{A}) \mathcal{A}$. The $\tau^{\lfloor\ell/2\rfloor}$ power map is computed 
+using the iterated Frobenius algorithm of von zur Gathen and Shoup \cite{gs} implemented using fast 
+modular composition \cite{ku}. Step \ref{step:hasse-3} is performed using \cite[Lemma 3]{ks} 
+implemented using fast modular composition \cite{ku}. Step \ref{step:hasse-5} is nearly identical, 
+except its performed over $\mathscr{M}_2(\K)$. Step \ref{step:hasse-4} is performed using 
+multipoint evaluation \cite{vzGG}. In summary, we have proven 
+\begin{theorem}
+	\label{theo:hasse-inv}
+	Algorithm \ref{alg:hasse-inv} runs in 
+	\[O(n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)})\]
+	bit operations.
+\end{theorem}
 
 
 
