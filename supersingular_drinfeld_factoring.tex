@@ -517,16 +517,17 @@ For a $\mathcal{M} \in \mathscr{M}_2(\K)[Y]$ and a $\zeta \in \K$, let $\mathcal
 \end{bmatrix}.
 \]
 Then, for any $k \ge 1$, we have $$A_k = \tau^{k - 2}(\mathcal{A})(\xi).$$
-Let $\ell := \lceil n^\beta \rceil$, $m := \lceil n / \ell \rceil$ and define 
+Let $\ell := \lceil n^\beta \rceil$, $m := \lfloor n / \ell \rfloor$ and define 
 \[\mathcal{B} := \tau^{\ell-1}(\mathcal{A}) \cdots \tau(\mathcal{A}) \mathcal{A}.\]
 It follows from the above that 
-\[\mathcal{B}(\xi) = A_{\ell-1}A_{\ell - 2} \cdots A_2.\]
+\[\mathcal{B}(\xi) = A_{\ell+1}A_{\ell - 2} \cdots A_2.\]
 More generally, using the fact that for all $i, j$
-\[A_{i + j} = \tau^{i + j}(\mathcal{A})(\xi) = \tau^j\Big(\tau^i(\mathcal{A})\big( \tau^{-j}(\xi)\big)\Big),\]
+\[A_{i + j + 2} = \tau^{i + j}(\mathcal{A})(\xi) = \tau^j\Big(\tau^i(\mathcal{A})\big( 
+\tau^{-j}(\xi)\big)\Big),\]
 we deduce for all $i \ge 1$ that 
-\[\tau^{i}\Big(\mathcal{B} \big( \tau^{-i}(\xi)\big) \Big) = A_{i + \ell-1} \cdots A_{i + 1}A_i.\]
-
-In particular, $B_n$ can be computed as the product of the following values, 
+\[\tau^{i}\Big(\mathcal{B} \big( \tau^{-i}(\xi)\big) \Big) = A_{i + \ell+1} \cdots A_{i + 3}A_{i + 
+2}.\]
+In particular, $B_n$ can be computed as the product of the following matrices, 
 \[
 \mathcal{B} \big(\xi\big), \tau^{\ell}\Big(\mathcal{B} \big( \tau^{-\ell}(\xi)\big) \Big), \dots, 
 \tau^{m \ell}\Big(\mathcal{B} \big( \tau^{-m \ell}(\xi)\big) \Big).
@@ -547,9 +548,9 @@ This suggest Algorithm \ref{alg:hasse-inv} for computing $B_n$.
 		\STATE\label{step:hasse-4}
 		Compute $\beta_i = \mathcal{B}(\xi_i)$ for $0 \le i \le m$
 		\STATE\label{step:hasse-5}
-		Compute $t_i = \tau^{i\ell}(\beta_i)$ for $1 \le i \le m$
+		Compute $t_i = \tau^{i\ell}(\beta_i)$ for $0 \le i \le m$
 		\RETURN\label{step:hasse-6} 
-		$r_{\phi,n}$, by reading off from $B_n$ computed as the product $t_0 t_1 \cdots t_m$.
+		$r_{\phi,n}$, by reading off from $B_n$ computed as the product $t_m t_{m - 1} \cdots t_0$.
 	\end{algorithmic}
 \end{algorithm}
 
