@@ -605,7 +605,7 @@ necessary, at the cost of $O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega - 1) / 2})
 \ref{lemma:ks}. Computing a value $\tau^{s\ell}(\beta_i)$ is equivalent to computing the modular 
 composition $\beta_i(h_s)$. Consider the list $\beta_1, \beta_2, \dots, \beta_m$. One can produce 
 all the powers $\tau^{\ell}(\beta_1), \dots, \tau^{m\ell}(\beta_m)$ only using composition with 
-$h_1, h_2, h_{2^2}, \dots, h_{2^d}$ where $d = \lfloor m \rfloor$. More precisely, all the 
+$h_1, h_2, h_{2^2}, \dots, h_{2^d}$ where $d = \lfloor \log m \rfloor$. More precisely, all the 
 $\beta_i$ with the $k$-th bit of the binary representation of $i$ equal to '1' are composed with 
 $h_{2^k}$. There are $m / 2$ of these $\beta_i$. Therefore, $O(\log m)$ applications of Lemma 
 \ref{lemma:ks} at the cost of $O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega - 1) / 2})$ gives the 
