@@ -17,3 +17,9 @@
 *.brf
 *.run.xml
 supersingular_drinfeld_factoring.pdf
+.cproject
+.dep.inc
+.project
+.settings/
+nbproject/
+
