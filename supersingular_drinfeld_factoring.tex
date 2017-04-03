@@ -384,7 +384,7 @@ We now state our randomized algorithm to factor polynomials over finite fields u
 		%\STATE Let $\K = \F_q[x] / f$
 		\STATE Pick $a \in \F_q$ uniformly at random and compute \\ % the following elements in $\K$ \\
 		$d(x) := x-a \mod f(x)$. \\
-		$g_\phi(x) := d(x)(1+d(x)^{\frac{q-1}{2}}) \mod f(x)$. \\
+		$g_\phi(x) := d(x)(1+d(x)^{\frac{q-1}{2}})^2 \mod f(x)$. \\
 		$\Delta_\phi(x) := d(x)^{\frac{q+1}{2}}(1+d(x)^{\frac{q-1}{2}})^{q+1} \mod f(x)$ .
 		\STATE Compute $r_{\phi,n}(x) \mod f(x)$ as in recurrence (\ref{eisenstein_recurrence}) 
 		(that is, the $n$-th Hasse invariant lift with respect to the Drinfeld module $\phi$ with 

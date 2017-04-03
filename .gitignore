@@ -22,4 +22,5 @@ supersingular_drinfeld_factoring.pdf
 .project
 .settings/
 nbproject/
+ss_drinfeld_impl/build/
 

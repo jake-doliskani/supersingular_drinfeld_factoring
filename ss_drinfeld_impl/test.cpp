@@ -174,7 +174,7 @@ void testFrob() {
 void testHasseLift() {
     ZZ_pX f, g, delta, lift1, lift2;
 
-    long degree = 1000;
+    long degree = 10000;
 
     // build a square-free modulus
     Util util;
@@ -191,10 +191,10 @@ void testHasseLift() {
 
     HasseLiftExt hasseLiftExt(g, delta, F);
     long start = util.getTimeMillis();
-    hasseLiftExt.computeNaive(lift1, degree / 2);
-    cout << util.getTimeMillis() - start << endl;
-
-    start = util.getTimeMillis();
+//    hasseLiftExt.computeNaive(lift1, degree / 2);
+//    cout << util.getTimeMillis() - start << endl;
+//
+//    start = util.getTimeMillis();
     hasseLiftExt.compute(lift2, degree / 2, 1);
     cout << util.getTimeMillis() - start << endl;
 
@@ -207,7 +207,7 @@ void testHasseLift() {
 void testFactoring() {
     Util util;
     
-    long n = 2000;
+    long n = 10000;
     ZZ_pX f;
     util.randomMonic(f, n);
     
@@ -216,19 +216,19 @@ void testFactoring() {
     
     SSFactoring sSfactoring;
     long start = util.getTimeMillis();
-    sSfactoring.factor(factors1, f);
-    cout << util.getTimeMillis() - start << endl;
-    
-    start = util.getTimeMillis();
-    CanZass(factors2, f);
+//    sSfactoring.factor(factors1, f);
+//    cout << util.getTimeMillis() - start << endl;
+//    
+//    start = util.getTimeMillis();
+    CanZass(factors2, f, 1);
     cout << util.getTimeMillis() - start << endl;
 
-    ZZ_pX g;
-    mul(g, factors1);
-    if (f == g)
-        cout << "OK" << endl;
-    else
-        cout << "Failed" << endl;
+//    ZZ_pX g;
+//    mul(g, factors1);
+//    if (f == g)
+//        cout << "OK" << endl;
+//    else
+//        cout << "Failed" << endl;
 }
 
 int main(int argc, char** argv) {
@@ -237,7 +237,7 @@ int main(int argc, char** argv) {
     NextPrime(p, to_ZZ(7));
     ZZ_p::init(p);
 
-    testFactoring();
+    testHasseLift();
     
     return 0;
 }
