@@ -477,105 +477,93 @@ $L$, the factorization thus obtained is likely to be non trivial.
  
 %####################################################
  
+
 \section{Efficient computation of the Hasse invariant lift}
 \label{sec:hasse}
 
 In this section, we devise an efficient algorithm to compute the Hasse invariant lift. We let $\K = 
 \F_q[x]/f(x)$ and define $\xi$ as the image of $x$ in $\K$. The recursion  
-\ref{eisenstein_recurrence} for computing $r_{\phi,n}(x)$ can be written as
+\eqref{eisenstein_recurrence} for computing $r_{\phi,n}(x)$ can be written as
 \[
 \begin{bmatrix}
-r_{\phi,k - 1} \\
-r_{\phi,k} \\
+	r_{\phi,k - 1} \\
+	r_{\phi,k} \\
 \end{bmatrix} = 
 \begin{bmatrix}
-0 & 1 \\
--[k - 1]\Delta^{q^{k - 2}} & g^{q^{k - 1}}
+	0 & 1 \\
+	-[k - 1]\Delta^{q^{k - 2}} & g^{q^{k - 1}}
 \end{bmatrix}
 \begin{bmatrix}
-r_{\phi,k - 2} \\
-r_{\phi,k - 1} \\
+	r_{\phi,k - 2} \\
+	r_{\phi,k - 1} \\
 \end{bmatrix}.
 \]
-where $[k - 1]:=\xi^{q^{k - 1}}-\xi$. Define the following sequence of matrices in 
-$\mathscr{M}_2(\K)$:
+where $[k - 1]:=\xi^{q^{k - 1}}-\xi$. Define the following sequence of matrices in $M_2(\K)$:
 \[
-A_k :=\begin{bmatrix}
-0 & 1 \\
--[k - 1]\Delta^{q^{k - 2}} & g^{q^{k - 1}}
+A_k :=
+\begin{bmatrix}
+	0 & 1 \\
+	-[k - 1]\Delta^{q^{k - 2}} & g^{q^{k - 1}}
 \end{bmatrix}.
 \]
 Then we have
 \[
 \begin{bmatrix}
-r_{\phi,k - 1} \\
-r_{\phi,k} \\
-\end{bmatrix} = 
-A_kA_{k - 1} \cdots A_2
+	r_{\phi,k - 1} \\
+	r_{\phi,k} \\
+\end{bmatrix}
+= A_kA_{k - 1} \cdots A_2
 \begin{bmatrix}
-r_{\phi,0} \\
-r_{\phi,1} \\
+	r_{\phi,0} \\
+	r_{\phi,1} \\
 \end{bmatrix}.
 \]
 Our goal is to compute the product 
-\[B_n := A_nA_{n - 1} \cdots A_2 ~ \in ~ \mathscr{M}(\K)\]
-for then we can read off $r_{\phi,n}$ from $B_n\begin{bmatrix}
-r_{\phi,0} \\
-r_{\phi,1} \\
-\end{bmatrix}.$ 
-%for a given positive integer $m$. Although the following algorithm works for any $m$, we set $m = 
-%n$ for the sake of simplicity, specially when analyzing the runtime complexity. 
-%Define the linear map $\tau: \K \to \K$ given by $\tau(f) = f^q$ for any $f$ in $\K$. We can 
-%extend the action of $\tau$ to the polynomial ring $\mathscr{M}_2(\K)[Y]$ by leaving $Y$ fixed and 
-%acting on the coefficient matrices entry-wise.
-Extend the $\F_q$-linear $q^{th}$-power Frobenius map $\tau: \K \to \K$ to the polynomial ring 
-$\mathscr{M}_2(\K)[Y]$ by leaving $Y$ fixed and acting on the coefficient matrices entry-wise.
-Let
+\[B_n := A_nA_{n - 1} \cdots A_2 ~ \in M_2(\K)\]
+for then we can read off $r_{\phi,n}$ from $B_n[r_{\phi,0} ~ r_{\phi,1}]^T$. Extend the  
+$q^{th}$-power Frobenius map $\tau: \K \to \K$ to the polynomial ring $M_2(\K)[Y]$ by leaving $Y$ 
+fixed and acting on the coefficient matrices entry-wise. Let
 \[
 \mathcal{A} := 
 \begin{bmatrix}
-0 & 1 \\
--\tau(\xi)\Delta & \tau(g)
+	0 & 1 \\
+	-\tau(\xi)\Delta & \tau(g)
 \end{bmatrix}
 +
 \begin{bmatrix}
-0 & 0 \\
-\Delta & 0
-\end{bmatrix} Y ~ \in ~ \mathscr{M}_2(\K)[Y].
+	0 & 0 \\
+	\Delta & 0
+\end{bmatrix} Y ~ \in M_2(\K)[Y].
 \]
-For a $\mathcal{M} \in \mathscr{M}_2(\K)[Y]$ and a $\zeta \in \K$, let $\mathcal{M}(\zeta)$ denote 
-the image of $\mathcal{M}$ under the substitution 
+For any $\mathcal{M} \in M_2(\K)[Y]$ and any $\zeta \in \K$, let $\mathcal{M}(\zeta)$ denote the 
+image of $\mathcal{M}$ under the substitution 
 \[Y \longmapsto 
 \begin{bmatrix}
-\zeta & 0 \\
-0 & \zeta
+	\zeta & 0 \\
+	0 & \zeta
 \end{bmatrix}.
 \]
-Then, for any $k \ge 1$, we have $$A_k = \tau^{k - 2}(\mathcal{A})(\xi).$$
-Let $\ell := \lceil n^\beta \rceil$, $m := \lfloor n / \ell \rfloor$ and define 
-\[\mathcal{B} := \tau^{\ell-1}(\mathcal{A}) \cdots \tau(\mathcal{A}) \mathcal{A}.\]
-It follows from the above that 
-\[\mathcal{B}(\xi) = A_{\ell+1}A_{\ell - 2} \cdots A_2.\]
-More generally, using the fact that for all $i, j$
-\[A_{i + j + 2} = \tau^{i + j}(\mathcal{A})(\xi) = \tau^j\Big(\tau^i(\mathcal{A})\big( 
-\tau^{-j}(\xi)\big)\Big),\]
-we deduce for all $i \ge 1$ that 
-\[\tau^{i}\Big(\mathcal{B} \big( \tau^{-i}(\xi)\big) \Big) = A_{i + \ell+1} \cdots A_{i + 3}A_{i + 
-	2}.\]
-In particular, $B_n$ can be computed as the product of the following matrices, 
+Then, for any $k \ge 1$, we have $A_k = \tau^{k - 2}(\mathcal{A})(\xi)$. Let $\ell := \lceil 
+n^\beta \rceil$, $m := \lfloor n / \ell \rfloor$ and define $\mathcal{B} := 
+\tau^{\ell-1}(\mathcal{A}) \cdots \tau(\mathcal{A}) \mathcal{A}$. It follows from the above that 
+$\mathcal{B}(\xi) = A_{\ell+1}A_{\ell - 2} \cdots A_2$. More generally, using the fact that for all 
+$i, j$
+\[A_{i + j + 2} = \tau^{i + j}(\mathcal{A})(\xi) = \tau^j\Big(\tau^i(\mathcal{A})(\tau^{-j}\xi) 
+\Big),\]
+we deduce for all $i \ge 1$ that $\tau^{i}\mathcal{B}(\tau^{-i}\xi) = A_{i + \ell+1} \cdots A_{i + 
+3} A_{i + 2}$. In particular, $B_n$ can be computed as the product of the following matrices, 
 \[
-\mathcal{B} \big(\xi\big), \tau^{\ell}\Big(\mathcal{B} \big( \tau^{-\ell}(\xi)\big) \Big), \dots, 
-\tau^{m \ell}\Big(\mathcal{B} \big( \tau^{-m \ell}(\xi)\big) \Big).
+\mathcal{B} (\xi), \tau^{\ell}\mathcal{B}(\tau^{-\ell}\xi), \dots, \tau^{m \ell}\mathcal{B}( 
+\tau^{-m \ell}\xi).
 \]
 This suggest Algorithm \ref{alg:hasse-inv} for computing $B_n$.
-
 \begin{algorithm}[H]
 	\caption{Compute Hasse invariant}
 	\label{alg:hasse-inv}
 	\begin{algorithmic}[1]
-		\REQUIRE A degree $n$ polynomial $f(x)$ and the coefficients $\Delta(x), g(x)$ (modulo 
-		$f(x)$) of a Drinfeld module $\phi$.
-		\ENSURE The $n$-th Hasse invariant lift $r_{\phi,n}(x)$ modulo $f(x)$.
+		\REQUIRE A degree $n$ polynomial $f \in \F_q[x]$ and the coefficients $\Delta, g \pmod{f}$ 
+		of an elliptic module $\phi$.
+		\ENSURE The $n$-th Hasse invariant lift $r_{\phi,n}(x) \pmod{f}$.
 		\STATE Let $\ell := \lceil n^\beta \rceil$, and let $m := \lceil n / \ell \rceil$
 		\STATE\label{step:hasse-2}
 		Compute $\mathcal{B} = \tau^{\ell-1}(\mathcal{A}) \cdots \tau(\mathcal{A}) \mathcal{A}$
@@ -585,11 +573,12 @@ This suggest Algorithm \ref{alg:hasse-inv} for computing $B_n$.
 		Compute $\beta_i = \mathcal{B}(\xi_i)$ for $0 \le i \le m$
 		\STATE\label{step:hasse-5}
 		Compute $t_i = \tau^{i\ell}(\beta_i)$ for $0 \le i \le m$
-		\RETURN\label{step:hasse-6} 
-		$r_{\phi,n}$, by reading off from $B_n$ computed as the product $t_m t_{m - 1} \cdots t_0$.
+		\STATE\label{step:hasse-6} 
+		Compute $B_n = t_m t_{m - 1} \cdots t_0$ 
+		\RETURN\label{step:hasse-7}
+		$r_{\phi,n} = B_n[r_{\phi,0} ~ r_{\phi,1}]^T$.
 	\end{algorithmic}
 \end{algorithm}
-
 The correctness of the algorithm follows from the preceding remarks. The next two subsections 
 analyze its complexity in both boolean and algebraic models.
 
@@ -597,8 +586,7 @@ analyze its complexity in both boolean and algebraic models.
 \subsection{Complexity in an algebraic model}
 
 First we need a lemma from \cite{ks} for efficient simultaneous modular composition, which we 
-include here for convenience:
-
+include here for convenience.
 \begin{lemma}[\cite{ks}]
 	\label{lemma:ks}
 	Given a polynomials $f \in \K[x]$ of degree $n$ over an arbitrary field $\K$, and polynomials 
@@ -606,18 +594,15 @@ include here for convenience:
 	\[ g_1(h) \bmod f, \dots, g_k(h) \bmod f \]
 	using $O(n^{(\omega + 1) / 2} k^{(\omega - 1) / 2})$ operations in $\K$.
 \end{lemma}
-
-In this subsection we prove the following:
-
+The complexity of algorithm \ref{alg:hasse-inv} is analyzed in the following theorem.
 \begin{theorem}
 	\label{theo:hasse-inv}
 	Algorithm \ref{alg:hasse-inv} runs in
 	\[O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega - 1) / 2} + n^{1 + \beta + o(1)}\log q)\] 
 	operations in $\F_q$, where $\omega$ is the matrix multiplication exponent. Taking $\omega 
-	\approx	2.375$ and $\beta \approx 0.815$, the above is $O(n^{1.815}\log q)$ operations in 
+	\approx	2.375$ and $\beta \approx 0.815$, the complexity is $O(n^{1.815}\log q)$ operations in 
 	$\F_q$.
 \end{theorem}
-
 \begin{proof}
 	Step \ref{step:hasse-2} is done using $\ell$ successive applications of the Frobenius and 
 	multiplying the results. Here we do the Frobenius using binary-powering. The cost is 
@@ -626,37 +611,29 @@ In this subsection we prove the following:
 	Step \ref{step:hasse-3} is computed as follows. First we compute $g = \tau^{m\ell}(\xi)$ by 
 	computing $\tau(\xi)$ using binary-powering and then doing $\log (m\ell)$ modular polynomial 
 	compositions. This takes $O(\CC(n)\log n + \MM(n)\log q)$ operations in $\F_q$. Now we find $f 
-	\in 
-	\K$ such that \[f^{q^{m\ell}} = \tau^{m\ell}(f) = f(g) = \xi.\]
+	\in \K$ such that 
+	\[f^{q^{m\ell}} = \tau^{m\ell}(f) = f(g) = \xi.\]
 	In other words we find $f = \tau^{-m\ell}(\xi)$. This can be done using transposed modular 
 	composition with cost dominated by previous steps, see \cite{DeDoSc2014} for more details. So 
-	we 
-	have $\xi_m = f$, and other $\xi_i$ for $i < m$ can be computed using Lemma \ref{lemma:ks}. 
-	This 
-	takes $O(n^{(\omega + 1) / 2}n^{(1 - \beta)(\omega - 1) / 2}) = O(n^{(\omega + 1) / 2 + (1 - 
-		\beta)(\omega - 1) / 2})$ operations in $\F_q$.
+	we have $\xi_m = f$, and other $\xi_i$ for $i < m$ can be computed using Lemma \ref{lemma:ks}. 
+	This takes $O(n^{(\omega + 1) / 2}n^{(1 - \beta)(\omega - 1) / 2}) = O(n^{(\omega + 1) / 2 + (1 
+	- \beta)(\omega - 1) / 2})$ operations in $\F_q$.
 	
 	Step \ref{step:hasse-4} can be done using multipoint evaluation \cite{vzGG}. We are evaluating 
-	a 
-	polynomial of degree at most $\ell$ at $m$ points. This takes $O((\ell / m + \log m) 
-	\MM(m\ell)) = 
-	O(n^{2\beta + o(1)})$ operations in $\F_q$.
+	a polynomial of degree at most $\ell$ at $m$ points. This takes $O((\ell / m + \log m) 
+	\MM(m\ell)) = O(n^{2\beta + o(1)})$ operations in $\F_q$.
 	
 	Step \ref{step:hasse-5} is done as follows. Assume we have the polynomials $h_i = 
 	\tau^{i\ell}(\xi)$, $1 \le i \le m$ from the previous steps. One can compute these polynomials, 
-	if
-	necessary, at the cost of $O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega - 1) / 2})$ using Lemma 
-	\ref{lemma:ks}. Computing a value $\tau^{s\ell}(\beta_i)$ is equivalent to computing the 
-	modular 
-	composition $\beta_i(h_s)$. Consider the list $\beta_1, \beta_2, \dots, \beta_m$. One can 
-	produce 
-	all the powers $\tau^{\ell}(\beta_1), \dots, \tau^{m\ell}(\beta_m)$ only using composition with 
-	$h_1, h_2, h_{2^2}, \dots, h_{2^d}$ where $d = \lfloor \log m \rfloor$. More precisely, all the 
-	$\beta_i$ with the $k$-th bit of the binary representation of $i$ equal to '1' are composed 
-	with 
-	$h_{2^k}$. There are $m / 2$ of these $\beta_i$. Therefore, $O(\log m)$ applications of Lemma 
-	\ref{lemma:ks} at the cost of $O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega - 1) / 2})$ gives the 
-	final result. 
+	if necessary, at the cost of $O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega - 1) / 2})$ using 
+	Lemma \ref{lemma:ks}. Computing a value $\tau^{s\ell}(\beta_i)$ is equivalent to computing the 
+	modular composition $\beta_i(h_s)$. Consider the list $\beta_1, \beta_2, \dots, \beta_m$. One 
+	can produce all the powers $\tau^{\ell}(\beta_1), \dots, \tau^{m\ell}(\beta_m)$ only using 
+	composition with $h_1, h_2, h_{2^2}, \dots, h_{2^d}$ where $d = \lfloor \log m \rfloor$. More 
+	precisely, all the $\beta_i$ with the $k$-th bit of the binary representation of $i$ equal to 
+	'1' are composed with $h_{2^k}$. There are $m / 2$ of these $\beta_i$. Therefore, $O(\log m)$ 
+	applications of Lemma \ref{lemma:ks} at the cost of $O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega 
+	- 1) / 2})$ gives the final result. 
 	
 	Step \ref{step:hasse-6} is done using $O(m\MM(n)) = O(n^{2 - \beta + o(1)})$ operations in 
 	$\F_q$ 
@@ -664,12 +641,13 @@ In this subsection we prove the following:
 \end{proof}
 
 
+
 \subsection{Complexity in a boolean model}
 
-In this subsection we set $\beta = 1/2$. Curiously, each of the steps \ref{step:hasse-2}, 
-\ref{step:hasse-3}, \ref{step:hasse-4} and \ref{step:hasse-5} can each be performed in 
-$n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)}$. time. We next briefly sketch 
-how.\\ 
+In this subsection we set $\beta = 1/2$. Steps \ref{step:hasse-2}, \ref{step:hasse-3}, 
+\ref{step:hasse-4} and \ref{step:hasse-5} can each be performed in 
+\[ n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)}\]
+bit operations. We next briefly sketch how.
 
 Step \ref{step:hasse-2} is performed recursively. Given 
 $\tau^{\lfloor\ell/2\rfloor}(\mathcal{A})\tau^{\lfloor\ell/2\rfloor-1}\ldots\tau(\mathcal{A}) 
