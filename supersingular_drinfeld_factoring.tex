@@ -644,21 +644,26 @@ The complexity of algorithm \ref{alg:hasse-inv} is analyzed in the following the
 
 \subsection{Complexity in a boolean model}
 
-In this subsection we set $\beta = 1/2$. Steps \ref{step:hasse-2}, \ref{step:hasse-3}, 
-\ref{step:hasse-4} and \ref{step:hasse-5} can each be performed in 
-\[ n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)}\]
-bit operations. We next briefly sketch how.
+Since modular composition can be done in $O(n^{1 + \varepsilon}\log q^{1 + o(1)})$ bit operations 
+in a boolean model, we take a different approach to analyze Algorithm \ref{alg:hasse-inv}. First,  
+we set $\beta = 1/2$ so that $\ell = O(n^{1/2})$. Step \ref{step:hasse-2} is done using a simple 
+recursion which performs alternate applications of the Frobenius and multiplications. More 
+precisely, starting from the matrix $\mathcal{A}$, assume at the $i$-th step we have computed 
+$\tau^{\lfloor i/2 \rfloor}(\mathcal{A}) \tau^{\lfloor i/2 \rfloor-1} \ldots \tau(\mathcal{A}) 
+\mathcal{A}$. It now takes one application of the $\tau^{\lfloor i/2 \rfloor}$ map and a few 
+multiplications in $M_2(\K)[Y]$ to compute $\tau^{i-1}(\mathcal{A}) \tau^{i-2} \ldots 
+\tau(\mathcal{A}) \mathcal{A}$. The map $\tau^{\lfloor i \rfloor}$ itself is computed from
+$\tau^{\lfloor i/2 \rfloor}$ the same way. The whole recursion takes
+\[ n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)} \]
+bit operations. 
 
-Step \ref{step:hasse-2} is performed recursively. Given 
-$\tau^{\lfloor\ell/2\rfloor}(\mathcal{A})\tau^{\lfloor\ell/2\rfloor-1}\ldots\tau(\mathcal{A}) 
-\mathcal{A}$, it takes one $\tau^{\lfloor\ell/2\rfloor}$ map (and a constant number of 
-multiplications) in $\mathscr{M}_2(\K)[Y]$ to compute $\tau^{\ell-1}(\mathcal{A}) \tau^{\ell-2} 
-\ldots \tau(\mathcal{A}) \mathcal{A}$. The $\tau^{\lfloor\ell/2\rfloor}$ power map is computed 
-using the iterated Frobenius algorithm of von zur Gathen and Shoup \cite{gs} implemented using fast 
-modular composition \cite{ku}. Step \ref{step:hasse-3} is performed using Lemma \ref{lemma:ks} 
-implemented using fast modular composition \cite{ku}. Step \ref{step:hasse-5} is nearly identical, 
-except its performed over $\mathscr{M}_2(\K)$. Step \ref{step:hasse-4} is performed using 
-multipoint evaluation \cite{vzGG}. In summary, we have proven 
+Step \ref{step:hasse-3} can be done using $m$ modular compositions at the cost of $n^{3/2+o(1)} 
+(\log q)^{1+o(1)}$ bit operations. Step \ref{step:hasse-4} can be done using multipoint evaluation 
+\cite{vzGG} at the cost of $n^{1+o(1)} (\log q)^{2+o(1)}$ bit operations. Step \ref{step:hasse-5} 
+costs the same as Step \ref{step:hasse-3}. 
+
+Finally, step \ref{step:hasse-6}, \ref{step:hasse-7} can be done using $n^{3/2+o(1)} (\log 
+q)^{1+o(1)}$ bit operations. In summary, we have proven 
 \begin{theorem}
 	\label{theo:hasse-inv}
 	Algorithm \ref{alg:hasse-inv} runs in 
