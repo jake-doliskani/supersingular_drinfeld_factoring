@@ -455,7 +455,7 @@ modules with complex multiplication, the density of supersingular primes is $1/2
 
 
 \subsection{Elliptic modules with complex multiplication}
-\label{randomized_section}
+\label{sec:elliptic-CM}
 
 An elliptic module $\phi$ is said to have complex multiplication by an imaginary quadratic 
 extension $L/\F_q(x)$ if $\End_{\F_q(x)}(\phi)\otimes_{\F_q[x]} \F_q(x) \cong L$. Here, $L$ is 
@@ -468,10 +468,13 @@ Suppose $f(x)$ factors into monic irreducible polynomials as $f(x) = \prod_i p_i
 elliptic module $\phi$ with complex multiplication by some imaginary quadratic extension 
 $L/\F_q(x)$. Compute $r_{\phi,k}(x) \bmod f$ for some $k \le \deg(f)$. By equations 
 \eqref{supersingular_zero} and \eqref{supersingular_nonzero}, 
-\[\gcd(r_{\phi,k} \bmod f, f) = \prod_{\substack{(p_i) \text{ inert in } L \\ \deg(p_i) \le k}} 
-p_i \]
+\begin{equation}
+\label{equ:fact-sep}
+	\gcd(r_{\phi,k} \bmod f, f) = \prod_{\substack{(p_i) \text{ inert in } L \\ \deg(p_i) \le k}} 
+	p_i
+\end{equation}
 is a factor of $f$. Since for every degree, roughly half the primes of that degree are inert in 
-$L$, the factorization thus obtained is likely to be non trivial.
+$L$, the factorization thus obtained is likely to be nontrivial.
 
 
  
@@ -636,8 +639,7 @@ The complexity of algorithm \ref{alg:hasse-inv} is analyzed in the following the
 	- 1) / 2})$ gives the final result. 
 	
 	Step \ref{step:hasse-6} is done using $O(m\MM(n)) = O(n^{2 - \beta + o(1)})$ operations in 
-	$\F_q$ 
-	which is dominated by the rest.
+	$\F_q$ which is dominated by the rest.
 \end{proof}
 
 
@@ -677,112 +679,139 @@ q)^{1+o(1)}$ bit operations. In summary, we have proven
 %####################################################
  
 
-\section{Randomized Polynomial Factorization using Drinfeld Modules with Complex Multiplication}
-\subsection{Constructing Drinfeld Modules with Complex 
-Multiplication}\label{drinfeld_construction_subsection}
+\section{A polynomial factoring algorithm}
 
-Our strategy is to pick an $a \in \F_q$ at random and construct a Drinfeld module $\phi$ with complex multiplication by the imaginary quadratic extension $\F_q(x)(\sqrt{d(x)})$ of discriminant $d(x):=x-a$. From \cite{dor}, the Drinfeld module $\phi^\prime$ with $$g_{\phi^\prime}(x):=\sqrt{d(x)}+\left(\sqrt{d(x)}\right)^q, \D_{\phi^\prime}(x) := 1$$ has complex multiplication by $\F_q(x)(\sqrt{d(x)})$.\\ \\
-However, $\phi^\prime$ has the disadvantage of not being defined over $A$ since $g_{\phi^\prime}(x) \notin A$.\\ \\
-We construct an alternate $\phi$, that is isomorphic to $\phi^\prime$ but defined over $A$. The $J$-invariant \cite{gek} of $\phi^\prime$ is $$J_{\phi^\prime}(x) := \frac{g_{\phi^\prime}(x)^{q+1}}{\D_{\phi^\prime}(x)} = d(x)^{\frac{q+1}{2}}\left(1+d(x)^{\frac{q-1}{2}}\right)^{q+1}.$$
-With the knowledge that two Drinfeld modules with the same $J$-invariant are isomorphic, we construct the Drinfeld module $\phi$ satisfying $$g_\phi(x)^{q+1} = (J_{\phi^\prime}(x))^2, \D_{\phi}(x)= J_{\phi^\prime}(x)$$ thereby ensuring $$J_{\phi}(x)=J_{\phi^\prime}(x).$$ Further, this assures that $\phi$ is defined over $A$ since
+The efficient computation of the Hasse invariant lift in Section \ref{sec:hasse} allows us to 
+efficiently factor polynomials as follows. Given a polynomial $f \in \F_q[x]$ of degree $n$, we 
+compute the $\lceil n / 2 \rceil$-th Hasse lift $r_{\phi, \lceil n / 2 \rceil} \bmod f$. Then 
+according to \eqref{equ:fact-sep}, the factors of $f$ that are inert in an imaginary quadratic 
+extension $L/\F_q(x)$ can be separated by computing a $\gcd$. If the elliptic module $\phi$ has 
+complex multiplication, the probability of obtaining a nontrivial factor of $f$ in this way is 
+close to $1/2$. We first need to construct elliptic modules with complex multiplication.
 
-$$g_\phi(x):=d(x)(1+d(x)^{\frac{q-1}{2}})^2, \quad 
-\D_\phi(x):=d(x)^{\frac{q+1}{2}}(1+d(x)^{\frac{q-1}{2}})^{q+1}.$$
-In summary, $\phi$ has complex multiplication by $\F_q(x)(\sqrt{d(x)})$) and is defined over $A$.
-\subsection{Polynomial Factorization using Drinfeld Modules with Complex Multiplication}
-We now state our randomized algorithm to factor polynomials over finite fields using Drinfeld modules with complex multiplication. Curiously, it can be stated and implemented with no reference to Drinfeld modules.
+\paragraph{Elliptic modules with complex multiplication}
+Our strategy is to pick an $a \in \F_q$ at random and construct a elliptic module $\phi$ with 
+complex multiplication by the imaginary quadratic extension $\F_q(x)(\sqrt{d(x)})$ of discriminant 
+$d(x):=x-a$. From \cite{dor}, the elliptic module $\phi^\prime$ with 
+\[ g_{\phi^\prime}(x):=\sqrt{d(x)}+\left(\sqrt{d(x)}\right)^q, \D_{\phi^\prime}(x) := 1 \]
+has complex multiplication by $\F_q(x)(\sqrt{d(x)})$.
+However, $\phi^\prime$ has the disadvantage of not being defined over $\F_q[x]$ since 
+$g_{\phi^\prime}(x) \notin \F_q[x]$.
+We construct an alternate $\phi$, that is isomorphic to $\phi^\prime$ but defined over $\F_q[x]$. 
+The $J$-invariant \cite{gek} of $\phi^\prime$ is 
+\[ J_{\phi^\prime}(x) := \frac{g_{\phi^\prime}(x)^{q+1}}{\D_{\phi^\prime}(x)} = 
+d(x)^{\frac{q+1}{2}}\left(1+d(x)^{\frac{q-1}{2}}\right)^{q+1}. \]
+With the knowledge that two elliptic modules with the same $J$-invariant are isomorphic, we 
+construct the elliptic module $\phi$ satisfying 
+\[ g_\phi(x)^{q+1} = (J_{\phi^\prime}(x))^2, \D_{\phi}(x)= J_{\phi^\prime}(x)\] thereby ensuring 
+$J_{\phi}(x)=J_{\phi^\prime}(x)$. Further, this assures that $\phi$ is defined over $\F_q[x]$ since
+\[g_\phi(x) = d(x)\left(1 + d(x)^{\frac{q-1}{2}}\right)^2, \quad  \D_\phi(x) = d(x)^{\frac{q + 
+1}{2}}\left(1 + d(x)^{\frac{q-1}{2}}\right)^{q+1}. \]
+In summary, $\phi$ has complex multiplication by $\F_q(x)(\sqrt{d(x)})$ and is defined over $A$.
 
+
+
+\subsection{Polynomial factorization}
+We now state our randomized algorithm to factor polynomials over finite fields using elliptic 
+modules with complex multiplication.
 
 \begin{algorithm}[H]
 	\caption{Polynomial factorization}
 	\label{factoring_algorithm}
 	\begin{algorithmic}[1]
-		\REQUIRE Monic squarefree $f(x) \in \F_q[x]$ of degree $n$
-		\ENSURE The irreducible factors of $f(x)$
-		\STATE If $f(x)$ is irreducible then print $f(x)$ and return.
-		\STATE If $f(x)$ has roots in $\F_q$, find and remove the roots.
-		%\STATE Let $\K = \F_q[x] / f$
-		\STATE Pick $a \in \F_q$ uniformly at random and compute \\ % the following elements in $\K$ \\
-		$d(x) := x-a \mod f(x)$. \\
+		\REQUIRE Monic squarefree $f \in \F_q[x]$ of degree $n$
+		\ENSURE The irreducible factors of $f$
+		\STATE If $f$ is irreducible then print $f$ and return.
+		\STATE\label{step:fac-2}
+		Remove the linear factors of $f$ and output them.
+		\STATE\label{step:fac-3}
+		Pick $a \in \F_q$ uniformly at random and compute \\
+		$d(x) := x - a \mod f$. \\
 		$g_\phi(x) := d(x)(1+d(x)^{\frac{q-1}{2}})^2 \mod f(x)$. \\
 		$\Delta_\phi(x) := d(x)^{\frac{q+1}{2}}(1+d(x)^{\frac{q-1}{2}})^{q+1} \mod f(x)$ .
-		\STATE Compute $r_{\phi,n}(x) \mod f(x)$ as in recurrence (\ref{eisenstein_recurrence}) 
-		(that is, the $n$-th Hasse invariant lift with respect to the Drinfeld module $\phi$ with 
-		coefficients $g_\phi, \Delta_\phi$, computed modulo $f$)
-		\STATE Compute $f_1(x) := \gcd(r_{\phi,n}(x), f(x))$ and recursively factor $f_1(x)$ and $f(x)/f_1(x)$.
+		\STATE\label{step:fac-4}
+		Compute $r_{\phi, \lceil n / 2 \rceil} \bmod f$ as in recurrence 
+		\eqref{eisenstein_recurrence} (that is, the $\lceil n / 2 \rceil$-th Hasse invariant lift 
+		with respect to the elliptic module $\phi$ with coefficients $g_\phi, \Delta_\phi$, 
+		computed modulo $f$)
+		\STATE\label{step:fac-split}
+		Compute $f_1 := \gcd(r_{\phi, \lceil n / 2 \rceil}, f)$ and recursively factor $f_1$ and 
+		$f/f_1$.
 	\end{algorithmic}
 \end{algorithm}
 
-\begin{remark}
-	In Step $4$, we may compute $r_{\phi,k} \mod f(x)$ for some $k\geq n$ instead of $r_{\phi,k} \mod f(x)$. As is evident from the forthcoming paragraphs, the rest of the algorithm would run identically. For instance, it might be convenient in practice to chose $k$ to be the smallest power of $2$ that is at least $n$.
-\end{remark}
-
-
 The irreducibility test in Step $1$ can be performed in $O(\CC(n)\log n + \MM(n)\log q)$ operations 
-in $\F_q$ \cite{vzGG}, or $O(n^{1+o(1)} (\log q)^{2+o(1)})$ bit operations. In Step $2$, all the 
-linear factors of $f(x)$ are found and removed using a root finding algorithm. It takes 
-$O(\MM(n)\log n \log(nq))$ operations in $\F_q$ \cite{vzGG}, or $O(n^{1+o(1)} (\log q)^{2+o(1)})$ 
-bit operations. \\
+in $\F_q$ \cite{vzGG}, or $O(n^{1+o(1)} (\log q)^{2+o(1)})$ bit operations. In Step 
+\ref{step:fac-2}, all the linear factors of $f(x)$ are found and removed using a root finding 
+algorithm. It takes $O(\MM(n)\log n \log(nq))$ operations in $\F_q$ \cite{vzGG}, or $O(n^{1+o(1)} 
+(\log q)^{2+o(1)})$ bit operations.
 
- In Step $3$, we choose $a \in \F_q$ at random and construct a Drinfeld module $\phi$ with complex 
- multiplication by $\F_q(x)(\sqrt{x-a})$. The primes that divide $\D_\phi(x)$ are precisely 
- $\{(x-b),  b \in \F_q, \sqrt{b-a} \notin \F_q\} \cup \{(d(x))\}$. We might run into issues of bad 
- reduction if the polynomial $f(x)$ to be factored had roots. It is to prevent this, we performed 
- root finding in Step $2$. \\
+In Step \ref{step:fac-3}, we choose $a \in \F_q$ at random and construct a Drinfeld module $\phi$ 
+with complex multiplication by $\F_q(x)(\sqrt{x-a})$. The primes that divide $\D_\phi(x)$ are 
+precisely $\{(x-b),  b \in \F_q, \sqrt{b-a} \notin \F_q\} \cup \{(d)\}$. We might run into issues 
+of bad reduction if the polynomial $f$ to be factored had roots. It is to prevent this, we 
+performed root finding in Step \ref{step:fac-2}.
 
- In Step $4$, from the recurrence \ref{eisenstein_recurrence}, we indeed compute the $n^{th}$ Hasse 
- invariant lift $r_{\phi,n}(x)$ modulo $f(x)$. By Deligne's congruence \ref{deligne_congruence}, a 
- degree $k$ monic irreducible factor $p(x)$ of $f(x)$ divides $r_k(x)$ if and only if $(p(x))$ is 
- supersingular with respect to $\phi$. In particular, $\gcd(r_{\phi,k}(x),f(x))$ is the product of 
- all degree $k$ irreducible factors of $f(x)$ that are supersingular with respect to $\phi$. 
- Further, by equations \ref{supersingular_zero} and \ref{supersingular_nonzero}, 
- $\gcd(r_{\phi,k}(x),f(x))$ is the product of all degree at most $k$ irreducible factors of $f(x)$ 
- that are supersingular with respect to $\phi$. In particular, $(f_1(x) =) 
- \gcd(r_{\phi,k}(x),f(x))$ is the product of irreducible factors of $f(x)$ that are supersingular 
- with respect to $\phi$. Thus our algorithm separates the irreducible factors supported at the 
- supersingular primes from those supported at the ordinary primes. All that remains to argue is 
- that for a Drinfeld module chosen as randomly in Algorithm \ref{factoring_algorithm}, this split 
- is random enough to ensure that the recursion depth is logarithmic in $n$.\\ 
+In Step \ref{step:fac-4}, the Hasse invariant lift is computed at the cost of 
+\[O(n^{(\omega + 1) / 2 + (1 - \beta)(\omega - 1) / 2} + n^{1 + \beta + o(1)}\log q)\]
+operations in $\F_q$ or 
+\[ O(n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)}) \]
+bit operations. 
+ 
+As mentioned in Subsection \ref{sec:elliptic-CM}, $\gcd(r_{\phi,k}, f)$ is the product of all 
+degree at most $k$ irreducible factors of $f$ that are supersingular with respect to $\phi$. Thus 
+our algorithm separates the irreducible factors supported at the supersingular primes from those 
+supported at the ordinary primes. In the following, we show that for an elliptic module chosen  
+randomly as in Step \ref{step:fac-3}, the splitting of $f$ in Step \ref{step:fac-split} is random 
+enough to ensure that the recursion depth is $O(\log n)$. Since the algorithm is dominated by Step 
+\ref{step:fac-4}, this will prove Theorem \ref{theorem:main}.
 
-%Hence at iteration $k$ in Step $4$, by Deligne's congruence \ref{deligne_congruence}, a degree $k$ monic irreducible factor $p(x)$ of $f(x)$ divides $r_k(x)$ if and only if $(p(x))$ is supersingular with respect to $\phi$. In particular, $\gcd(r_k(x),f(x))$ is the product of all degree $k$ irreducible factors of $f(x)$ that are supersingular with respect to $\phi$. If there is only one such factor, we output it. Else, the product is multiplied to $f_{ss}(x)$ to be split recursively later. Likewise, at iteration $k$ in Step $4$, $\gcd(x^{q^k}-x,f(x))/\gcd(r_{k}(x),f(x))$ is the product of all degree $k$ irreducible factors of $f(x)$ that are ordinary with respect to $\phi$. If there is only one such factor, we output it. Else, the product is multiplied to $f_{or}(x)$ to be split recursively later.\\ 
-
- The following Lemma \ref{splitting_lemma} states that any two distinct factors of $f(x)$ of the 
- same degree are neither both supersingular nor both ordinary with probability $1/2$. This ensures 
- that the splitting into supersingular and ordinary factors in Step $4$ is random enough that the 
- recursion depth of our algorithm is logarithmic in $n$. For the lemma to apply to Algorithm 
- \ref{factoring_algorithm}, we need to assume $\sqrt{q} \geq n$.  
-The assumption $\sqrt{q} \geq  n$ in Algorithm \ref{factoring_algorithm} can thankfully be made without loss of generality in theory. For if $\sqrt{q} < n$, we might choose to factor over a slightly larger field $\F_{q^\prime}$ where $q^\prime$ is the smallest power of $q$ such that $\sqrt{q^\prime} > n$ and still recover the factorization over $\F_q$ (c.f. \cite[Remark 3.2]{nar}). Further, the running times are only affected by logarithmic factors. In practice, we recommend running Algorithm \ref{factoring_algorithm} as is and take Lemma \ref{splitting_lemma} as strong evidence for the recursion depth to be logarithmic in $n$.
-
-
-\begin{lemma}\label{splitting_lemma}
-Let $p_1(x),p_2(x) \in A $ be two distinct monic irreducible polynomials of degree $k$ where $1<k \leq \sqrt{q}$. Let $\phi$ be a Drinfeld module with complex multiplication by the imaginary quadratic extension $\F_q(x)(\sqrt{x-a})$ where $a \in \F_q$ is chosen at random. With probability close to $1/2$, exactly one of $(p_1(x))$ or $(p_2(x))$ is supersingular with respect to $\phi$.
+\paragraph{On the splitting of factors}
+We prove in Lemma \ref{splitting_lemma} that any two distinct factors of $f$ of the same degree are 
+neither both supersingular nor both ordinary with probability $1/2$. This ensures that the 
+splitting into supersingular and ordinary factors in Step \ref{step:fac-split} of Algorithm 
+\ref{factoring_algorithm} is random enough that the recursion depth of our algorithm is logarithmic 
+in $n$. For the lemma to apply to the algorithm, we need to assume $\sqrt{q} \geq n$.  The 
+assumption $\sqrt{q} \geq  n$ can be made without loss of generality in theory. For if $\sqrt{q} < 
+n$, we might choose to factor over a slightly larger field $\F_{q^\prime}$ where $q^\prime$ is the 
+smallest power of $q$ such that $\sqrt{q^\prime} > n$ and still recover the factorization over 
+$\F_q$ (c.f. \cite[Remark 3.2]{nar}). Further, the running times are only affected by logarithmic 
+factors. In practice, we recommend running Algorithm \ref{factoring_algorithm} as is and take the 
+Lemma \ref{splitting_lemma} as strong evidence for the recursion depth to be logarithmic in $n$.
+\begin{lemma}
+\label{splitting_lemma}
+	Let $p_1,p_2 \in \F_q[x]$ be distinct monic irreducible polynomials of degree $k$ where $1 < k 
+	\le \sqrt{q}$. Let $\phi$ be an elliptic module with complex multiplication by the imaginary 
+	quadratic extension $\F_q(x)(\sqrt{x-a})$ where $a \in \F_q$ is chosen at random. With 
+	probability close to $1/2$, exactly one of $(p_1)$ or $(p_2)$ is supersingular with respect to 
+	$\phi$.
 \end{lemma}
 \begin{proof}
-Since $k > 1$ neither $(p_1(x))$ nor $(p_2(x))$ ramify in $\F_q(x)(\sqrt{x-a})$. Hence, the probability that exactly one of $(p_1(x))$ or $(p_2(x))$ is supersingular with respect to $\phi$ is precisely the probability that exactly one of $(p_1),(p_2)$ splits in $\F_q(x)(\sqrt{x-a})/\F_q(x)$.\\ \\
-%That is, exactly one of $(p_1),(p_2)$ splits in $\F_q(t)(\sqrt{d})/\F_q(t)$.
-For $i\in\{0,1\}$, let $K_i:=\F_q(x)(\alpha_i)$ be the hyperelliptic extension of $\F_q(t)$ 
-obtained by adjoining a root $\alpha_i$ of $y^2-p_i(x)$. By quadratic reciprocity over function 
-fields \cite{carlitz1932}, since $p_1(x)$ and $p_2(x)$ have the same degree, exactly one of 
-$(p_1(x)),(p_2(x))$ splits in $\F_q(x)(\sqrt{x-a})$ if and only if $x-a$ is split in exactly one of 
-$K_1,K_2$. That is, $(x-a)$ is neither completely split nor completely inert in the composite 
-$K_1K_2$. Since $p_1(x)$ and $p_2(x)$ are distinct, $K_1$ and $K_2$ are linearly disjoint over 
-$\F_q(x)$. Further, $K_1K_2$ is Galois over $\F_q(t)$ with $$Gal(K_1K_2/\F_q(x)) \cong 
-Gal(K_1/\F_q(x)) \times Gal(K_2/\F_q(x)) \cong \Z/2\Z \oplus \Z/2\Z.$$  For $(x-a)$ to be neither 
-totally split nor totally inert, the Artin symbol $$((x-a),K_1K_2/\F_q(x)) \in 
-Gal(K_1K_2/\F_q(x))$$ has to be either $(0,1)$ or $(1,0)$ under the isomorphism 
-$Gal(K_1K_2/\F_q(x)) \cong \Z/2\Z \oplus \Z/2\Z$. Applying Chebotarev's density theorem, the number 
-$N$ of degree one primes $\{(x-a),a\in \F_q\}$ that are neither totally inert nor totally split in 
-$K_1K_2$ is bounded by 
-$$ \left|N - \frac{q}{2} \right| \leq 2 g(K_1K_2)\sqrt{q}$$
-where $g(K_1K_2)$ is the genus of $K_1K_2$. By the Riemann-Hurwitz genus formula, $g(K_1K_2) = k-1 \leq \sqrt{q}/2$. Hence when $a \in \F_q$ is chosen at random, $(x-a)$ is neither totally inert nor totally split in $K_1K_2$ with probability close to $1/2$. 
+	Since $k > 1$, none of $(p_1), (p_2)$ ramify in $\F_q(x)(\sqrt{x-a})$. Therefore, the 
+	probability that exactly one of $(p_1), (p_2)$ is supersingular with respect to $\phi$ is the 
+	same as the probability that exactly one of them splits in $\F_q(x)(\sqrt{x-a})/\F_q(x)$.
+	
+	For $i\in\{0,1\}$, let $K_i:=\F_q(x)(\alpha_i)$ be the hyperelliptic extension of $\F_q(t)$ 
+	obtained by adjoining a root $\alpha_i$ of $y^2-p_i$. By quadratic reciprocity over function 
+	fields \cite{carlitz1932}, since $p_1$ and $p_2$ have the same degree, exactly one of $(p_1), 
+	(p_2)$ splits in $\F_q(x)(\sqrt{x-a})$ if and only if $x-a$ is split in exactly one of $K_1, 
+	K_2$. That is, $(x-a)$ is neither completely split nor completely inert in the composite 
+	$K_1K_2$. Since $p_1, p_2$ are distinct, $K_1$ and $K_2$ are linearly disjoint over $\F_q(x)$. 
+	Further, $K_1K_2$ is Galois over $\F_q(t)$ with 
+	\[ \gal(K_1K_2/\F_q(x)) \cong \gal(K_1/\F_q(x)) \times \gal(K_2/\F_q(x)) \cong \Z/2\Z \oplus 
+	\Z/2\Z. \]  
+	For $(x-a)$ to be neither totally split nor totally inert, the Artin symbol 
+	\[ ((x-a), K_1K_2/\F_q(x)) \in \gal(K_1K_2/\F_q(x)) \]
+	has to be either $(0,1)$ or $(1,0)$ under the isomorphism $\gal(K_1K_2/\F_q(x)) \cong \Z/2\Z 
+	\oplus \Z/2\Z$. Applying Chebotarev's density theorem, the number $N$ of degree one primes 
+	$\{(x-a),a \in \F_q\}$ that are neither totally inert nor totally split in $K_1K_2$ is bounded 
+	by 
+	\[ \left|N - \frac{q}{2} \right| \le 2 g(K_1K_2)\sqrt{q} \]
+	where $g(K_1K_2)$ is the genus of $K_1K_2$. By the Riemann-Hurwitz genus formula, $g(K_1K_2) = 
+	k-1 \le \sqrt{q}/2$. Hence when $a \in \F_q$ is chosen at random, $(x-a)$ is neither totally 
+	inert nor totally split in $K_1K_2$ with probability close to $1/2$. 
 \end{proof}
-In summary, we have thus proven that Algorithm \ref{factoring_algorithm} is correct and that it has 
-expected recursion depth logarithmic in $n$. Further, the bottleneck is Step $4$, the computation 
-of the Hasse invariant lift. A naive computation relying on recurrence \ref{eisenstein_recurrence} 
-would lead to a runtime dependence quadratic in $n$. In the forthcoming section we describe a 
-deterministic algorithm Algorithm \ref{alg:hasse-inv} to compute the Hasse invariant lift with 
-runtime subquadratic in $n$. Incorporating Algorithm \ref{alg:hasse-inv} in Algorithm 
-\ref{factoring_algorithm} thus leads to Theorem \ref{theorem:main}.
+
 
 
 
