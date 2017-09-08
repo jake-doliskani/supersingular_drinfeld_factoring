@@ -207,22 +207,25 @@ void testHasseLift() {
 void testFactoring() {
     Util util;
     
-    long n = 10000;
+    long n = 10;
     ZZ_pX f;
     util.randomMonic(f, n);
+    cout << "p: " << ZZ_p::modulus() << endl;
+    cout << "f: " << f << endl;
     
     Vec<pair_ZZ_pX_long> factors1;
     Vec<pair_ZZ_pX_long> factors2;
     
     SSFactoring sSfactoring;
-    long start = util.getTimeMillis();
-//    sSfactoring.factor(factors1, f);
+//    long start = util.getTimeMillis();
+    sSfactoring.factor(factors1, f);
+    cout << factors1 << endl;
 //    cout << util.getTimeMillis() - start << endl;
 //    
 //    start = util.getTimeMillis();
-    CanZass(factors2, f, 1);
-    cout << util.getTimeMillis() - start << endl;
-
+//    CanZass(factors2, f, 1);
+//    cout << util.getTimeMillis() - start << endl;
+//
 //    ZZ_pX g;
 //    mul(g, factors1);
 //    if (f == g)
@@ -236,8 +239,8 @@ int main(int argc, char** argv) {
     ZZ p;
     NextPrime(p, to_ZZ(7));
     ZZ_p::init(p);
-
-    testHasseLift();
+    
+    testFactoring();
     
     return 0;
 }

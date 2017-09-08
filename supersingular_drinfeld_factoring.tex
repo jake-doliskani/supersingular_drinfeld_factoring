@@ -415,7 +415,8 @@ polynomial not dividing $\Delta_\phi$. The \textit{Hasse invariant} $h_{\phi,f} 
 $\phi$ at $f$ is the coefficient of $\tau^{\deg(f)}$ in the expansion 
 \[ \ph_f = \sum_{i=0}^{2\deg(f)} h_i \tau^i \in (\F_{q}[x]/f)\{\tau\}. \]
 The elliptic module $\phi$ has supersingular reduction at $f$ if and only if $h_{\phi,f}$ vanishes 
-\cite{gos}. Otherwise, $\phi$ is said to have ordinary reduction at $f$.
+\cite{gos}. Otherwise, $\phi$ is said to have ordinary reduction at $f$. When $\phi$ is fixed, we 
+call $f$ supersingular or ordinary with respect to $\phi$.
 
 Recursively define a sequence $(r_{\phi,k})_{k \in \mathbb{N}}$ in $\F_q[x]^\mathbb{N}$ as 
 $r_{\phi,0}:=1$, $r_{\phi,1}:=g_\phi$ and for $m>1$,
@@ -721,14 +722,14 @@ modules with complex multiplication.
 	\begin{algorithmic}[1]
 		\REQUIRE Monic squarefree $f \in \F_q[x]$ of degree $n$
 		\ENSURE The irreducible factors of $f$
-		\STATE If $f$ is irreducible then print $f$ and return.
+		\STATE If $f$ is irreducible then print $f$ and return
 		\STATE\label{step:fac-2}
-		Remove the linear factors of $f$ and output them.
+		Remove the linear factors of $f$ and output them
 		\STATE\label{step:fac-3}
 		Pick $a \in \F_q$ uniformly at random and compute \\
-		$d(x) := x - a \mod f$. \\
-		$g_\phi(x) := d(x)(1+d(x)^{\frac{q-1}{2}})^2 \mod f(x)$. \\
-		$\Delta_\phi(x) := d(x)^{\frac{q+1}{2}}(1+d(x)^{\frac{q-1}{2}})^{q+1} \mod f(x)$ .
+		$d(x) := x - a \mod f$ \\
+		$g_\phi(x) := d(x)(1+d(x)^{\frac{q-1}{2}})^2 \mod f$ \\
+		$\Delta_\phi(x) := d(x)^{\frac{q+1}{2}}(1+d(x)^{\frac{q-1}{2}})^{q+1} \mod f$
 		\STATE\label{step:fac-4}
 		Compute $r_{\phi, \lceil n / 2 \rceil} \bmod f$ as in recurrence 
 		\eqref{eisenstein_recurrence} (that is, the $\lceil n / 2 \rceil$-th Hasse invariant lift 
@@ -771,8 +772,8 @@ We prove in Lemma \ref{splitting_lemma} that any two distinct factors of $f$ of 
 neither both supersingular nor both ordinary with probability $1/2$. This ensures that the 
 splitting into supersingular and ordinary factors in Step \ref{step:fac-split} of Algorithm 
 \ref{factoring_algorithm} is random enough that the recursion depth of our algorithm is logarithmic 
-in $n$. For the lemma to apply to the algorithm, we need to assume $\sqrt{q} \geq n$.  The 
-assumption $\sqrt{q} \geq  n$ can be made without loss of generality in theory. For if $\sqrt{q} < 
+in $n$. For the lemma to apply to the algorithm, we need to assume $\sqrt{q} \ge n$.  The 
+assumption $\sqrt{q} \ge  n$ can be made without loss of generality in theory. For if $\sqrt{q} < 
 n$, we might choose to factor over a slightly larger field $\F_{q^\prime}$ where $q^\prime$ is the 
 smallest power of $q$ such that $\sqrt{q^\prime} > n$ and still recover the factorization over 
 $\F_q$ (c.f. \cite[Remark 3.2]{nar}). Further, the running times are only affected by logarithmic 
@@ -815,7 +816,51 @@ Lemma \ref{splitting_lemma} as strong evidence for the recursion depth to be log
 
 
 
+%####################################################
 
+
+\section{Implementation and example}
+
+We have implemented Algorithms \ref{alg:hasse-inv}, \ref{factoring_algorithm} in C++ using the NTL 
+library \cite{shoup2001ntl}. The implementation source code can be found at 
+\url{https://github.com/javad-doliskani/supersingular_drinfeld_factoring}. After running the 
+algorithm on 100 random input polynomials, we observed that the splitting $\gcd(r_{\phi, \lceil n / 
+2 \rceil}, f)$ is almost always nontrivial when $f$ is reducible. This confirms the behavior 
+expected from theory. Also we observed that, in practice, one does not need to impose the condition 
+$\sqrt{q} \ge n$ for splitting a polynomial of degree $n$ over $\F_q$. This remedies the need for 
+working in an auxiliary extension over $\F_q$. To show the behavior of the algorithm in practice we 
+finish this section with an example output of Algorithm \ref{factoring_algorithm} on input a small 
+degree polynomial.
+
+\paragraph{Example}
+Consider the randomly selected polynomial 
+\[ f(x) = 2 + 6x + 5x^3 + 4x^4 + 6x^5 + 2x^7 + 3x^8 + 3x^9 + x^{10} \]
+in $\F_7[x]$. The algorithm starts by checking for linear factors, which $f$ has none. So, in the 
+next step it generates the random supersingular elliptic module parameterized by
+\[
+\begin{array}{rll}
+	d(x) & = & 1 + x, \\
+	g_\phi(x) & = & 4 + 2x + 5x^2 + x^3 + 2x^4 + x^7, \\
+	\Delta_\phi(x) & = & 3 + 3x + 5x^3 + x^4 + x^5 + x^6 + 6x^7 + 5x^8 + 5x^9.
+\end{array}
+\]
+This means $\phi$ has complex multiplication by the imaginary quadratic extension $\F_7(x)(\sqrt{x 
++ 1})$ of $\F_7(x)$. After computing the $5$-th Hasse lift $r_{\phi, 5}$, it finds $f_1 = 
+\gcd(r_{\phi, 5}, f) = 1 + 4x + x^2 + 4x^3 + x^4$. This is the product of the factors of $f$ that 
+are supuersingular with respect to $\phi$. Now, $f_1$ does not pass the irreducibility check, so 
+the process is repeated for $f_1$. The next randomly generated supersingular elliptic module is
+\[
+\begin{array}{rll}
+	d(x) & = & 5 + x, \\
+	g_\phi(x) & = & 2 + x^2 + 6x^3, \\
+	\Delta_\phi(x) & = & 6 + x + 5x^2 + 5x^3.
+\end{array}
+\]
+Now, $f_{11} = \gcd(r_{\phi, 2}, f_1) = 4 + 6x + x^2$, and $f_{12} = f_1 / f_{11} = 2 + 5x + x^2$ 
+which are both irreducible. Again, this means that $f_{11}$ is supuersingular and $f_{12}$ is 
+ordinary with respect to $\phi$. Finally, $f / f_1 = 2 + 5x + 6x^2 + 3x^3 + 6x^4 + 6x^5 + x^6$ 
+which is also irreducible. The complete factorization of $f$ is then
+\[ f(x) = (4 + 6x + x^2)(2 + 5x + x^2)(2 + 5x + 6x^2 + 3x^3 + 6x^4 + 6x^5 + x^6).\]
 
 
 \bibliographystyle{plain}

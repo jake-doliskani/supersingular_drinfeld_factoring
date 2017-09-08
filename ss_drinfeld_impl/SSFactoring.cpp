@@ -34,6 +34,10 @@ void SSFactoring::factor(Vec<pair_ZZ_pX_long>& factors, const ZZ_pX& f) {
         }
     }
 
+    cout << "linear factors: " << endl;
+    cout << factors << endl;
+    cout << "-----------------------" << endl;
+    
     // now temp = f doesn't have any linear factors
     Vec<pair_ZZ_pX_long> sfd;
     SquareFreeDecomp(sfd, temp);
@@ -100,8 +104,17 @@ void SSFactoring::factorRec(Vec<ZZ_pX>& factors, const ZZ_pX& f) {
     while (deg(temp) == 0 || deg(temp) == deg(f))
         split(temp, f);
 
+    cout << "f1: " << endl;
+    cout << temp << endl;
+    cout << "-----------------------" << endl;
+    
     factorRec(factors, temp);
     div(temp, f, temp);
+
+    cout << "f / f1: " << endl;
+    cout << temp << endl;
+    cout << "-----------------------" << endl;
+    
     factorRec(factors, temp);
 
     temp.kill();
@@ -134,22 +147,26 @@ void SSFactoring::split(ZZ_pX& factor, const ZZ_pX& f) {
     MulMod(delta, delta, dx, F);
 
     // the Hasse lift
-    cout << "Computing Hasse lift:" << endl;
     Util util;
-    long start = util.getTimeMillis();
     ZZ_pX hasseLift;
     HasseLiftExt hasseLiftExt(g, delta, F);
     if (deg(f) < 700)
         hasseLiftExt.computeNaive(hasseLift, deg(f) / 2);
     else
-        hasseLiftExt.compute(hasseLift, deg(f) / 2, 1);
-    cout << "Hasse lift time: " << util.getTimeMillis() - start << endl;
+        hasseLiftExt.compute(hasseLift, deg(f) / 2, 0);
 
     GCD(factor, hasseLift, f);
-    
-    cout << "degree of f: " << deg(f) << endl;
-    cout << "degree of factor: " << deg(factor) << endl;
-    cout << "------------------------" << endl;
+
+    if (deg(factor) > 0 && deg(factor) < deg(f)) {
+        cout << "extension: " << endl;
+        cout << dx << endl;
+        cout << "-----------------------" << endl;
+
+        cout << "elliptic module: " << endl;
+        cout << "g:" << g << endl;
+        cout << "delta:" << delta << endl;
+        cout << "-----------------------" << endl;
+    }
 
     dx.kill();
     temp.kill();
