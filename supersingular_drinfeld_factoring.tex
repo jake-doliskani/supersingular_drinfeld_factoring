@@ -788,25 +788,24 @@ Lemma \ref{splitting_lemma} as strong evidence for the recursion depth to be log
 	$\phi$.
 \end{lemma}
 \begin{proof}
-	Since $k > 1$, none of $(p_1), (p_2)$ ramify in $\F_q(x)(\sqrt{x-a})$. Therefore, the 
-	probability that exactly one of $(p_1), (p_2)$ is supersingular with respect to $\phi$ is the 
-	same as the probability that exactly one of them splits in $\F_q(x)(\sqrt{x-a})/\F_q(x)$.
+	Let $F = \F_q(x)$. Since $k > 1$, none of $(p_1), (p_2)$ ramify in $F(\sqrt{x-a})$. Therefore, 
+	the probability that exactly one of $(p_1), (p_2)$ is supersingular with respect to $\phi$ is 
+	the same as the probability that exactly one of them splits in $F(\sqrt{x-a})/F$.
 	
-	For $i\in\{0,1\}$, let $K_i:=\F_q(x)(\alpha_i)$ be the hyperelliptic extension of $\F_q(t)$ 
-	obtained by adjoining a root $\alpha_i$ of $y^2-p_i$. By quadratic reciprocity over function 
-	fields \cite{carlitz1932}, since $p_1$ and $p_2$ have the same degree, exactly one of $(p_1), 
-	(p_2)$ splits in $\F_q(x)(\sqrt{x-a})$ if and only if $x-a$ is split in exactly one of $K_1, 
-	K_2$. That is, $(x-a)$ is neither completely split nor completely inert in the composite 
-	$K_1K_2$. Since $p_1, p_2$ are distinct, $K_1$ and $K_2$ are linearly disjoint over $\F_q(x)$. 
-	Further, $K_1K_2$ is Galois over $\F_q(t)$ with 
-	\[ \gal(K_1K_2/\F_q(x)) \cong \gal(K_1/\F_q(x)) \times \gal(K_2/\F_q(x)) \cong \Z/2\Z \oplus 
+	For $i = 0, 1$, let $K_i:=F(\alpha_i)$ be the hyperelliptic extension of $F$ obtained by 
+	adjoining a root $\alpha_i$ of $y^2-p_i$. By quadratic reciprocity over function fields 
+	\cite{carlitz1932}, since $p_1$ and $p_2$ have the same degree, exactly one of $(p_1), (p_2)$ 
+	splits in $F(\sqrt{x-a})$ if and only if $x-a$ is split in exactly one of $K_1, K_2$. That is, 
+	$(x-a)$ is neither completely split nor completely inert in the composite $K_1K_2$. Since $p_1, 
+	p_2$ are distinct, $K_1$ and $K_2$ are linearly disjoint over $F$. Further, $K_1K_2$ is Galois 
+	over $F$ with 
+	\[ \gal(K_1K_2/F) \cong \gal(K_1/F) \times \gal(K_2/F) \cong \Z/2\Z \oplus 
 	\Z/2\Z. \]  
 	For $(x-a)$ to be neither totally split nor totally inert, the Artin symbol 
-	\[ ((x-a), K_1K_2/\F_q(x)) \in \gal(K_1K_2/\F_q(x)) \]
-	has to be either $(0,1)$ or $(1,0)$ under the isomorphism $\gal(K_1K_2/\F_q(x)) \cong \Z/2\Z 
-	\oplus \Z/2\Z$. Applying Chebotarev's density theorem, the number $N$ of degree one primes 
-	$\{(x-a),a \in \F_q\}$ that are neither totally inert nor totally split in $K_1K_2$ is bounded 
-	by 
+	\[ ((x-a), K_1K_2/F) \in \gal(K_1K_2/F) \]
+	has to be either $(0,1)$ or $(1,0)$ under the isomorphism $\gal(K_1K_2/F) \cong \Z/2\Z \oplus 
+	\Z/2\Z$. Applying Chebotarev's density theorem, the number $N$ of degree one primes $\{(x-a), a 
+	\in \F_q\}$ that are neither totally inert nor totally split in $K_1K_2$ is bounded by 
 	\[ \left|N - \frac{q}{2} \right| \le 2 g(K_1K_2)\sqrt{q} \]
 	where $g(K_1K_2)$ is the genus of $K_1K_2$. By the Riemann-Hurwitz genus formula, $g(K_1K_2) = 
 	k-1 \le \sqrt{q}/2$. Hence when $a \in \F_q$ is chosen at random, $(x-a)$ is neither totally 
