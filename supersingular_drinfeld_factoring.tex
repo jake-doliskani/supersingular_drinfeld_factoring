@@ -170,131 +170,52 @@
 
 \section{Introduction}
 
-Drinfeld modules of rank two are often presented as an analogue over
-function fields such as $\F_q(x)$ (for a prime power $q$) of elliptic
-curves over number fields. In very concrete terms, a Drinfeld module
-over $\F_q(x)$ is simply a ring homomorphism $\phi$ (together with
-some mild assumptions) from $\F_q[x]$ to the ring of skew polynomials
-$\F_q(x)\ang{\tau}$, where $\tau$ satisfies the commutation
-relation $\tau u = u^q \tau$ for $u$ in $\F_q(x)$. The rank of a
-Drinfeld module is the degree of $\phi(x)$.
-
-In this definition, one may replace $\F_q(x)$ by any other other field
-$L$ equipped with a homomorphism $\F_q[x]\to L$, and in particular by
-a finite field of the form $L=\F_q[x]/f$; one may then define the {\rm
-  reduction} of a Drinfeld module over $\F_q(x)$ modulo an irreducible
-$f \in \F_q[x]$. Then, there exist striking similarities between the
-theory of elliptic curves over $\Q$ and their reductions modulo primes,
-and that of rank two Drinfeld modules over $\F_q(x)$ and their
-reduction modulo irreducibles $f$. For instance, such notions as
-endomorphism ring, complex multiplication, Hasse invariants,
-supersingularity, or the characteristic polynomial of the Frobenius,
-\dots~can be defined in both contexts, and share many
-properties.
-
-While the literature on algorithmic aspects of elliptic curves is
-extremely rich, this is not the case for Drinfeld modules; only
-recently have they been considered under the algorithmic viewpoint.  A
-first goal in this paper is to give algorithms for the computation of
-the Hasse invariant of a rank two Drinfeld module over a finite field.
-
-The Hasse invariant $h_E$ of an elliptic curve $E: y^2=f(x)$ over a
-finite field $\F_p$, with $f$ of degree $3$, can be defined as the
-coefficient of degree $p-1$ in $f^{(p-1)/2}$ (other definitions set it
-to be $1$ if this coefficient is nonzero, $0$ otherwise). The
-definition of $h_E$ makes it possible to compute it using a number of
-operations softly linear in $p$, but one can do better: it is possible
-to compute $h_E$ without computing all previous coefficients, using
-the fact that the coefficients of the $f^{(p-1)/2}$ satisfy a linear
-recurrence with polynomial coefficients, and applying techniques for
-such recurrences due to Strassen~\cite{Strassen76} and the
-Chudnovskys~\cite{ChCh88}.
-
-In the case of a rank-two Drinfeld module defined by a ring morphism
-$\phi: \F_q[x] \to L\ang{\tau}$, with $L=\F_q[x]/f$ and $f$ of degree
-$k$, the Hasse invariant $h_\phi$ is now defined as the coefficient of
-$\tau^k$ in $\phi(f) =\sum_{i=0}^{2k} h_i \tau^i$, with $h_i$ in $L$
-for all $i$ (all coefficients of index less than $k$ vanish).  As in
-the elliptic case, one can immediately deduce an algorithm from the
-definition; our first contribution is to show that better algorithms
-exist, based on a recurrence (due to Gekeler~\cite{gek}) somewhat 
-similar to the one used in the elliptic case.
-
-
-
-Let $q$ be a power of a an odd prime $p$ and let $\F_q$ denote the
-finite field with $q$ elements.  The univariate polynomial
-factorization problem over $\F_q$ is the following:
+Let $q$ be a power of a an odd prime $p$ and let $\F_q$ denote the finite field with $q$ elements. 
+The univariate polynomial factorization problem over $\F_q$ is,
 \begin{itemize}
- \item \textsc{Polynomial Factorization:} \textit{Given a monic $f(x) \in \mathbb{F}_q[x]$ of 
- degree $n$, write $f(x)$ as a product of its monic irreducible factors.}
+	\item \textsc{Polynomial Factorization:} \textit{Given a monic $f(x) \in \mathbb{F}_q[x]$ of 
+		degree $n$, write $f(x)$ as a product of its monic irreducible factors.}
 \end{itemize}
+Without loss of generality, we may assume that $f(x)$ is squarefree \cite{knu,yun}, that is, does 
+not contain a square of an irreducible polynomial as a factor. Berlekamp showed that 
+\textsc{Polynomial Factorization} can be solved in randomized polynomial time \cite{ber} and there 
+is an extensive line of research \cite{cz,gs,ks,ku} with the best known runtime bound due to 
+\cite{ku}.
 
+The use of Drinfeld modules to factor polynomials over finite fields originated with Panchishkin 
+and Potemine \cite{pp} whose algorithm was rediscovered by van der Heiden \cite{vdH}. These 
+algorithms, along with the second author's Drinfeld module black box Berlekamp algorithm \cite{nar} 
+are in spirit Drinfeld module analogues of Lenstra's elliptic curve method to factor integers 
+\cite{len}. The Drinfeld module degree estimation algorithm of \cite{nar} uses Euler-Poincare 
+charactersitics of Drinfeld modules to estimate the factor degrees in distinct degree 
+factorization. A feature common to the aforementioned algorithms is their use of random Drinfeld 
+modules, which typically don't have complex multiplication.
 
-Without loss of generality, we may assume that $f(x)$ is squarefree
-\cite{knu,yun}, that is, does not contain a square of an irreducible
-polynomial as a factor. Berlekamp showed that \textsc{Polynomial
-  Factorization} can be solved in randomized polynomial time
-\cite{ber} and there is an extensive line of research
-\cite{cz,gs} with the best known bound being the improvement by
-Kedlaya and Umans~\cite{ku} of an algorithm due to Kaltofen and
-Shoup~\cite{ks}.
-
-
-The use of Drinfeld modules to factor polynomials over finite fields
-originated with Panchishkin and Potemine \cite{pp}, whose algorithm
-was rediscovered by van der Heiden \cite{vdH}. These algorithms, along
-with the second author's Drinfeld module black box Berlekamp
-algorithm~\cite{nar} are in spirit Drinfeld module analogues of
-Lenstra's elliptic curve method to factor integers \cite{len}. The
-Drinfeld module degree estimation algorithm of \cite{nar} uses
-Euler-Poincar\'e charactersitics of Drinfeld modules to estimate the
-factor degrees in distinct degree factorization. A feature common to
-the aforementioned algorithms is their use of random Drinfeld
-modules, which typically don't have complex multiplication. 
-
-
-In this paper we take a different approach. We construct random rank
-$2$ Drinfeld modules $\phi$ with complex multiplication by an
-imaginary quadratic extension of the rational function field $\F_q(x)$
-with class number $1$. At roughly half of the prime ideals $\f$ in
-$\F_q[x]$, $\phi$ has supersingular reduction. The Hasse invariant of
-$\phi$ at a prime ideal $\f$ vanishes if and only if $\phi$ has
-supersingular reduction at $\f$. A Drinfeld module analogue of
-Deligne's congruence, due to Gekeler \cite{gek}, allows us to compute
-a certain lift of Hasse invariants modulo the polynomial $f(x)$ we are
-attempting to factor. As a consequence, this lift vanishes exactly
-modulo the irreducible factors of $f(x)$ that correspond to the primes
-with supersingular reduction. In summary, we get to separate the
-irreducible factors corresponding to primes with supersingular
-reductions from those with ordinary reduction.
-
+In this paper we take a different approach. We construct random rank $2$ Drinfeld modules $\phi$ 
+with complex multiplication by an imaginary quadratic extension of the rational function field 
+$\F_q(x)$  with class number $1$. At roughly half of the prime ideals $\p$ in $\F_q[x]$, $\phi$ 
+has supersingular reduction. The Hasse invariant of $\phi$ at a prime ideal $\p$ vanishes if and 
+only if $\phi$ has supersingular reduction at $\p$. A Drinfeld module analogue of Deligne's 
+congruence, due to Gekeler \cite{gek}, allows us to compute a certain lift of Hasse invariants 
+modulo the polynomial $f(x)$ we are attempting to factor. As a consequence, this lift vanishes 
+exactly modulo the irreducible factors of $f(x)$ that correspond to the primes with supersingular 
+reduction. In summary, we get to separate the irreducible factors corresponding to primes with 
+supersingular reductions from those with ordinary reduction.
 
 \paragraph{Complexity model.}
-We will consider two different complexity models in our runtime
-analysis: an \textit{algebraic model} and a \textit{boolean model}. In
-the former we count the number of operations $+, \times, \div$ in the
-field $\F_q$, while in the latter we count the number of bit
-operations, over a standard RAM. 
+We will consider two different complexity models in our runtime analysis: \textit{Algebraic 
+	model}, and \textit{Boolean model}. In the former we count the number of operations $+, \times, 
+\div$ in the field $\F_q$ while in the latter we count the number of bit operations. The complexity 
+upper bounds for polynomial multiplication and modular composition are denoted by $\MM(n), \CC(n)$ 
+respectively. In the algebraic model we have $\MM(n) \in O(n\log(n)\log\log(n))$
+\cite{Schonhage1971}, and $\CC(n) \in O(n^{(\omega+1)/2})$ \cite{BrKu78}, where $\omega$ comes 
+from the cost $O(n^\omega)$ of square matrix multiplication. We can always take $\omega \le 2.37$ 
+\cite{CoWi90} which gives $\CC(n) \in O(n^{1.69})$.
 
-The main reason behind this dichotomy is that some operations at the
-core of our algorithms turn out to be faster in the boolean model.
-
-
-% The complexity upper bounds for
-% polynomial multiplication and modular composition are denoted by
-% $\MM(n), \CC(n)$ respectively. In the algebraic model we have $\MM(n)
-% \in O(n\log(n)\log\log(n))$ \cite{Schonhage1971}, and $\CC(n) \in
-% O(n^{(\omega+1)/2})$ \cite{BrKu78}, where $\omega$ comes from the cost
-% $O(n^\omega)$ of square matrix multiplication. We can always take
-% $\omega \le 2.37$ \cite{CoWi90} which gives $\CC(n) \in O(n^{1.69})$.
-
-In the boolean model, the modular composition can be done in $O(n^{1 +
-  \varepsilon}\log q^{1 + o(1)})$ bit operations \cite{ku}. In this
-case, the best polynomial factorization algorithm has the expected run
-time of $n^{3/2+o(1)} (\log q)^{1+o(1)}+n^{1+o(1)} (\log q)^{2+o(1)}$
-bit operations.  As to if the exponent $3/2$ in $n$ can be lowered
-remains an outstanding open question.
+In the boolean model, the modular composition can be done in $n^{1 + o(1)}\log q^{1 + o(1)}$ bit 
+operations \cite{ku}. In this case, the best polynomial factorization algorithm has the 
+expected run time of $n^{3/2+o(1)} (\log q)^{1+o(1)}+n^{1+o(1)} (\log q)^{2+o(1)}$ bit operations. 
+As to if the exponent $3/2$ in $n$ can be lowered remains an outstanding open question.
 
 
 \paragraph{Main result.}
@@ -306,11 +227,10 @@ computing the product of a carefully constructed sequence of matrices twited by 
 action. The final step is to construct a polynomial with matrix coefficients, whose evaluations 
 allow us to rapidly compute the aformentioned product. The evaluations are computed using a fast 
 multipoint evaluation algorithm. Our main result can be summarized as:
-
 \begin{theorem}
 	\label{theorem:main}
-	Given a polynomial $f(x)$ of degree $n$ over $\F_q$, there exits a probabilistic algorithm for 
-	factoring $f$ using
+	There exists a randomized algorithm for factoring a given polynomial $f(x)$ of degree $n$ over 
+	$\F_q$ using expected
 	\begin{itemize}
 		\item $O(n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)})$ bit operations, or
 		\item $O(n^{1.815}\log q)$ operations in $\F_q$.
@@ -318,12 +238,12 @@ multipoint evaluation algorithm. Our main result can be summarized as:
 \end{theorem}
 
 
-The paper is organized as follows. In \S~\ref{drinfeld_section}, Drinfeld modules are introduced 
-and the general algorithmic strategy is outlined with emphasis on the role played by Hasse 
-invariants and Deligne's congruence. In \S~\ref{randomized_section}, a high level description of 
-our algorithm and its rigorous analysis using function field arithmetic is presented. Fast 
-computation of the Hasse invariant lift, analysis of the complexity of the algorithm and its 
-practical implications are in \S~\ref{sec:hasse}. 
+The paper is organized as follows. In Section \ref{drinfeld_section}, Drinfeld modules are 
+introduced and the general algorithmic strategy is outlined with emphasis on the role played by 
+Hasse invariants and Deligne's congruence. In Section \ref{sec:hasse}, our algorithm for computing 
+the Hasse invariant lift is presented. A polynomials factorization algorithm is presented in 
+Section \ref{sec:poly-fac}. Finally, in Section \ref{sec:impl}, an implementation and an example is 
+provided.
  
  
  
@@ -653,6 +573,7 @@ q)^{1+o(1)}$ bit operations. In summary, we have proven
  
 
 \section{A polynomial factoring algorithm}
+\label{sec:poly-fac}
 
 The efficient computation of the Hasse invariant lift in Section \ref{sec:hasse} allows us to 
 efficiently factor polynomials as follows. Given a polynomial $f \in \F_q[x]$ of degree $n$, we 
@@ -791,6 +712,7 @@ Lemma \ref{splitting_lemma} as strong evidence for the recursion depth to be log
 
 
 \section{Implementation and example}
+\label{sec:impl}
 
 We have implemented Algorithms \ref{alg:hasse-inv}, \ref{factoring_algorithm} in C++ using the NTL 
 library \cite{shoup2001ntl}. The implementation source code can be found at 
