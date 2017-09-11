@@ -118,7 +118,7 @@
 \usepackage{tikz}
 \usetikzlibrary{matrix,arrows}
 
-\newcommand{\ph}{(\phi/f)}
+\newcommand{\ph}{(\phi/\p)}
 \newcommand{\m}{\mathfrak m}
 \newcommand{\g}{\mathfrak g}
 \newcommand{\be}{\mathfrak b}
@@ -138,7 +138,7 @@
 
 
 
-\title{Drinfeld Modules with Complex Multiplication, Hasse Invariants and Factoring Polynomials over Finite Fields}
+\title{On Elliptic Modules and Factoring Polynomials in Subquadratic Time}
 
 
 
@@ -158,40 +158,12 @@
 \maketitle
 
 \begin{abstract}
-\noindent 
-
-We present a novel randomized algorithm to factor polynomials over a
-finite field $\F_q$ of odd characteristic using rank $2$ Drinfeld
-modules with complex multiplication. The main idea is to compute a
-lift of the Hasse invariant (modulo the polynomial $f(x) \in \F_q[x]$
-to be factored) with respect to a random Drinfeld module $\phi$ with
-complex multiplication. Factors of $f(x)$ supported on prime ideals
-with supersingular reduction at $\phi$ have vanishing Hasse invariant
-and can be separated from the rest.
-
-
-
-Incorporating a Drinfeld module analogue of Deligne's congruence, we
-devise an intricate method to compute the Hasse invariant lift, which
-turns out to be the crux of our algorithm. The resulting expected
-runtime of $n^{3/2+o(1)} (\log q)^{1+o(1)}+n^{1+o(1)} (\log
-q)^{2+o(1)}$ to factor polynomials of degree $n$ over $\F_q$ matches
-the fastest previously known algorithm, the Kedlaya-Umans
-implementation of the Kaltofen-Shoup algorithm. In comparison, our
-algorithm has the distinction of not requiring separate distinct
-degree and equal degree factorization phases, potentially leading to a
-faster implementation. We augment our theoretical results with a
-subquadratic implementation of our algorithm that from preliminary
-experimentation appears to the fastest way to factor polynomials over
-finite fields.
-
-% A Drinfeld module analogue of Deligne's congruence plays a key role in computing the Hasse 
-%invariant lift. We devise an intricate algorithm to compute the Hasse invariant lift yielding an 
-%expected runtime of $n^{3/2+o(1)} (\log q)^{1+o(1)}+n^{1+o(1)} (\log q)^{2+o(1)}$ to factor 
-%polynomials of degree $n$ over $\F_q$. This matches the fastest previously known algorithm, the 
-%Kedlaya-Umans implementation of the Kaltofen-Shoup algorithm. Unlike the Kaltofen\\ \\
- 
-%We present two algorithms based on this idea. The first algorithm  chooses Drinfeld modules with complex multiplication at random and has a quadratic expected run time. The second is a deterministic algorithm with $O(\sqrt{p})$ run time dependence on the characteristic $p$ of $\F_q$.
+	We present a novel randomized algorithm to factor polynomials over a finite field $\F_q$ of odd 
+	characteristic using elliptic modules with complex multiplication. The main idea is to compute a
+	lift of the Hasse invariant (modulo the polynomial $f(x) \in \F_q[x]$ to be factored) with 
+	respect to a random elliptic module $\phi$ with complex multiplication. Factors of $f(x)$  
+	supported on prime ideals with supersingular reduction at $\phi$ have vanishing Hasse invariant
+	and can be separated from the rest. We also provide an implementation.
 \end{abstract}
 
 
@@ -382,7 +354,7 @@ with $a_0 = \gamma(x)$ and $a_r \ne 0$.
 
 An \textit{elliptic module} is a rank-2 Drinfeld module, obtained by setting $r = 2$ in 
 \eqref{equ:Drinfeld}. In this paper, we consider elliptic modules over $\F_q(x)$, i.e. $L = 
-\F_q(x)$ is the field of fractions of $A$. In particular, $\phi$ will always be given as the ring 
+\F_q(x)$, the field of fractions of $A$. In particular, $\phi$ will always be given as the ring 
 homomorphisms
 \[
 \begin{array}{rrll}
@@ -393,30 +365,30 @@ homomorphisms
 for some $g_\phi \in \F_q[x]$ and nonzero $\Delta_\phi \in \F_q[x]$. Unless otherwise noted, a 
 Drinfeld module over $\F_q(x)$ will mean an elliptic module as above. 
 
-For an irreducible polynomial $f \in \F_q[x]$, if $\Delta_\phi$ is nonzero modulo $f$, then the 
-reduction $\phi/f$ of $\phi$ at $f$ is defined as the ring homomorphism
+For a prime ideal $\p \subset \F_q[x]$, if $\Delta_\phi$ is nonzero modulo $\p$, then the reduction 
+$\phi / \p = \phi \otimes \F_q[x] / \p$ of $\phi$ at $\p$ is defined as the ring homomorphism
 \[
 \begin{array}{rrll}
-	\phi/f : & \F_q[x] & \longrightarrow & (\F_q[x]/f) \ang{\tau} \\
-	& x & \longmapsto & x + (g_\phi \bmod f) \tau + (\Delta_\phi\bmod f) \tau^.
+	\phi / \p : & \F_q[x] & \longrightarrow & (\F_\p/f) \ang{\tau} \\
+	& x & \longmapsto & x + (g_\phi \bmod \p) \tau + (\Delta_\phi \bmod \p) \tau^.
 \end{array}
 \]
-The image of $a \in \F_q[x]$ under $\phi/f$ is denoted by $(\phi/f)(a)$. Even if $\Delta_{\phi}$ is 
-zero modulo $f$, one could still obtain the reduction $(\phi/f)$ of $\phi$ at $f$ through
+The image of $a \in \F_q[x]$ under $\phi/\p$ is denoted by $(\phi/\p)_a$. Even if $\Delta_{\phi}$ 
+is zero modulo $\p$, one could still obtain the reduction $(\phi/\p)$ of $\phi$ at $\p$ through
 minimal models of $\phi$; see \cite{gek1}. We refrain from addressing this case since it will not 
-be required. For a non zero ideal $\f \subset \F_q[x]$, let $\deg(\f)$ denote the degree of its 
+be required. For a nonzero ideal $\f \subset \F_q[x]$, let $\deg(\f)$ denote the degree of its 
 monic generator.
 
 
 \subsection{Hasse invariants and Deligne's congruence}
 
-Let $\phi$ be an elliptic module as above and let $f \in \F_q[x]$ be an irreducible monic 
-polynomial not dividing $\Delta_\phi$. The \textit{Hasse invariant} $h_{\phi,f} \in \F_q[x]/f$ of 
-$\phi$ at $f$ is the coefficient of $\tau^{\deg(f)}$ in the expansion 
-\[ \ph_f = \sum_{i=0}^{2\deg(f)} h_i \tau^i \in (\F_{q}[x]/f)\{\tau\}. \]
-The elliptic module $\phi$ has supersingular reduction at $f$ if and only if $h_{\phi,f}$ vanishes 
-\cite{gos}. Otherwise, $\phi$ is said to have ordinary reduction at $f$. When $\phi$ is fixed, we 
-call $f$ supersingular or ordinary with respect to $\phi$.
+Let $\phi$ be an elliptic module as above and let $\p \in \F_q[x]$ be a prime no deviding  
+$\Delta_\phi$. The \textit{Hasse invariant} $h_{\phi,\p} \in \F_q[x]/\p$ of $\phi$ at $\p$ is the 
+coefficient of $\tau^{\deg(\p)}$ in the expansion 
+\[ \ph_\p = \sum_{i=0}^{2\deg(\p)} h_i \tau^i \in (\F_{q}[x]/\p)\{\tau\}. \]
+The elliptic module $\phi$ has supersingular reduction at $\p$ if and only if $h_{\phi, \p}$ 
+vanishes $\bmod ~\p$ \cite{gos}. Otherwise, $\phi$ is said to have ordinary reduction at $\p$. When 
+$\phi$ is fixed, we call $\p$ supersingular or ordinary with respect to $\phi$.
 
 Recursively define a sequence $(r_{\phi,k})_{k \in \mathbb{N}}$ in $\F_q[x]^\mathbb{N}$ as 
 $r_{\phi,0}:=1$, $r_{\phi,1}:=g_\phi$ and for $m>1$,
@@ -427,25 +399,25 @@ $r_{\phi,0}:=1$, $r_{\phi,1}:=g_\phi$ and for $m>1$,
 \end{equation}
 Gekeler \cite[Eq 3.6, Prop 3.7]{gek} showed that $r_{\phi,m}$ is the value of the normalized 
 Eisenstein series of weight $q^{m}-1$ on $\phi$ and established Deligne's congruence for elliptic 
-modules. That is, for any $f$ of degree $k \geq 1$ with $\Delta_\phi \neq 0 \bmod f$, we have
+modules. That is, for any $\p$ of degree $k \geq 1$ with $\Delta_\phi \neq 0 \bmod \p$, we have
 \begin{equation}
 \label{deligne_congruence}
-	h_{\phi,f}(x) = r_{\phi,k} \pmod{f}.
+	h_{\phi, \p}(x) = r_{\phi,k} \pmod{\p}.
 \end{equation}
 Hence, $r_{\phi,k}$ is in a sense a lift to $\F_q[x]$ of all the Hasse invariants of $\phi$ at 
-primes of degree $k$. If $\phi$ has supersingular reduction at an irreducible polynomial $f$ of 
-degree $k$, that is, $h_{\phi,f} = 0$, then by Deligne's congruence we have $r_{\phi,k} = 0 \bmod 
-f$. From the recurrence \eqref{eisenstein_recurrence}, it follows that $r_{\phi,k+1} = 0 \bmod f$, 
-since $f$ divides $x^{q^k} - x$. Plugging $r_{\phi,k} = r_{\phi,k+1} = 0 \bmod f$  into the 
+primes of degree $k$. In particular, if $\phi$ has supersingular reduction at a $\p$ of degree $k$, 
+that is, $h_{\phi, \p} = 0$, then by Deligne's congruence we have $r_{\phi,k} = 0 \bmod \p$. From 
+the recurrence \eqref{eisenstein_recurrence}, it follows that $r_{\phi,k+1} = 0 \bmod \p$, since 
+$\p$ divides $x^{q^k} - x$. Plugging $r_{\phi,k} = r_{\phi,k+1} = 0 \bmod \p$  into the 
 recurrence \eqref{eisenstein_recurrence} yields
 \begin{equation}
 \label{supersingular_zero}
-	r_{\phi,j} = 0 \pmod{f}, ~ \forall~j \ge k.
+	r_{\phi,j} = 0 \pmod{\p}, ~ \forall~j \ge k.
 \end{equation}
 On the other hand, if $\phi$ has ordinary reduction at $f$, then \cite[Lemma~2.3]{cor}
 \begin{equation}
 \label{supersingular_nonzero}
-	r_{\phi,j} \neq 0 \pmod{f}, ~ \forall~j \ge k.
+	r_{\phi,j} \neq 0 \pmod{\p}, ~ \forall~j \ge k.
 \end{equation}
 This suggests that we could use an elliptic module $\phi$ in a polynomial factorization algorithm 
 by separating supersingular primes from ordinary ones. For most elliptic modules, the density of 
