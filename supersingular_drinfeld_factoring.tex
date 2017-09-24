@@ -670,8 +670,8 @@ assumption $\sqrt{q} \ge  n$ can be made without loss of generality in theory. F
 n$, we might choose to factor over a slightly larger field $\F_{q^\prime}$ where $q^\prime$ is the 
 smallest power of $q$ such that $\sqrt{q^\prime} > n$ and still recover the factorization over 
 $\F_q$ (c.f. \cite[Remark 3.2]{nar}). Further, the running times are only affected by logarithmic 
-factors. In practice, we recommend running Algorithm \ref{factoring_algorithm} as is and take the 
-Lemma \ref{splitting_lemma} as strong evidence for the recursion depth to be logarithmic in $n$.
+factors. In practice, we recommend running Algorithm \ref{factoring_algorithm} as is and take Lemma 
+\ref{splitting_lemma} as strong evidence for the recursion depth to be logarithmic in $n$.
 \begin{lemma}
 \label{splitting_lemma}
 	Let $p_1,p_2 \in \F_q[x]$ be distinct monic irreducible polynomials of degree $k$ where $1 < k 
@@ -717,13 +717,13 @@ Lemma \ref{splitting_lemma} as strong evidence for the recursion depth to be log
 We have implemented Algorithms \ref{alg:hasse-inv}, \ref{factoring_algorithm} in C++ using the NTL 
 library \cite{shoup2001ntl}. The implementation source code can be found at 
 \url{https://github.com/javad-doliskani/supersingular_drinfeld_factoring}. After running the 
-algorithm on 100 random input polynomials, we observed that the splitting $\gcd(r_{\phi, \lceil n / 
-2 \rceil}, f)$ is almost always nontrivial when $f$ is reducible. This confirms the behavior 
-expected from theory. Also we observed that, in practice, one does not need to impose the condition 
+algorithm on $10^3$ random input polynomials, we observed that the splitting $\gcd(r_{\phi, \lceil 
+n / 2 \rceil}, f)$ is almost always nontrivial when $f$ is reducible. This confirms the behavior 
+expected from theory. Also, we observed that in practice one does not need to impose the condition 
 $\sqrt{q} \ge n$ for splitting a polynomial of degree $n$ over $\F_q$. This remedies the need for 
-working in an auxiliary extension over $\F_q$. To show the behavior of the algorithm in practice we 
-finish this section with an example output of Algorithm \ref{factoring_algorithm} on input a small 
-degree polynomial.
+working in an auxiliary extension over $\F_q$. To show the behavior of the algorithm in practice, 
+we finish this section with an example output of Algorithm \ref{factoring_algorithm} on input a 
+small degree polynomial.
 
 \paragraph{Example}
 Consider the randomly selected polynomial 
@@ -749,10 +749,10 @@ the process is repeated for $f_1$. The next randomly generated supersingular ell
 	\Delta_\phi(x) & = & 6 + x + 5x^2 + 5x^3.
 \end{array}
 \]
-Now, $f_{11} = \gcd(r_{\phi, 2}, f_1) = 4 + 6x + x^2$, and $f_{12} = f_1 / f_{11} = 2 + 5x + x^2$ 
-which are both irreducible. Again, this means that $f_{11}$ is supuersingular and $f_{12}$ is 
-ordinary with respect to $\phi$. Finally, $f / f_1 = 2 + 5x + 6x^2 + 3x^3 + 6x^4 + 6x^5 + x^6$ 
-which is also irreducible. The complete factorization of $f$ is then
+So two factors of $f_1$ are $f_{11} = \gcd(r_{\phi, 2}, f_1) = 4 + 6x + x^2$, and $f_{12} = f_1 / 
+f_{11} = 2 + 5x + x^2$ which are both irreducible. Again, this means that $f_{11}$ is 
+supuersingular and $f_{12}$ is ordinary with respect to $\phi$. Finally, $f / f_1 = 2 + 5x + 6x^2 + 
+3x^3 + 6x^4 + 6x^5 + x^6$ which is also irreducible. The complete factorization of $f$ is then
 \[ f(x) = (4 + 6x + x^2)(2 + 5x + x^2)(2 + 5x + 6x^2 + 3x^3 + 6x^4 + 6x^5 + x^6).\]
 
 
