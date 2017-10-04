@@ -220,32 +220,31 @@ primes with supersingular reductions from those with ordinary reduction. This gi
 \ref{alg:factoring} which has the following complexity.
 \begin{theorem}
 	\label{theo:main-factor}
-	Given a polynomial $f(x)$ of degree $n$ over $\F_q$, assume the Hasse invariant lift modulo $f$ 
-	can be computed using $H(n)$ operations in $\F_q$. Then there is a randomized algorithm that 
-	can factor $f(x)$ in an expected 
+	Given a polynomial $f(x)$ of degree $n$ over $\F_q$, assume the Hasse invariant lift modulo 
+	$f(x)$ can be computed using $H(n)$ operations in $\F_q$. Then there is a randomized algorithm 
+	that can factor $f(x)$ in an expected 
 	\begin{itemize}
 		\item $\tildO(H(n) + \CC(n)\log n + \MM(n)\log q)$ operations in $\F_q$, or
 		\item $O(H(n) + n^{1+o(1)}(\log q)^{2+o(1)})$ bit operations.
 	\end{itemize}
 \end{theorem}
-%In Section \ref{sec:hasse} we propose an efficient algorithm for computation of the Hasse 
-%invariant 
-%lift modulo $f$. 
-This reduces polynomial factorization to computation of the Hasse invariant lift modulo $f$. The 
+This reduces polynomial factorization to computation of the Hasse invariant lift modulo $f(x)$. The 
 Hasse invariant lift can be computed using a recursive formula that arises in Gekeler's proof of a 
-Drinfeld module variant of Deligne's congruence \cite{gek}.
+Drinfeld module variant of Deligne's congruence \cite{gek}. We believe that computation of the 
+Hasse invariant lift using this recursive formula provides a better path to a potentially more 
+efficient polynomial factorization than previous methods.
 
-Our strategy is to first phrase the 
-recurrence in matrix form with entries being polynomials modulo $f(x)$. We then observe that 
-solving the recurrence amounts to computing the product of a carefully constructed sequence of 
-matrices twited by the Frobenius action. The final step is to construct a polynomial with matrix 
-coefficients, whose evaluations allow us to rapidly compute the aformentioned product. The 
-evaluations are computed using a fast multipoint evaluation algorithm. This gives Algorithm 
-\ref{alg:hasse-inv} with the following complexity.
+In Section \ref{sec:hasse} we propose an efficient algorithm for computation of the Hasse invariant 
+lift modulo $f(x)$. Our strategy is to first phrase the recurrence in matrix form with entries 
+being polynomials modulo $f(x)$. We then observe that solving the recurrence amounts to computing 
+the product of a carefully constructed sequence of matrices twisted by the Frobenius action. The 
+final step is to construct a polynomial with matrix coefficients, whose evaluations allow us to 
+rapidly compute the aformentioned product. The evaluations are computed using a fast multipoint 
+evaluation algorithm. This gives Algorithm \ref{alg:hasse-inv} with the following complexity.
 \begin{theorem}
 	\label{theo:main-hasse}
-	Given a polynomial $f(x)$ of degree $n$ over $\F_q$, the Hasse invariant lift modulo $f$ can be 
-	computed using
+	Given a polynomial $f(x)$ of degree $n$ over $\F_q$, the Hasse invariant lift modulo $f(x)$ can 
+	be computed using
 	\begin{itemize}
 		\item $O(n^{1.815}\log q)$ operations in $\F_q$, or
 		\item $O(n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)})$ bit operations.
@@ -253,8 +252,9 @@ evaluations are computed using a fast multipoint evaluation algorithm. This give
 \end{theorem}
 
 From Theorems \ref{theo:main-factor} and \ref{theo:main-hasse} we conclude that a polynomial of 
-degree $n$ over $\F_q$ can be factor in the same number of operations as in Theorem 
-\ref{theo:main-hasse}.
+degree $n$ over $\F_q$ can be factored in the same number of operations as in Theorem 
+\ref{theo:main-hasse}. This is comparable to the best known algorithm for polynomial factorization 
+\cite{ks,ku}.
 
 \paragraph{Organization of the paper.}
 In Section \ref{sec:drinfeld}, Drinfeld modules are introduced and the general algorithmic 
@@ -402,7 +402,6 @@ extension $L/\F_q(x)$ can be separated by computing a $\gcd$. If the elliptic mo
 complex multiplication, the probability of obtaining a nontrivial factor of $f$ in this way is 
 close to $1/2$. We first need to construct elliptic modules with complex multiplication.
 
-\paragraph{Elliptic modules with complex multiplication}
 Our strategy is to pick an $a \in \F_q$ at random and construct a elliptic module $\phi$ with 
 complex multiplication by the imaginary quadratic extension $\F_q(x)(\sqrt{d(x)})$ of discriminant 
 $d(x):=x-a$. From \cite{dor}, the elliptic module $\phi^\prime$ with 
