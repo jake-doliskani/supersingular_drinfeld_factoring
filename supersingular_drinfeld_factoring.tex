@@ -1,7 +1,5 @@
 \documentclass[12pt]{article}
 
-%%\usepackage[margin = 1in]{geometry}
-
 \usepackage{graphicx}              
 \usepackage{fullpage}              
 \usepackage{amsmath}               
@@ -224,16 +222,20 @@ primes with supersingular reductions from those with ordinary reduction. This gi
 	\label{theo:main-factor}
 	Given a polynomial $f(x)$ of degree $n$ over $\F_q$, assume the Hasse invariant lift modulo $f$ 
 	can be computed using $H(n)$ operations in $\F_q$. Then there is a randomized algorithm that 
-	can $f(x)$ in the expected 
+	can factor $f(x)$ in an expected 
 	\begin{itemize}
 		\item $\tildO(H(n) + \CC(n)\log n + \MM(n)\log q)$ operations in $\F_q$, or
 		\item $O(H(n) + n^{1+o(1)}(\log q)^{2+o(1)})$ bit operations.
 	\end{itemize}
 \end{theorem}
+%In Section \ref{sec:hasse} we propose an efficient algorithm for computation of the Hasse 
+%invariant 
+%lift modulo $f$. 
+This reduces polynomial factorization to computation of the Hasse invariant lift modulo $f$. The 
+Hasse invariant lift can be computed using a recursive formula that arises in Gekeler's proof of a 
+Drinfeld module variant of Deligne's congruence \cite{gek}.
 
-In Section \ref{sec:hasse} we propose an efficient algorithm for computation of the Hasse invariant 
-lift modulo $f$. We exploit a recursive formula for the lift that arises in Gekeler's proof of a 
-Drinfeld module variant of Deligne's congruence \cite{gek}. Our strategy is to first phrase the 
+Our strategy is to first phrase the 
 recurrence in matrix form with entries being polynomials modulo $f(x)$. We then observe that 
 solving the recurrence amounts to computing the product of a carefully constructed sequence of 
 matrices twited by the Frobenius action. The final step is to construct a polynomial with matrix 
@@ -267,6 +269,7 @@ Section \ref{sec:impl}, an implementation and an example is provided.
 %####################################################
 
 \section{Drinfeld modules}
+\label{sec:drinfeld}
 
 Let $A = \F_q[x]$ be the ring of univariate polynomials over the finite field $\F_q$ where $q$ is a 
 prime power. Let $L/\F_q$ be a field with an $\F_q$-algebra homomorphism $\gamma: A \rightarrow 
@@ -286,7 +289,6 @@ with $a_0 = \gamma(x)$ and $a_r \ne 0$.
 
 
 \subsection{Elliptic modules}
-\label{sec:drinfeld}
 
 An \textit{elliptic module} is a rank-2 Drinfeld module, obtained by setting $r = 2$ in 
 \eqref{equ:Drinfeld}. In this paper, we consider elliptic modules over $\F_q(x)$, i.e. $L = 
