@@ -317,13 +317,14 @@ monic generator.
 
 \subsection{Hasse invariants and Deligne's congruence}
 
-Let $\phi$ be an elliptic module as above and let $\p \in \F_q[x]$ be a prime no deviding  
-$\Delta_\phi$. The \textit{Hasse invariant} $h_{\phi,\p} \in \F_q[x]/\p$ of $\phi$ at $\p$ is the 
-coefficient of $\tau^{\deg(\p)}$ in the expansion 
-\[ \ph_\p = \sum_{i=0}^{2\deg(\p)} h_i \tau^i \in (\F_{q}[x]/\p)\{\tau\}. \]
-The elliptic module $\phi$ has supersingular reduction at $\p$ if and only if $h_{\phi, \p}$ 
-vanishes $\bmod ~\p$ \cite{gos}. Otherwise, $\phi$ is said to have ordinary reduction at $\p$. When 
-$\phi$ is fixed, we call $\p$ supersingular or ordinary with respect to $\phi$.
+Let $\phi$ be an elliptic module as above and let $\p \subset \F_q[x]$ be a prime ideal not 
+deviding $\Delta_\phi$. The \textit{Hasse invariant} $h_{\phi,\p} \in \F_q[x]/\p$ of $\phi$ at $\p$ 
+is the coefficient of $\tau^{\deg(\p)}$ in the expansion 
+\[ \ph_p = \sum_{i=0}^{2\deg(\p)} h_i \tau^i \in (\F_{q}[x]/\p)\{\tau\} \]
+where $p \in \F_q[x]$ is the monic generator of $\p$. The elliptic module $\phi$ has supersingular 
+reduction at $\p$ if and only if $h_{\phi, \p}$ vanishes $\bmod ~\p$ \cite{gos}. Otherwise, $\phi$ 
+is said to have ordinary reduction at $\p$. When $\phi$ is fixed, we call $\p$ supersingular or 
+ordinary with respect to $\phi$.
 
 Recursively define a sequence $(r_{\phi,k})_{k \in \mathbb{N}}$ in $\F_q[x]^\mathbb{N}$ as 
 $r_{\phi,0}:=1$, $r_{\phi,1}:=g_\phi$ and for $m>1$,
@@ -391,38 +392,39 @@ $L$, the factorization thus obtained is likely to be nontrivial.
 \section{A polynomial factoring algorithm}
 \label{sec:poly-fac}
 
-The efficient computation of the Hasse invariant lift in Section \ref{sec:hasse} allows us to 
-efficiently factor polynomials as follows. Given a polynomial $f \in \F_q[x]$ of degree $n$, we 
-compute the $\lceil n / 2 \rceil$-th Hasse lift $r_{\phi, \lceil n / 2 \rceil} \bmod f$. Then 
-according to \eqref{equ:fact-sep}, the factors of $f$ that are inert in an imaginary quadratic 
-extension $L/\F_q(x)$ can be separated by computing a $\gcd$. If the elliptic module $\phi$ has 
-complex multiplication, the probability of obtaining a nontrivial factor of $f$ in this way is 
-close to $1/2$. We first need to construct elliptic modules with complex multiplication.
+Given a polynomial $f \in \F_q[x]$ of degree $n$, one can split $f$ into two nontrivial factors 
+using a random elliptic module $\phi$ with complex multiplication: compute the $\lceil n / 2 
+\rceil$-th Hasse lift $r_{\phi, \lceil n / 2 \rceil} \bmod f$. Then according to 
+\eqref{equ:fact-sep}, the factors of $f$ that are inert in an imaginary quadratic extension 
+$L/\F_q(x)$ can be separated by computing a $\gcd$. Since $\phi$ has complex multiplication, the 
+probability of obtaining a nontrivial factor of $f$ in this way is close to $1/2$. Repeating the 
+process for the resulting factors leads to a complete factorization of $f$. It remains to construct 
+elliptic modules with complex multiplication.
 
-Our strategy is to pick an $a \in \F_q$ at random and construct a elliptic module $\phi$ with 
+Our strategy is to pick an $a \in \F_q$ at random and construct an elliptic module $\phi$ with 
 complex multiplication by the imaginary quadratic extension $\F_q(x)(\sqrt{d(x)})$ of discriminant 
 $d(x):=x-a$. From \cite{dor}, the elliptic module $\phi^\prime$ with 
 \[ g_{\phi^\prime}(x):=\sqrt{d(x)}+\left(\sqrt{d(x)}\right)^q, \D_{\phi^\prime}(x) := 1 \]
-has complex multiplication by $\F_q(x)(\sqrt{d(x)})$.
-However, $\phi^\prime$ has the disadvantage of not being defined over $\F_q[x]$ since 
-$g_{\phi^\prime}(x) \notin \F_q[x]$.
-We construct an alternate $\phi$, that is isomorphic to $\phi^\prime$ but defined over $\F_q[x]$. 
-The $J$-invariant \cite{gek} of $\phi^\prime$ is 
+has complex multiplication by $\F_q(x)(\sqrt{d(x)})$. However, $\phi^\prime$ has the disadvantage 
+of not being defined over $\F_q[x]$ since $g_{\phi^\prime}(x) \notin \F_q[x]$. We construct an 
+alternate $\phi$ that is isomorphic to $\phi^\prime$ but defined over $\F_q[x]$. The $J$-invariant 
+\cite{gek} of $\phi^\prime$ is 
 \[ J_{\phi^\prime}(x) := \frac{g_{\phi^\prime}(x)^{q+1}}{\D_{\phi^\prime}(x)} = 
 d(x)^{\frac{q+1}{2}}\left(1+d(x)^{\frac{q-1}{2}}\right)^{q+1}. \]
-With the knowledge that two elliptic modules with the same $J$-invariant are isomorphic, we 
-construct the elliptic module $\phi$ satisfying 
-\[ g_\phi(x)^{q+1} = (J_{\phi^\prime}(x))^2, \D_{\phi}(x)= J_{\phi^\prime}(x)\] thereby ensuring 
-$J_{\phi}(x)=J_{\phi^\prime}(x)$. Further, this assures that $\phi$ is defined over $\F_q[x]$ since
+Now let $\phi$ be an elliptic module defined by
 \[g_\phi(x) = d(x)\left(1 + d(x)^{\frac{q-1}{2}}\right)^2, \quad  \D_\phi(x) = d(x)^{\frac{q + 
 1}{2}}\left(1 + d(x)^{\frac{q-1}{2}}\right)^{q+1}. \]
-In summary, $\phi$ has complex multiplication by $\F_q(x)(\sqrt{d(x)})$ and is defined over $A$.
+Since 
+\[ g_\phi(x)^{q+1} = (J_{\phi^\prime}(x))^2, \D_{\phi}(x)= J_{\phi^\prime}(x), \]
+we see that $J_{\phi}(x)=J_{\phi^\prime}(x)$, that is that $\phi'$ and $\phi$ are isomorphic. 
+Further, this assures that $\phi$ is defined over $\F_q[x]$. In summary, $\phi$ has complex 
+multiplication by $\F_q(x)(\sqrt{d(x)})$ and is defined over $\F_q[x]$.
 
 
 
 \subsection{Polynomial factorization}
 
-We now state our randomized algorithm to factor polynomials over finite fields using elliptic 
+We now state our randomized algorithm for factoring polynomials over finite fields using elliptic 
 modules with complex multiplication.
 
 \begin{algorithm}[H]
@@ -453,22 +455,22 @@ modules with complex multiplication.
 The irreducibility test in Step $1$ can be performed in $O(\CC(n)\log n + \MM(n)\log q)$ operations 
 in $\F_q$ \cite{vzGG}, or $O(n^{1+o(1)} (\log q)^{2+o(1)})$ bit operations. In Step 
 \ref{step:fac-2}, all the linear factors of $f(x)$ are found and removed using a root finding 
-algorithm. It takes $O(\MM(n)\log n \log(nq))$ operations in $\F_q$ \cite{vzGG}, or $O(n^{1+o(1)} 
+algorithm which takes $O(\MM(n)\log n \log(nq))$ operations in $\F_q$ \cite{vzGG}, or $O(n^{1+o(1)} 
 (\log q)^{2+o(1)})$ bit operations.
 
-In Step \ref{step:fac-3}, we choose $a \in \F_q$ at random and construct a Drinfeld module $\phi$ 
+In Step \ref{step:fac-3}, we choose $a \in \F_q$ at random and construct an elliptic module $\phi$ 
 with complex multiplication by $\F_q(x)(\sqrt{x-a})$. The primes that divide $\D_\phi(x)$ are 
 precisely $\{(x-b),  b \in \F_q, \sqrt{b-a} \notin \F_q\} \cup \{(d)\}$. We might run into issues 
-of bad reduction if the polynomial $f$ to be factored had roots. It is to prevent this, we 
-performed root finding in Step \ref{step:fac-2}.
+of bad reduction if $f$ had linear factors. It is to prevent this, we performed root finding in 
+Step \ref{step:fac-2}.
 
 As mentioned in Subsection \ref{sec:elliptic-CM}, $\gcd(r_{\phi,k}, f)$ is the product of all 
-degree at most $k$ irreducible factors of $f$ that are supersingular with respect to $\phi$. Thus 
+degree at most $k$ irreducible factors of $f$ that are supersingular with respect to $\phi$. Thus, 
 our algorithm separates the irreducible factors supported at the supersingular primes from those 
 supported at the ordinary primes. In the following, we show that for an elliptic module chosen  
 randomly as in Step \ref{step:fac-3}, the splitting of $f$ in Step \ref{step:fac-split} is random 
-enough to ensure that the recursion depth is $O(\log n)$. Assuming that Step \ref{step:fac-4} can 
-be computed using $H(n)$ operations in $\F_p$, the runtime of the algorithm is 
+enough to ensure that the recursion depth is $O(\log n)$. Assuming that Step \ref{step:fac-4} is 
+computed using $H(n)$ operations in $\F_p$, the runtime of the algorithm is 
 \begin{itemize}
 	\item $\tildO(H(n) + \CC(n)\log n + \MM(n)\log q)$ operations in $\F_q$, or
 	\item $O(H(n) + n^{1+o(1)}(\log q)^{2+o(1)})$ bit operations.
@@ -486,7 +488,7 @@ n$, we might choose to factor over a slightly larger field $\F_{q^\prime}$ where
 smallest power of $q$ such that $\sqrt{q^\prime} > n$ and still recover the factorization over 
 $\F_q$ (c.f. \cite[Remark 3.2]{nar}). Further, the running times are only affected by logarithmic 
 factors. In practice, we recommend running Algorithm \ref{alg:factoring} as is and take Lemma 
-\ref{splitting_lemma} as strong evidence for the recursion depth to be logarithmic in $n$.
+\ref{splitting_lemma} as a strong evidence for the recursion depth to be logarithmic in $n$.
 \begin{lemma}
 	\label{splitting_lemma}
 	Let $p_1,p_2 \in \F_q[x]$ be distinct monic irreducible polynomials of degree $k$ where $1 < k 
@@ -516,8 +518,8 @@ factors. In practice, we recommend running Algorithm \ref{alg:factoring} as is a
 	\in \F_q\}$ that are neither totally inert nor totally split in $K_1K_2$ is bounded by 
 	\[ \left|N - \frac{q}{2} \right| \le 2 g(K_1K_2)\sqrt{q} \]
 	where $g(K_1K_2)$ is the genus of $K_1K_2$. By the Riemann-Hurwitz genus formula, $g(K_1K_2) = 
-	k-1 \le \sqrt{q}/2$. Hence when $a \in \F_q$ is chosen at random, $(x-a)$ is neither totally 
-	inert nor totally split in $K_1K_2$ with probability close to $1/2$. 
+	k-1 \le \sqrt{q}/2$. Therefore, when $a \in \F_q$ is chosen at random, $(x-a)$ is neither 
+	totally inert nor totally split in $K_1K_2$ with probability close to $1/2$. 
 \end{proof}
 
 
@@ -630,19 +632,19 @@ The correctness of the algorithm follows from the preceding remarks. The next tw
 analyze its complexity in both boolean and algebraic models.
 
 
-\subsection{Complexity in an algebraic model}
+\subsection{Complexity in the algebraic model}
 
 First we need a lemma from \cite{ks} for efficient simultaneous modular composition, which we 
 include here for convenience.
 \begin{lemma}[\cite{ks}]
 	\label{lemma:ks}
-	Given a polynomials $f \in \K[x]$ of degree $n$ over an arbitrary field $\K$, and polynomials 
-	$g_1, \dots, g_k, h \in \K[x]$ of degree less than $n$, where $k = O(n)$, we can compute 
+	Given a polynomials $f \in K[x]$ of degree $n$ over an arbitrary field $K$, and polynomials 
+	$g_1, \dots, g_k, h \in K[x]$ of degree less than $n$, where $k = O(n)$, we can compute 
 	\[ g_1(h) \bmod f, \dots, g_k(h) \bmod f \]
-	using $O(n^{(\omega + 1) / 2} k^{(\omega - 1) / 2})$ operations in $\K$.
+	using $O(n^{(\omega + 1) / 2} k^{(\omega - 1) / 2})$ operations in $K$.
 \end{lemma}
-The complexity of Algorithm \ref{alg:hasse-inv} is analyzed in the following which proves the first 
-part of Theorem \ref{theo:main-hasse}.
+The complexity of Algorithm \ref{alg:hasse-inv} is analyzed in the following, which proves the 
+first part of Theorem \ref{theo:main-hasse}.
 \begin{theorem}
 	\label{theo:hasse-inv}
 	Algorithm \ref{alg:hasse-inv} runs in
@@ -662,7 +664,7 @@ part of Theorem \ref{theo:main-hasse}.
 	\in \K$ such that 
 	\[f^{q^{m\ell}} = \tau^{m\ell}(f) = f(g) = \xi.\]
 	In other words we find $f = \tau^{-m\ell}(\xi)$. This can be done using transposed modular 
-	composition with cost dominated by previous steps, see \cite{DeDoSc2014} for more details. So 
+	composition with cost dominated by previous steps; see \cite{DeDoSc2014} for more details. So 
 	we have $\xi_m = f$, and other $\xi_i$ for $i < m$ can be computed using Lemma \ref{lemma:ks}. 
 	This takes $O(n^{(\omega + 1) / 2}n^{(1 - \beta)(\omega - 1) / 2}) = O(n^{(\omega + 1) / 2 + (1 
 	- \beta)(\omega - 1) / 2})$ operations in $\F_q$.
@@ -689,10 +691,10 @@ part of Theorem \ref{theo:main-hasse}.
 
 
 
-\subsection{Complexity in a boolean model}
+\subsection{Complexity in the boolean model}
 
 Since modular composition can be done in $O(n^{1 + \varepsilon}\log q^{1 + o(1)})$ bit operations 
-in a boolean model, we take a different approach to analyze Algorithm \ref{alg:hasse-inv}. First,  
+in the boolean model, we take a different approach to analyze Algorithm \ref{alg:hasse-inv}. First, 
 we set $\beta = 1/2$ so that $\ell = O(n^{1/2})$. Step \ref{step:hasse-2} is done using a simple 
 recursion which performs alternate applications of the Frobenius and multiplications. More 
 precisely, starting from the matrix $\mathcal{A}$, assume at the $i$-th step we have computed 
@@ -701,16 +703,16 @@ $\tau^{\lfloor i/2 \rfloor}(\mathcal{A}) \tau^{\lfloor i/2 \rfloor-1} \ldots \ta
 multiplications in $M_2(\K)[Y]$ to compute $\tau^{i-1}(\mathcal{A}) \tau^{i-2} \ldots 
 \tau(\mathcal{A}) \mathcal{A}$. The map $\tau^{\lfloor i \rfloor}$ itself is computed from
 $\tau^{\lfloor i/2 \rfloor}$ the same way. The whole recursion takes
-\[ n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)} \]
+\[ O(n^{3/2+o(1)} (\log q)^{1+o(1)} + n^{1+o(1)} (\log q)^{2+o(1)}) \]
 bit operations. 
 
-Step \ref{step:hasse-3} can be done using $m$ modular compositions at the cost of $n^{3/2+o(1)} 
-(\log q)^{1+o(1)}$ bit operations. Step \ref{step:hasse-4} can be done using multipoint evaluation 
-\cite{vzGG} at the cost of $n^{1+o(1)} (\log q)^{2+o(1)}$ bit operations. Step \ref{step:hasse-5} 
-costs the same as Step \ref{step:hasse-3}. 
+Step \ref{step:hasse-3} can be done using $m$ modular compositions at the cost of $O(n^{3/2+o(1)} 
+(\log q)^{1+o(1)})$ bit operations. Step \ref{step:hasse-4} can be done using the multipoint 
+evaluation algorithm in \cite{vzGG} at the cost of $O(n^{1+o(1)} (\log q)^{2+o(1)})$ bit 
+operations. Step \ref{step:hasse-5} costs the same as Step \ref{step:hasse-3}. 
 
-Finally, step \ref{step:hasse-6}, \ref{step:hasse-7} can be done using $n^{3/2+o(1)} (\log 
-q)^{1+o(1)}$ bit operations. In summary, we have proven 
+Finally, step \ref{step:hasse-6}, \ref{step:hasse-7} can be done using $O(n^{3/2+o(1)} (\log q)^{1 
++ o(1)})$ bit operations. In summary, we have proven 
 \begin{theorem}
 	\label{theo:hasse-inv}
 	Algorithm \ref{alg:hasse-inv} runs in 
@@ -725,7 +727,7 @@ This proves the second part of Theorem \ref{theo:main-hasse}.
 \section{Implementation and example}
 \label{sec:impl}
 
-We have implemented Algorithms \ref{alg:hasse-inv}, \ref{alg:factoring} in C++ using the NTL 
+We have implemented Algorithms \ref{alg:factoring} and \ref{alg:hasse-inv} in C++ using the NTL 
 library \cite{shoup2001ntl}. The implementation source code can be found at 
 \url{https://github.com/javad-doliskani/supersingular_drinfeld_factoring}. After running the 
 algorithm on $10^3$ random input polynomials, we observed that the splitting $\gcd(r_{\phi, \lceil 
@@ -740,7 +742,7 @@ small degree polynomial.
 Consider the randomly selected polynomial 
 \[ f(x) = 2 + 6x + 5x^3 + 4x^4 + 6x^5 + 2x^7 + 3x^8 + 3x^9 + x^{10} \]
 in $\F_7[x]$. The algorithm starts by checking for linear factors, which $f$ has none. So, in the 
-next step it generates the random supersingular elliptic module parameterized by
+next step it generates the random supersingular elliptic module $\phi$ given by
 \[
 \begin{array}{rll}
 	d(x) & = & 1 + x, \\
@@ -749,7 +751,7 @@ next step it generates the random supersingular elliptic module parameterized by
 \end{array}
 \]
 This means $\phi$ has complex multiplication by the imaginary quadratic extension $\F_7(x)(\sqrt{x 
-+ 1})$ of $\F_7(x)$. After computing the $5$-th Hasse lift $r_{\phi, 5}$, it finds $f_1 = 
++ 1})$ of $\F_7(x)$. After computing the $5$-th Hasse invariant lift $r_{\phi, 5}$, it finds $f_1 = 
 \gcd(r_{\phi, 5}, f) = 1 + 4x + x^2 + 4x^3 + x^4$. This is the product of the factors of $f$ that 
 are supuersingular with respect to $\phi$. Now, $f_1$ does not pass the irreducibility check, so 
 the process is repeated for $f_1$. The next randomly generated supersingular elliptic module is
@@ -760,11 +762,11 @@ the process is repeated for $f_1$. The next randomly generated supersingular ell
 	\Delta_\phi(x) & = & 6 + x + 5x^2 + 5x^3.
 \end{array}
 \]
-The Hasse lift of this $\phi$ splits $f_1$ as $f_{11} = \gcd(r_{\phi, 2}, f_1) = 4 + 6x + x^2$, and 
-$f_{12} = f_1 / f_{11} = 2 + 5x + x^2$ which are both irreducible. Again, this means that $f_{11}$ 
-is supuersingular and $f_{12}$ is ordinary with respect to $\phi$. Finally, $f / f_1 = 2 + 5x + 
-6x^2 + 3x^3 + 6x^4 + 6x^5 + x^6$ which is also irreducible. The complete factorization of $f$ is 
-then \[ f(x) = (4 + 6x + x^2)(2 + 5x + x^2)(2 + 5x + 6x^2 + 3x^3 + 6x^4 + 6x^5 + x^6).\]
+The Hasse invariant lift of this $\phi$ splits $f_1$ as $f_{11} = \gcd(r_{\phi, 2}, f_1) = 4 + 6x + 
+x^2$, and $f_{12} = f_1 / f_{11} = 2 + 5x + x^2$ which are both irreducible. Again, this means that 
+$f_{11}$ is supuersingular and $f_{12}$ is ordinary with respect to $\phi$. Finally, $f / f_1 = 2 + 
+5x + 6x^2 + 3x^3 + 6x^4 + 6x^5 + x^6$ which is also irreducible. The complete factorization of $f$ 
+is then \[ f(x) = (4 + 6x + x^2)(2 + 5x + x^2)(2 + 5x + 6x^2 + 3x^3 + 6x^4 + 6x^5 + x^6).\]
 
 
 \bibliographystyle{plain}
