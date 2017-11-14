@@ -149,7 +149,7 @@
 
 \affil[1]{\small Institute for Quantum Computing, University of Waterloo}
 \affil[2]{\small Computing and Mathematical Sciences, Caltech}
-\affil[3]{\small Computer Science Department, University of Waterloo}
+\affil[3]{\small Cheriton Schoold of Computer Science, University of Waterloo}
 
 \date{}
 
@@ -172,7 +172,7 @@ and can be separated from the rest.
 Incorporating a Drinfeld module analogue of Deligne's congruence, we
 devise an algorithm method to compute the Hasse invariant lift, which
 turns out to be the crux of our algorithm. The resulting expected
-runtime of $n^{3/2+o(1)} (\log q)^{1+o(1)}+n^{1+o(1)} (\log
+runtime of $n^{3/2+\varepsilon} (\log q)^{1+o(1)}+n^{1+\varepsilon} (\log
 q)^{2+o(1)}$ to factor polynomials of degree $n$ over $\F_q$ matches
 the fastest previously known algorithm, the Kedlaya-Umans
 implementation of the Kaltofen-Shoup algorithm.
@@ -181,7 +181,7 @@ implementation of the Kaltofen-Shoup algorithm.
 \section{Introduction}
 
 Drinfeld modules of rank two are often presented as an analogue over
-function fields such as $\F_q(x)$ (for a prime power $q$) of elliptic
+function fields such as $\F_q(x)$ (for an off prime power $q$) of elliptic
 curves over $\Q$; following Drinfeld's original terminology,
 we will often call them {\em elliptic modules} in this paper. In very
 concrete terms, a Drinfeld module over $\F_q(x)$ is simply a ring
@@ -189,7 +189,7 @@ homomorphism $\phi$ (together with some mild assumptions) from
 $\F_q[x]$ to the ring of skew polynomials $\F_q(x)\ang{\tau}$, where
 $\tau$ satisfies the commutation relation $\tau u = u^q \tau$ for $u$
 in $\F_q(x)$. The rank of a Drinfeld module is the degree of
-$\phi(x)$.
+$\phi_x$, where as customary, we write $\phi_a:=\phi(a)$ for $a$ in $\F_q[x]$.
 
 In this definition, one may replace $\F_q(x)$ by any other other field
 $L$ equipped with a homomorphism $\F_q[x]\to L$, and in particular by
@@ -208,8 +208,8 @@ Drinfeld modules; only recently have they been considered under the
 algorithmic viewpoint (for instance, it is known that they are not
 suitable for usual forms of public key cryptography~\cite{Scanlon01}).
 
-In this article, we give an algorithm the computation of the Hasse
-invariante of elliptic modules over finite fields, and show how fast
+In this article, we give an algorithm for the computation of the Hasse
+invariant of elliptic modules over finite fields, and show how fast
 algorithms for this particular problem (and a natural generalization
 thereof) can be used to factor polynomials over finite fields.
 
@@ -220,10 +220,10 @@ definitions set it to be $1$ if this coefficient is nonzero, $0$
 otherwise). The definition of $h_E$ makes it possible to compute it
 using a number of operations softly linear in $p$, but one can do
 better: it is possible to compute $h_E$ without computing all previous
-coefficients, using the fact that the coefficients of the
+coefficients, using the fact that the coefficients of 
 $(x^3+Ax+B)^{(p-1)/2}$ satisfy a linear recurrence with polynomial
 coefficients, and applying techniques for such recurrences due to
-Strassen~\cite{Strassen76} and the Chudnovsky and
+Strassen~\cite{Strassen76} and Chudnovsky and
 Chudnovsky~\cite{ChCh88} (see also~\cite{BoGaSc07}).
 
 In the case of elliptic modules, we will consider $\phi: \F_q[x] \to
@@ -232,7 +232,7 @@ In the case of elliptic modules, we will consider $\phi: \F_q[x] \to
 irreducible of degree $k$ and does not divide $\Delta_\phi$,
 we say that $\phi$ has {\em good reduction} at $f$. Then, the {\em
   Hasse invariant} $h_{\phi,f}$ is defined as the coefficient of
-$\tau^k$ in $\phi(f)\bmod f =\sum_{i=0}^{2k} h_i \tau^i$, with $h_i$
+$\tau^k$ in $\phi_f\bmod f =\sum_{i=0}^{2k} h_i \tau^i$, with $h_i$
 in $\F_q[x]/f$ for all $i$ (all coefficients of index less than $k$
 vanish modulo $f$).  Using a recurrence due to Gekeler~\cite{gek}
 (which is somewhat similar to the one used in the elliptic case), it
@@ -248,19 +248,19 @@ our runtime analysis: an \textit{algebraic model} and a
 operations $+, \times, \div$ in the field $\F_q$, while in the latter
 we count the number of bit operations, over a standard RAM (the main
 reason behind this dichotomy is that some operation at the core of our
-algorithms, namely {\em modular composition}, turns out to be faster
-in the boolean model; we discuss this further in the next section).
+algorithms, namely {\em modular composition}, admits faster
+algorithms in the boolean model; we discuss this further in the next section).
 We denote by $\MM$ a function such that polynomials of degree $n$ over
 any ring can be multiplied in $\MM(n)$ base ring operations, and such
 that the superlinearity conditions of~\cite[Chapter~8]{vzGG} are
 satisfied; we can take $\MM(n) \in O(n\log n \log\log
 n)$~\cite{CaKa91}. We let $\omega$ be a feasible exponent for square
-matrix multiplication; we can always take $\omega \le 2.37$
+matrix multiplication; we can always take $\omega \le 2.38$
 \cite{CoWi90,LeGall14}. Then, our first main result is the following
 theorem.
 
 \begin{theorem}\label{theo:1}
-  Let $\phi: \F_q[x] \to \F_q(x)\langle \tau \rangle$ be an elliptic
+  Let $\phi: \F_q[x] \to \F_q(x)\ang{\tau}$ be an elliptic
   module, such that $\phi(x)=x+ g_\phi \tau+\Delta_\phi \tau^2$, with
   $g_\phi$ and $\Delta_\phi$ in $\F_q[x]$.
 
@@ -275,9 +275,9 @@ theorem.
 The algorithm is inspired by the baby steps / giant steps algorithms
 for recurrences with polynomial coefficients
 of~\cite{Strassen76,ChCh88,BoGaSc07}, and also borrows heavily from
-Kaltofen and Shoup's (baby steps / giant steps) distinct degree
+Kaltofen and Shoup's baby steps / giant steps distinct degree
 factorization algorithm~\cite{ks}; indeed, the structure of the
-algorithm, and runtime reported here, are the same as that in that
+algorithm, and runtime reported here, are the same as those in that
 reference. As in~\cite{ks}, for our first claim, taking $\omega
 \approx 2.375$ and $\beta \approx 0.815$, the complexity is
 $O(n^{1.815}\log q)$ operations in $\F_q$.
@@ -285,7 +285,7 @@ $O(n^{1.815}\log q)$ operations in $\F_q$.
 We use these results to design a polynomial factorization
 algorithm. The resulting runtime is not better than that in~\cite{ks}
 (in the algebraic model) or~\cite{ku} (in the boolean model); however,
-we believe it is worth stating such results, since it brings a new
+we believe it is worth stating such results, since they bring a new
 perspective to polynomial factorization questions.
 
 The use of Drinfeld modules for polynomial factorization actually
@@ -300,16 +300,17 @@ factor degrees in distinct degree factorization. A feature common to
 the aforementioned algorithms is their use of random Drinfeld modules,
 which typically don't have complex multiplication.
 
-We take a different approach. To factor a squarefree polynomial $g$,
+We take a different approach. To factor a squarefree polynomial $f$,
 we construct a random elliptic module $\phi$ with complex
 multiplication by an imaginary quadratic extension of the rational
 function field $\F_q(x)$ with class number $1$. At roughly half of the
-prime ideals $\langle f \rangle$ in $\F_q[x]$, $\phi$ has
-supersingular reduction; this is the case if and only if $h_{\phi,f}$
-vanishes. The properties of the Hasse invariant $h_{\phi,g}$ computed
-modulo $g$ then imply that for any prime factor $f$ of $g$,
-$h_{\phi,g} = 0 \bmod f$ if and only if $f$ is a prime with
-supersingular reduction for $\phi$. 
+prime ideals $\langle g \rangle$ in $\F_q[x]$, $\phi$ has
+supersingular reduction; this is the case if and only if $h_{\phi,g}$
+vanishes. The properties of the Hasse invariant $h_{\phi,f}$ computed
+modulo $f$ then imply that for any prime factor $g$ of $f$,
+$h_{\phi,f} = 0 \bmod g$ if and only if $g$ is a prime with
+supersingular reduction for $\phi$. The construction of $\phi$ ensures
+that this happens with non-vanishing probability.
 
 \begin{theorem}
   \label{theo:main-factor}
@@ -330,22 +331,24 @@ supersingular reduction for $\phi$.
 Combining the first item in Theorem~\ref{theo:1} with the result
 above, the runtime is $O(n^{1.815}\log q)$ operations in $\F_q$; in a
 boolean model, the second item in Theorem~\ref{theo:1} gives a cost of
-$n^{3/2+\varepsilon} (\log q)^{1 +o(1)}
-+ n^{1+\varepsilon}(\log q)^{2+o(1)}$ bit operations.
+$n^{3/2+\varepsilon} (\log q)^{1 +o(1)} + n^{1+\varepsilon}(\log
+q)^{2+o(1)}$ bit operations. As mentioned above, these results do not
+improve on the state-of-the-art for polynomial factorization.
 
-As mentioned above, these results do not improve on the
-state-of-the-art for polynomial factorization. Since Berlekamp's
-randomized polynomial time algorithm~\cite{ber}, polynomial
-factorization over finite fields has been the subject of a vast body
-of work. Among important milestones, we mention~\cite{cz,gs}; the
-first subquadratic algorithms are due to Kaltofen and Shoup~\cite{ks},
-with runtimes $O(n^{1.815}\log q)$ operations in $\F_q$.
+Since Berlekamp's randomized polynomial time algorithm~\cite{ber},
+polynomial factorization over finite fields has been the subject of a
+vast body of work. Among important milestones, we
+mention~\cite{cz,gs}; the first subquadratic algorithms are due to
+Kaltofen and Shoup~\cite{ks}, with runtimes $O(n^{1.815}\log q)$
+operations in $\F_q$  (two algorithms are in that reference:
+a fast distinct degree factorization algorithm, and an algorithm
+derived from the Berlekamp algorithm).
 
 Kaltofen and Shoup already pointed out that a quasi-linear time
 algorithm for modular composition would yield an exponent $3/2$ for
 polynomial factorization; Kedlaya and Umans~\cite{ku} showed that
 modular composition can be done in time $n^{1+\varepsilon} (\log
-q)^{1+o(1)}$ in a boolean model, and exhibited the corresponding
+q)^{1+o(1)}$ in a boolean model, and exhibited the resulting
 algorithm for factoring polynomials, with runtime $n^{3/2+\varepsilon}
 (\log q)^{1 +o(1)} + n^{1+\varepsilon}(\log q)^{2+o(1)}$ bit
 operations. 
@@ -355,7 +358,7 @@ separate distinct degree and equal degree factorization phases. In the
 algebraic model, Kaltofen and Shoup's black box Berlekamp algorithm
 has a similar runtime and also bypasses the distinct degree / equal
 degree factorization stages; however, we are not aware of a version of
-that algorithm with runtime $n^{3/2+\varepsilon} (\log q)^{1 +o(1)} +
+that algorithm that would feature a runtime of $n^{3/2+\varepsilon} (\log q)^{1 +o(1)} +
 n^{1+\varepsilon}(\log q)^{2+o(1)}$ in the boolean model.
 As to if the exponent $3/2$ in $n$ can be lowered remains an
 outstanding open question.
@@ -363,7 +366,7 @@ outstanding open question.
 
 The paper is organized as follows. In \S~\ref{drinfeld_section},
 elliptic modules are introduced; we define Hasse invariants and give
-details for their computation, proving Theorem~\ref{theo:1}.  In
+our algorithm for their computation, proving Theorem~\ref{theo:1}.  In
 \S~\ref{randomized_section}, we describe our factoring algorithm and
 prove Theorem~\ref{theo:main-factor}, using a few notions from
 function field arithmetic.
@@ -380,7 +383,7 @@ function field arithmetic.
 \subsection{Basic definitions}
 
 Let $\F_q[x]$ denote the polynomial ring in the indeterminate $x$, for
-some prime power $q$, and let $L$ be a field equipped with a
+some odd prime power $q$, and let $L$ be a field equipped with a
 homomorphism $\gamma:\F_q[x] \to L$; typical examples for us will be
 $L=\F_q(x)$ and $L=\F_q[x]/f$, for some irreducible polynomial $f$ in
 $\F_q[x]$.  Let us further consider the skew polynomial ring
@@ -408,7 +411,7 @@ In such a case, $\phi$ will be written as
 \end{array}
 \]
 for some $g_\phi \in \F_q[x]$ and nonzero $\Delta_\phi \in \F_q[x]$. 
-For an irreducible polynomial $f \subset \F_q[x]$, if $\Delta_\phi$ is
+For an irreducible polynomial $f \in \F_q[x]$, if $\Delta_\phi$ is
 nonzero modulo $f$, then the reduction $\phi/f$ of $\phi$ at $f$ is defined as the elliptic module
 \[
 \begin{array}{rcll}
@@ -416,6 +419,8 @@ nonzero modulo $f$, then the reduction $\phi/f$ of $\phi$ at $f$ is defined as t
 	& x & \longmapsto & x + (g_\phi \bmod f) \tau + (\Delta_\phi\bmod f) \tau^2;
 \end{array}
 \]
+we say that $\phi$ has {\em good reduction} at $f$ in this case.
+Then,
  the image of $a \in \F_q[x]$ under $\phi/f$ is denoted by
 $(\phi/f)_a$. Even if $\Delta_{\phi}$ is zero modulo $f$, one could
 still obtain the reduction $(\phi/f)$ of $\phi$ at $f$ through
@@ -426,7 +431,7 @@ Let $\phi$ be as above and let $f \in \F_q[x]$ be an irreducible
 polynomial not dividing $\Delta_\phi$. The {\em Hasse invariant} $h_{\phi,f}
 \in \F_q[x]/f$ of $\phi$ at $f$ is the coefficient of $\tau^{\deg(f)}$
 in the expansion $$\ph_f = \sum_{i=0}^{2\deg(f)} h_i \tau^i \in
-(\F_{q}[x]/f)\langle \tau \rangle.$$
+(\F_{q}[x]/f)\ang{\tau}.$$
 The elliptic module $\phi$ has {\em supersingular reduction} at $f$ if
 $h_{\phi,f}$ vanishes~\cite{gos}; otherwise, we say that it has {\em
   ordinary reduction}. If the choice of $\phi$ is clear from context,
@@ -434,12 +439,12 @@ we will simply call $f$ supersingular.
 
 Recursively define a sequence $(r_{\phi,k})_{k \in \mathbb{N}}$ in
 $\F_q[x]^\mathbb{N}$ as $r_{\phi,0}:=1$, $r_{\phi,1}:=g_\phi$ and for
-$m>1$,
+$k>1$,
 \begin{equation}\label{eisenstein_recurrence}
-r_{\phi,m} := g_\phi^{q^{m-1}}r_{\phi,m-1} - (x^{q^{m-1}}-x)\D_\phi^{q^{m-2}} r_{\phi,m-2} \in \F_q[x].
+r_{\phi,k} := g_\phi^{q^{k-1}}r_{\phi,k-1} - (x^{q^{k-1}}-x)\D_\phi^{q^{k-2}} r_{\phi,k-2} \in \F_q[x].
 \end{equation}
-Gekeler~\cite[Eq 3.6, Prop 3.7]{gek} showed that $r_{\phi,m}$ is
-the value of the normalized Eisenstein series of weight $q^{m}-1$ on
+Gekeler~\cite[Eq 3.6, Prop 3.7]{gek} showed that $r_{\phi,k}$ is
+the value of the normalized Eisenstein series of weight $q^{k}-1$ on
 $\phi$ and established Deligne's congruence for Drinfeld modules,
 which ascertains that for any irreducible $f$ of degree $k \geq 1$ with
 $\Delta_\phi \neq 0 \mod f$, we have
@@ -447,17 +452,18 @@ $\Delta_\phi \neq 0 \mod f$, we have
  h_{\phi,f} = r_{\phi,k} \mod f.
 \end{equation}
 Hence $r_{\phi,k}$ is in a sense a lift to $\F_q[x]$ of all the Hasse
-invariants of $\phi$ at primes of degree $k$. Defining this sequence
-allows us to define a generalization of $h_{\phi,f}$ to
+invariants of $\phi$ at primes of degree $k$. Using the sequence
+$r_{\phi,k}$ allows us to define a generalization of $h_{\phi,f}$ to
 non-irreducible polynomials $f$, by setting $h_{\phi,f} =
-r_{\phi,\deg(f)} \bmod f$.
+r_{\phi,\deg(f)} \bmod f$.  The following subsections give our
+algorithm to compute $h_{\phi, f}$ for an arbitrary $f$, thereby
+proving Theorem~\ref{theo:1}.
 
 %####################################################
 
 \subsection{Some key subroutines}
 
-The following subsection gives our algorithm to compute $h_{\phi, f}$
-for an arbitrary $f$. We summarize here the main results we will need;
+ We summarize here the main results we will need;
 most of them are well-known, and originate from work of von zur
 Gathen-Shoup~\cite{gs} or Kaltofen-Shoup~\cite{ks}. A key ingredient
 is the use of {\em modular composition}, that is, the operation
@@ -476,7 +482,7 @@ $n^{1+\varepsilon} (\log q)^{1+o(1)}$ bit operations.
 
 As of now, algorithms based on Brent and Kung's result have been
 implemented on a variety of platforms~\cite{shoup2001ntl,BoCaPl97,Hart10},
-and still outperfom implementations of the Kedlaya-Umans algorithm. As
+and still outperform implementations of the Kedlaya-Umans algorithm. As
 a result, we decided to give two variants of our main algorithm, using
 these two possible key subroutines.
 
@@ -486,11 +492,11 @@ $\K$.  Let $\tau: \K \to \K$ be the $\F_q$-linear $q$th-power
 Frobenius map $a \mapsto a^q$; since $f$ is squarefree, $\tau$ is
 invertible. It will then be convenient to define $\xi_i:=\tau^i(\xi)$,
 for $i$ in $\Z$; then, for any $a$ in $\K$ and $i$ in $\Z$, $a(\xi_i)$
-is well-defined (as $A(\xi_i)$, for an arbitrary lift of $a$ to
+is well-defined (as $A(\xi_i) \in \K$, for an arbitrary lift $A$ of $a$ to
 $\F_q[x]$) and satisfies $a(\xi_i)=\tau^i(a)$.  In particular, for any
 $i,j$ in $\Z$, the relation $\xi_i(\xi_j)=\xi_{i+j}$ holds.
 
-The following items describe technical results needed in our main
+The following items describe subroutines needed in our main
 algorithm. With the exception of the last one (which we discuss
 further below), all of them are known results.
 \begin{enumerate}
@@ -511,7 +517,7 @@ further below), all of them are known results.
   q)^{1+o(1)}$ bit operations, which is essentially optimal.
   In the algebraic model, for $k=O(n)$, Lemma~3 in~\cite{ks} shows how
   to do this in $O(k^{(\omega-1)/2}n^{(\omega+1)/2})$ operations in
-  $\F_q$, by exploiting the fact that the second argument is the same
+  $\F_q$ instead of $O(kn^{(\omega+1)/2})$, by exploiting the fact that the second argument is the same
   for all instances.
 
 \item[{\bf 5.}] Given integers $u,\ell,m \in O(n)$, and $\xi_1$, one
@@ -531,7 +537,7 @@ further below), all of them are known results.
   item ${\bf 4}$. We repeat this process for $k=1,2,4,\dots$, stopping
   at the first power of two greater than or equal to $m$.  At this
   stage, we know $\xi_{-\ell},\dots,\xi_{-(m-1)\ell}$. To conclude, we
-  compute $\xi_{-u}$ for $O(\log u)$ modular compositions, and finally
+  compute $\xi_{-u}$ at the cost of $O(\log u)$ modular compositions, and finally
   $\xi_{-\ell}(\xi_{-u}),\dots,\xi_{-(m-1)\ell}(\xi_{-u})$. The total
   cost is $O(m^{(\omega-1)/2}n^{(\omega+1)/2})$ operations in $\F_q$.
 
@@ -539,9 +545,10 @@ further below), all of them are known results.
   and $\xi_1$, we finally show how to compute
   $\tau^{u+(m-1)\ell}(a_{m-1}) \cdots \tau^{u}(a_0).$ Here, we
   actually take all $a_i$ as $2\times 2$ matrices over $\K$, since
-  this is what we will need below. As above, in the boolean model, the
-  cost is easily seen to be $m n^{1+\varepsilon} (\log q)^{1+o(1)}$
-  bit operations.
+  this is what we will need below (this has no impact on the algorithm
+  description, except that we must account for the non-commutativity
+  of the product). As above, in the boolean model, the cost is easily
+  seen to be $m n^{1+\varepsilon} (\log q)^{1+o(1)}$ bit operations.
   
   To discuss the algorithm in the algebraic model, without loss of
   generality, we assume that $m$ is a power of $2$, say
@@ -566,10 +573,12 @@ further below), all of them are known results.
   The description we give for item ${\bf 6}$ answers a question
   in~\cite[Section~3.2]{ks}: the authors proved the existence of an
   algorithm to compute (in our notation) an expression of the form
-  $\sum_{0 \le i < m} \tau^{j \ell} (a_i)$ in
+  $a_0 + \tau^\ell(a_1) + \cdots + \tau^{(m-1)\ell}(a_{m-1})$
+in
   $O(m^{(\omega-1)/2}n^{(\omega+1)/2})$ base field operations, but left
   the actual description of such an algorithm as an open question
-  (in that context, $\log n$ is negligible in front of $m^{(\omega-1)/2}$).
+  (in that context, $\log n$ is negligible in front of $m^{(\omega-1)/2}$,
+  and the $a_i$'s are actually in $\K$).
   The procedure we gave above can be adapted to the computation
   of such a sum, simply by replacing all products by additions 
   in the main loop.
@@ -580,7 +589,7 @@ further below), all of them are known results.
 \subsection{Efficient computation of the Hasse invariant lift}
 
 Given a squarefree $f$ in $\F_q[x]$ as above, with $\deg(f)=n$, and an
-elliptic module $\phi$ over $\F_q(x)$, we devise an efficient
+elliptic module $\phi$ over $\F_q(x)$, we present an efficient
 algorithm to compute $h_{\phi,f} = r_{\phi,n} \bmod f$.  Our strategy
 is to first phrase the recurrence in matrix form with entries being
 polynomials modulo $f$. We then observe that solving the recurrence
@@ -593,7 +602,7 @@ are then computed using a fast multipoint evaluation algorithm.
 The overall structure of the algorithm is similar to the distinct
 degree factorization algorithm of~\cite{ks}, with the polynomial
 matrix described above being akin to the ``interval polynomial'' used
-in that algorithm.  Another inspiration for this algorithm is
+in that algorithm.  Another inspiration for our algorithm is
 computation with simpler recurrences, that go back to Strassen's
 deterministic integer factorization algorithm~\cite{Strassen76} and
 Chudnovsky and Chudnovsky's algorithm for linear recurrences with
@@ -611,7 +620,7 @@ from~\eqref{eisenstein_recurrence}; equivalently,
 \begin{equation}\label{eq:rho}
   \rho_0=1,\quad \rho_1=\gamma,\quad
 \rho_{k} = \gamma^{q^{k-1}}\rho_{k-1} -
-(\xi^{q^{k-1}}-x)\delta^{q^{k-2}} \rho_{k-2},
+(\xi^{q^{k-1}}-\xi)\delta^{q^{k-2}} \rho_{k-2},
 \end{equation}
 with $\gamma = g_\phi(\xi)\in \K$ and $\delta=\Delta_\phi(\xi) \in \K$.
 Computing all terms $\rho_0,\rho_1,\dots,\rho_n$ takes $\Omega(n^2)$
@@ -711,34 +720,35 @@ Choose an integer $\ell \le n$ and define
 so that in particular
 $\mathcal{B}(\xi) = A_{\ell-1} \cdots A_1 A_0.$ More generally, 
 we use the fact that for all integers $i, j$, we have
-\[A_{i + j} = \tau^{i + j}(\mathcal{A})(\xi) = \tau^i\Big(\tau^j(\mathcal{A})\big( 
-\tau^{-i}(\xi)\big)\Big)\]
+\[A_{i + j} = \tau^{i + j}(\mathcal{A})(\xi) = \tau^i\big(\tau^j(\mathcal{A})( 
+\xi_{-i})\big)\]
 to deduce that  for all $i \ge 1$,
-\[\tau^{i}\Big(\mathcal{B} \big( \tau^{-i}(\xi)\big) \Big) = A_{i + \ell-1} \cdots A_{i + 1}A_{i} = B_{i,i+\ell}.\]
+\[\tau^{i}(\mathcal{B}( \xi_{-i})) = A_{i + \ell-1} \cdots A_{i + 1}A_{i} = B_{i,i+\ell}.\]
 In particular, for any integer $m$, $B_{0,m\ell}$ can be computed as the product of the  matrices
 \[
-\tau^{(m-1) \ell}\Big(\mathcal{B} \big( \tau^{-(m-1) \ell}(\xi)\big) \Big), \dots, 
-\tau^{\ell}\Big(\mathcal{B} \big( \tau^{-\ell}(\xi)\big) \Big), \mathcal{B} \big(\xi\big);
+\tau^{(m-1) \ell}\big(\mathcal{B} ( \xi_{-(m-1)\ell} ) \big), \dots, 
+\tau^{\ell}\big(\mathcal{B} ( \xi_{-\ell}) \big), \mathcal{B} \big(\xi\big);
 \]
 more generally, for any integers $m,u$, we have 
 \[
 B_{u,u+m\ell}=
-\tau^{u+(m-1) \ell}\Big(\mathcal{B} \big( \tau^{-(u+(m-1) \ell)}(\xi)\big) \Big) \cdots
-\tau^{u+\ell}\Big(\mathcal{B} \big( \tau^{-(u+\ell)}(\xi)\big) \Big)
-\tau^{u}\Big(\mathcal{B} \big( \tau^{-u}(\xi)\big) \Big).
+\tau^{u+(m-1) \ell}\big(\mathcal{B} ( \xi_{-(u+(m-1) \ell)}) \big) \cdots
+\tau^{u+\ell}\big(\mathcal{B} ( \xi_{-(u+\ell)}) \big)
+\tau^{u}\big(\mathcal{B} ( \xi_{-u}) \big).
 \]
 Suppose that we know $B_{0,u}$, for some $u < n-1$. As in~\cite{ks},
 let $\beta$ be an arbitrary constant in $(0,1)$, and define $\ell =
 \lceil (n-1-u)^\beta \rceil$, $m = \lfloor (n-1-u) / \ell
-\rfloor$. Then, $v=u+m\ell$ satisfies $v \le n-1$ and $n-v-1 \le
+\rfloor$. Then, $v=u+m\ell$ satisfies $v \le n-1$ and $n-1-v \le
 (n-1-u)^\beta$.  The discussion above suggests Algorithm
-\ref{alg:hasse-inv} for computing $B_{u,v}$.
+\ref{alg:hasse-inv} for computing $B_{u,v}$, from which we can
+deduce $B_{0,v} = B_{u,v}B_{0,u}$.
 
 \begin{algorithm}[H]
   \caption{Main subroutine for the Hasse invariant}
   \label{alg:hasse-inv}
   \begin{algorithmic}[1]
-    \REQUIRE $f \in \F_q[x]$,  $\delta, \gamma \in \K=\F_q[x]/f$, integers $u,n$, with $u < n-1$
+    \REQUIRE $f$ squarefree in $\F_q[x]$,  $\delta, \gamma \in \K=\F_q[x]/f$, integers $u,n$, with $u < n-1$
     \ENSURE $B_{u,v}$ as defined above
     \STATE Let $\ell := \lceil (n-1-u)^\beta \rceil$ and $m := \lfloor (n-1-u) / \ell \rfloor$
     \STATE\label{step:hasse-2}
@@ -747,13 +757,13 @@ let $\beta$ be an arbitrary constant in $(0,1)$, and define $\ell =
     Compute $\xi_{-(u+i\ell)} = \tau^{-(u+i\ell)}(\xi)$ for $0 \le i < m$
     \STATE\label{step:hasse-4}
     Compute $\beta_i = \mathcal{B}(\xi_{-(u+i\ell)})$ for $0 \le i< m$
-    \RETURN\label{step:hasse-5}  the product $\tau^{u+(m-1)\ell}(\beta_{(m-1)})\cdots \tau^u(\beta_0)$
+    \RETURN\label{step:hasse-5}  the product $\tau^{u+(m-1)\ell}(\beta_{m-1})\cdots \tau^u(\beta_0)$
   \end{algorithmic}
 \end{algorithm}
 
 Correctness of the algorithm follows from the preceding remarks.  We
 will give two different runtime analyses, in respectively the
-algebraic and boolean model, where the main difference will lie in the
+algebraic and boolean model, where the main difference lies in the
 cost of modular composition. 
 
 
@@ -782,7 +792,7 @@ cost of modular composition.
   The power-of-$\tau$ map is computed using the iterated Frobenius
   algorithm of von zur Gathen and Shoup~\cite{gs}. In the algebraic
   model, the cost of modular composition makes this solution inferior
-  to the one in the previous item. In the boolean model, since $\xi^q$
+  to the one in the previous paragraph. In the boolean model, since $\xi^q$
   is known, the cost becomes $\ell n^{1+\varepsilon} (\log q)^{1+o(1)}$
   bit operations.
 \item Items ${\bf 5}$ and ${\bf 6}$ in the previous subsection show
@@ -809,7 +819,7 @@ In the boolean model, we set $\beta = 1/2$. Then, each of the steps
 \ref{step:hasse-5} can each be performed in $n^{3/2+\varepsilon} (\log
 q)^{1+o(1)}$ bit operations, whereas the initial computation of
 $\xi^q$ takes $ n^{1+\varepsilon} (\log q)^{2+o(1)}$ bit operations. To
-summarize, we have the following.
+summarize, we have the following result.
  
 \begin{proposition}
   \label{theo:hasse-inv-bit}
@@ -822,8 +832,13 @@ To conclude the proof of Theorem~\ref{theo:1}, we apply the previous
 results with input $u=0$ and $n-1$, and obtain $B_{0,v}$, for $v$ as
 defined previously. If $v=n-1$, we are done, otherwise we re-enter the
 algorithm with input $v$ and $n-1$ (so that $n-1-v \le
-(n-1)^\beta$), and so on. The cost of the first call dominates the
-overall runtime, so that Theorem~\ref{theo:1} is proved.
+(n-1)^\beta$), and so on. Starting from Proposition~\ref{theo:hasse-inv},
+we see that the cost of the first call dominates the
+overall runtime, so the first item in Theorem~\ref{theo:1} is proved.
+Using Proposition~\ref{theo:hasse-inv-bit}, the situation is similar,
+up to the total contribution of the second term in the sum, since a factor
+$\log\log n$ appears; however, we can absorb it in the $1+\varepsilon$ 
+exponent and the second claim in Theorem~\ref{theo:1} follows.
 
 
 %####################################################
@@ -838,7 +853,7 @@ without loss of generality, we may assume that $f$ is
 squarefree~\cite{knu,yun}, that is, does not contain a square of an
 irreducible polynomial as a factor.
 
-Let $\phi: \F_q[x] \to \F_q(x)\langle\tau\rangle$ be an elliptic
+Let $\phi: \F_q[x] \to \F_q(x)\ang{\tau}$ be an elliptic
 module over $\F_q(x)$ and suppose that $\gcd(f,\Delta_\phi)=1$. 
  The following lemma is the key of our algorithm.
 \begin{lemma}\label{lemma:split}
@@ -853,7 +868,7 @@ module over $\F_q(x)$ and suppose that $\gcd(f,\Delta_\phi)=1$.
   since $g$ divides $f$, $r_{\phi,n} \bmod g = h_{\phi,f} \bmod g$. 
 
   Then, $\phi$ having supersingular reduction at $g$ means that
-  $r_{\phi,k} \bmod g=0$, If this is the case, since $g$ divides
+  $r_{\phi,k} \bmod g=0$. If this is the case, since $g$ divides
   $x^{q^k}-x$, the recurrence relation~\eqref{eisenstein_recurrence} implies $r_{\phi,k+1} = 0 \mod
   g$. Since this recurrence has order~2, this further yields
   \begin{equation}\label{supersingular_zero}
@@ -870,7 +885,7 @@ module over $\F_q(x)$ and suppose that $\gcd(f,\Delta_\phi)=1$.
   in particular, $r_{\phi,n} \bmod g = h_{\phi,f} \bmod g$ is nonzero.
 \end{proof}
 
-This suggests that we could use a Drineld module $\phi$ in a
+This suggests that we could use a Drinfeld module $\phi$ in a
 polynomial factorization algorithm to separate supersingular primes
 from those that are not. For most Drinfeld modules, the density of
 supersingular primes is too small for this to work. However, for a
@@ -902,7 +917,7 @@ $L/\F_q(x)$ and compute $r_{\phi,n} \bmod f$, with $n=
 \begin{equation}
 \label{equ:fact-sep}
 \gcd(r_{\phi,n}\bmod f, f) =
-\prod_{\langle f_i \rangle \text{~inert in~}\ L/\F_q(x)}f_i
+\prod_{\langle f_i \rangle \text{~inert in~} L/\F_q(x)}f_i
 \end{equation}
 is a factor of $f$. Since for every degree, roughly half the primes of
 that degree are inert in $L/\F_q(x)$, the factorization thus obtained
@@ -952,16 +967,16 @@ multiplication.
     $\gamma := g_\phi \bmod f$, with $g_\phi:=d(1+d^{\frac{q-1}{2}})^2$ \\
     $\delta := \Delta_\phi \bmod f$, with $\Delta_\phi:=d^{\frac{q+1}{2}}(1+d^{\frac{q-1}{2}})^{q+1}$
     \STATE\label{step:fac-4}
-    Compute $r_{\phi, n} \bmod f$ as in recurrence 
-    \eqref{eisenstein_recurrence}
+    Compute $r_{\phi, n'} \bmod f$ as in recurrence 
+    \eqref{eisenstein_recurrence}, with $n'=\deg(f)$
     \STATE\label{step:fac-split}
     Compute $h := \gcd(r_{\phi,n} \bmod f, f)$ and recursively factor $h$ and $f/h$.
   \end{algorithmic}
 \end{algorithm}
 
 \begin{remark}
-  In Step $4$, we may compute $r_{\phi,k} \bmod f$ for some $k\geq n$
-  instead of $r_{\phi,n} \bmod f$; the rest of the algorithm would run
+  In Step $4$, we may compute $r_{\phi,k} \bmod f$ for some $k\geq n'/2$
+  instead of $r_{\phi,n'} \bmod f$; the rest of the algorithm would run
   identically. For instance, if we use the algorithm of the previous
   section to compute $r_{\phi,k} \bmod f$, it might be convenient to
   choose $k$ so that only one call is made in the main loop of that
@@ -973,7 +988,7 @@ The irreducibility test in Step $1$ can be performed in
 $O(n^{(\omega+1)/2}(\log n)^2 + \MM(n)\log q)$ operations in
 $\F_q$~\cite{vzGG}, or $n^{1+\varepsilon} (\log q)^{2+o(1)}$ bit
 operations. In Step $2$, all the linear factors of $f$ are found and
-removed using a root finding algorithm; it takes $O(\MM(n)\log n
+removed using a root finding algorithm; it takes an expected $O(\MM(n)\log n
 \log(nq))$ operations in $\F_q$~\cite{vzGG}, or $n^{1+\varepsilon}
 (\log q)^{2+o(1)}$ bit operations (this step needs only be done once
 in the whole algorithm).
@@ -982,19 +997,20 @@ In Step $3$, we choose $a \in \F_q$ at random and construct a Drinfeld
 module $\phi$ with complex multiplication by
 $\F_q(x)(\sqrt{x-a})$. The primes that divide $\D_\phi$ are
 precisely $\{(x-b), b \in \F_q, \sqrt{b-a} \notin \F_q\} \cup
-\{d\}$.Hence, we might have run into issues of bad reduction if $f$
+\{x-a\}$.Hence, we might have run into issues of bad reduction if $f$
 had linear factors; it is to prevent this that we performed root finding
 in Step~\ref{step:fac-2}. The computation of $\gamma$ and $\delta$ takes
 $O(\MM(n)\log q)$ operations in $\F_q$.
 
-As mentioned in~\eqref{equ:fact-sep}, $\gcd(r_{\phi,n} \bmod f, f)$ is
-the product of all irreducible factors of $f$ that are supersingular
-with respect to $\phi$. Thus, our algorithm separates the irreducible
-factors supported at the supersingular primes from those supported at
-the ordinary primes. In the following, we show that for an elliptic
-module chosen randomly as in Step \ref{step:fac-3}, the splitting of
-$f$ in Step \ref{step:fac-split} is random enough to ensure that the
-recursion depth is $O(\log n)$. 
+As mentioned in~\eqref{equ:fact-sep}, $\gcd(r_{\phi,n'} \bmod f, f)$
+is the product of all irreducible factors of degree greater than $1$
+of $f$ that are supersingular with respect to $\phi$. Thus, our
+algorithm separates the irreducible factors supported at the
+supersingular primes from those supported at the ordinary primes. In
+the following, we show that for an elliptic module chosen randomly as
+in Step \ref{step:fac-3}, the splitting of $f$ in Step
+\ref{step:fac-split} is random enough to ensure that the recursion
+depth is $O(\log n)$.
 
 Assuming as in the statement of Theorem~\ref{theo:main-factor} that
 Step \ref{step:fac-4} is computed using $H(n,q)$ operations in $\F_q$,
@@ -1006,7 +1022,7 @@ on $H$, resp.\ $H^*$, the runtime of the algorithm is then an expected
 \end{itemize}
 this proves Theorem~\ref{theo:main-factor}. 
 
-In the following lemma, we establish our claim on the probability of
+In the following lemma, we establish the claim above on the probability of
 finding a nontrivial factor of $f$. For the lemma to apply to the
 algorithm, we need to assume $\sqrt{q} \ge 12(n+2)$.  This assumption
 can be made without loss of generality in theory: if $\sqrt{q} <
@@ -1020,7 +1036,7 @@ recommend running Algorithm \ref{alg:factoring} as is and take Lemma
 be logarithmic in $n$.
 \begin{lemma}
   \label{splitting_lemma}
-  Suppose that $f$ is not irreducible and that $12(n+2) \le
+  Suppose that $f$ is not irreducible, without linear factors, and that $12(n+2) \le
   \sqrt{q}$. Let $\phi$ be an elliptic module with complex
   multiplication by the imaginary quadratic extension
   $\F_q(x)(\sqrt{x-a})$, where $a \in \F_q$ is chosen at random. Then,
@@ -1051,8 +1067,8 @@ be logarithmic in $n$.
     in $\F_q(x)(\sqrt{x-a})$ if and only if $x-a$ splits in exactly
     one of $K_1, K_2$;
   \item[(b)] exactly one of $\langle f_1\rangle, \langle f_2\rangle$
-    splits in $\F_q(x)(\sqrt{x-a})$ if and only if $x-a$ splits in
-    either $K_1$ and $K_2$, or none of them.
+    splits in $\F_q(x)(\sqrt{x-a})$ if and only if $x-a$     either splits  in
+ $K_1$ and $K_2$, or splits in none of them.
   \end{enumerate}
   We are in case (a) if $q =1 \bmod 4$ or $k_1 = k_2 \bmod 2$, and
   in case (b) for all other values of the parameters. Since $f_1, f_2$ are distinct,
@@ -1066,23 +1082,23 @@ be logarithmic in $n$.
   $\gal(K_1K_2/\F_q(x)) \cong \Z/2\Z \oplus \Z/2\Z$; case (b) occurs
   when its value is either $(0,0)$ or $(1,1)$.  Applying the effective
   Chebotarev density theorem over function fields~\cite[Proposition~6.4.8]{FrJa08},
-  for any $\tau=(\tau_1,\tau_2) \in \Z/2\Z \oplus \Z/2\Z$, 
-  we obtain that the number $N_\tau$ of degree 1 primes in $\F_q(x)$ that are unramified in $K_1K_2$ 
-  and of symbol $\tau$ satisfies
+  for any $\eta=(\eta_1,\eta_2) \in \Z/2\Z \oplus \Z/2\Z$, 
+  we obtain that the number $N_\eta$ of degree 1 primes in $\F_q(x)$ that are unramified in $K_1K_2$ 
+  and of symbol $\eta$ satisfies
   \begin{align*}
-  \left|N_\tau - \frac{q}{4} \right| & \le  \frac 12 \left ( (4+g(K_1K_2)) q^{1/2} + 4 q^{1/4}  + (4 + g(K_1K_2)) \right)  
+  \left|N_\eta  - \frac{q}{4} \right| & \le  \frac 12 \left ( (4+g(K_1K_2)) q^{1/2} + 4 q^{1/4}  + (4 + g(K_1K_2)) \right)  
    %% &\le \frac 32 (4+g(K_1 K_2)) q^{1/2},
   \end{align*}
   where $g(K_1K_2)$ is the genus of $K_1K_2$. Taking into account the
-  prime at infinity, we obtain that the number $N_a$ of degree one
+  prime at infinity, we obtain that in case (a), the number $N_{\rm (a)}$ of degree one
   primes $\{\langle x-a\rangle, a \in \F_q\}$ that are neither totally
-  inert nor totally split in $K_1K_2$, and the number $N_b$ of degree
+  inert nor totally split in $K_1K_2$, and that in case (b), the number $N_{\rm (b)}$ of degree
   one primes $\{\langle x-a\rangle, a \in \F_q\}$ that are either
   totally inert or totally split in $K_1K_2$ satisfy
-  $$ N_a \ge N_{(0,1)} + N_{(1,0)} -1, \quad N_b \ge N_{(0,0)} + N_{(1,1)} -1.$$
+  $$ N_{\rm (a)} \ge N_{(0,1)} + N_{(1,0)} -1, \quad N_{\rm (b)} \ge N_{(0,0)} + N_{(1,1)} -1.$$
   The previous inequalities imply
   \begin{align*}
-N_a, N_b & \ge \frac 12 q - \left ( (4+g(K_1K_2)) q^{1/2} + 4 q^{1/4}  + (5 + g(K_1K_2)) \right)  \\
+N_{\rm (a)}, N_{\rm (b)} & \ge \frac 12 q - \left ( (4+g(K_1K_2)) q^{1/2} + 4 q^{1/4}  + (5 + g(K_1K_2)) \right)  \\
 &\ge \frac 12 q - 3(4+g(K_1K_2)) q^{1/2}.
   \end{align*}
   Using the Riemann-Hurwitz genus
@@ -1100,7 +1116,7 @@ N_a, N_b & \ge \frac 12 q - \left ( (4+g(K_1K_2)) q^{1/2} + 4 q^{1/4}  + (5 + g(
   $2 g(K_1 K_2)-2 \le -8 + 2(k_1 + k_2) + 3$, which implies our claim.
 
   Using the inequality $k_1 + k_2 \le n$, we deduce
-  $$N_a, N_b \ge \frac 12 q - 3(n+2) q^{1/2},$$ 
+  $$N_{\rm (a)}, N_{\rm (b)} \ge \frac 12 q - 3(n+2) q^{1/2},$$ 
   so that in either case, the probability of finding a non-trivial factorization
   of $f$ is at least $1/2- 3(n+2)/q^{1/2}$.
   Since $12(n+2)  \le q^{1/2}$, this probability is at least $1/4$.
@@ -1145,11 +1161,11 @@ next step it generates the random supersingular elliptic module $\phi$ given by
 \]
 This means $\phi$ has complex multiplication by the imaginary
 quadratic extension $\F_7(x)(\sqrt{x + 1})$ of $\F_7(x)$. After
-computing the $7$-th Hasse invariant lift $r_{\phi, 7} \bmod f$, we
-find $a = \gcd(r_{\phi, 10}, f) = 1 + 4x + x^2 + 4x^3 + x^4$; this is
-the product of the factors of $f$ that are supuersingular with respect
-to $\phi$. Now, $a$ does not pass the irreducibility check, so the
-process is repeated for $a$. The next randomly generated supersingular
+computing the $10$-th Hasse invariant lift $r_{\phi, 10} \bmod f$, we
+find $h = \gcd(r_{\phi, 10}, f) = 1 + 4x + x^2 + 4x^3 + x^4$; this is
+the product of the factors of $f$ that are supersingular with respect
+to $\phi$. Now, $h$ does not pass the irreducibility check, so the
+process is repeated for $h$. The next randomly generated supersingular
 elliptic module is
 \[
 \begin{array}{rll}
@@ -1158,11 +1174,11 @@ elliptic module is
 	\Delta_{\tilde\phi} & = & 6 + x + 5x^2 + 5x^3.
 \end{array}
 \]
-The Hasse invariant lift of this $\phi$ splits $a$ as $
-\tilde a = \gcd(r_{\phi, 4}, a) = 4 + 6x + x^2$, and $a/\tilde a = 2
+The Hasse invariant lift of  $\tilde \phi$ splits $h$ as $
+\tilde h = \gcd(r_{\phi, 4}, h) = 4 + 6x + x^2$, and $h/\tilde h = 2
 + 5x + x^2$ which are both irreducible; again, this means that
-$\tilde a$ is supuersingular and $a/\tilde a$ is ordinary with respect to
-$\tilde \phi$. Finally, $f / a = 2 + 5x + 6x^2 + 3x^3 + 6x^4 + 6x^5 + x^6$
+$\tilde h$ is supersingular and $h/\tilde h$ is ordinary with respect to
+$\tilde \phi$. Finally, $f / h = 2 + 5x + 6x^2 + 3x^3 + 6x^4 + 6x^5 + x^6$
 which is also irreducible. The complete factorization of $f$ is
 then \[ f(x) = (4 + 6x + x^2)(2 + 5x + x^2)(2 + 5x + 6x^2 + 3x^3 +
 6x^4 + 6x^5 + x^6).\]
