@@ -17,10 +17,10 @@
 \hypersetup{
 	unicode=true,
 	colorlinks=true,
-	citecolor=black,
-	filecolor=black,
-	linkcolor=black,
-	urlcolor=black,
+	citecolor=blue,
+	filecolor=blue,
+	linkcolor=blue,
+	urlcolor=blue,
 	pdfstartview={FitH},
 }
 
@@ -207,7 +207,7 @@ algorithmic viewpoint (for instance, it is known that they are not
 suitable for usual forms of public key cryptography~\cite{Scanlon01}).
 
 In this article, we give an algorithm for the computation of the Hasse
-invariant of elliptic modules over finite fields, and show how fast
+invariant of elliptic modules over finite fields, and show how efficient
 algorithms for this particular problem (and a natural generalization
 thereof) can be used to factor polynomials over finite fields.
 
@@ -316,7 +316,7 @@ that this happens with non-vanishing probability.
   $\F_q$, and any Drinfeld module $\phi$ as in Theorem~\ref{theo:1},
   one can compute $h_{\phi,f}$ in $H(n,q)$ operations in $\F_q$, resp.\
   $H^*(n,q)$ bit operations. Suppose also that $H(n_1,q)+H(n_2,q) \le
-  H(n_1+n_2,q)$, resp.\ $H(n_1,q)+H(n_2,q) \le H(n_1+n_2,q)$, holds for
+  H(n_1+n_2,q)$, resp.\ $H^*(n_1,q)+H^*(n_2,q) \le H^*(n_1+n_2,q)$, holds for
   all $n_1,n_2 \ge 0$.
 
   Then there is a randomized algorithm that can factor degree $n$
@@ -362,10 +362,10 @@ As to if the exponent $3/2$ in $n$ can be lowered remains an
 outstanding open question.
 
 
-The paper is organized as follows. In \S~\ref{drinfeld_section},
+The paper is organized as follows. In \S\ref{drinfeld_section},
 elliptic modules are introduced; we define Hasse invariants and give
 our algorithm for their computation, proving Theorem~\ref{theo:1}.  In
-\S~\ref{randomized_section}, we describe our factoring algorithm and
+\S\ref{randomized_section}, we describe our factoring algorithm and
 prove Theorem~\ref{theo:main-factor}, using a few notions from
 function field arithmetic.
 
@@ -793,10 +793,12 @@ cost of modular composition.
   to the one in the previous paragraph. In the boolean model, since $\xi^q$
   is known, the cost becomes $\ell n^{1+\varepsilon} (\log q)^{1+o(1)}$
   bit operations.
+  
 \item Items ${\bf 5}$ and ${\bf 6}$ in the previous subsection show
   that Step~\ref{step:hasse-3} and~\ref{step:hasse-5} can be done
   using $O(m^{(\omega-1)/2} n^{(\omega+1)/2})$ operations in $\F_q$,
   resp.\ $m n^{1+\varepsilon} (\log q)^{1+o(1)}$ bit operations.
+  
 \item Step \ref{step:hasse-4} can be done using multipoint evaluation
   \cite{vzGG}. We are evaluating a $2 \times 2$ polynomial matrix of
   degree at most $\ell$ at $m$ points.  We first build the subproduct
