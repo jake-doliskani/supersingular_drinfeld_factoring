@@ -179,7 +179,7 @@ implementation of the Kaltofen-Shoup algorithm.
 \section{Introduction}
 
 Drinfeld modules of rank two are often presented as an analogue over
-function fields such as $\F_q(x)$ (for an off prime power $q$) of elliptic
+function fields such as $\F_q(x)$ (for an add prime power $q$) of elliptic
 curves over $\Q$; following Drinfeld's original terminology,
 we will often call them {\em elliptic modules} in this paper. In very
 concrete terms, a Drinfeld module over $\F_q(x)$ is simply a ring
@@ -233,12 +233,12 @@ we say that $\phi$ has {\em good reduction} at $f$. Then, the {\em
 $\tau^k$ in $\phi_f\bmod f =\sum_{i=0}^{2k} h_i \tau^i$, with $h_i$
 in $\F_q[x]/f$ for all $i$ (all coefficients of index less than $k$
 vanish modulo $f$).  Using a recurrence due to Gekeler~\cite{gek}
-(which is somewhat similar to the one used in the elliptic case), it
+(which is somewhat similar to the one used for elliptic curves), it
 is then possible to define $h_{\phi,f}$ for an arbitrary squarefree
 $f$ in a consistent manner, while ensuring arithmetic properties
 needed for the factorization algorithm below.
 
-As in the elliptic case, one can immediately deduce an algorithm from
+As in the case of elliptic curves, one can immediately deduce an algorithm from
 the definition; our first contribution is to show that a better
 algorithm exist. We will consider two different complexity models in
 our runtime analysis: an \textit{algebraic model} and a
@@ -626,7 +626,7 @@ operations in $\F_q$, since merely writing down each $\rho_i$ involves
 $\Theta(n)$ operations. The algorithm in this section takes
 subquadratic time.
 
-In the elliptic case, the Hasse invariant is obtained as the element
+In the case of elliptic curves, the Hasse invariant is obtained as the element
 of index $(p-1)/2$ in an order-2 recurrence with polynomial
 coefficients. Seeing the similarity with Eq.~\eqref{eq:rho}, it is
 natural to adapt these ideas to our context. This is however not
