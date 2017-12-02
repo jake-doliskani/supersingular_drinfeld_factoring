@@ -1,48 +1,20 @@
-\documentclass[12pt]{article}
+\documentclass{siamonline1116}
 
-\usepackage{graphicx}              
-\usepackage{fullpage}              
-\usepackage{amsmath}               
 \usepackage{amsfonts}              
-\usepackage{amsthm}                
-\usepackage{amssymb}
 \usepackage{mathrsfs}
-\usepackage{url}
-\usepackage{hyperref}
 \usepackage{algorithmic}
 \usepackage{algorithm}
-\usepackage{authblk}
+\usepackage{enumitem}
 
 
-\hypersetup{
-	unicode=true,
-	colorlinks=true,
-	citecolor=blue,
-	filecolor=blue,
-	linkcolor=blue,
-	urlcolor=blue,
-	pdfstartview={FitH},
-}
+\numberwithin{theorem}{section}
+\newsiamremark{remark}{Remark}
 
-% theorem environments
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{proposition}[theorem]{Proposition}
-\theoremstyle{definition}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{conjecture}[theorem]{Conjecture}
-\newtheorem{example}[theorem]{Example}
-\newtheorem*{remark}{Remark}
-\newtheorem{note}[theorem]{Note}
 
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 \algsetup{linenodelimiter=.}
-
-
 
 
 
@@ -79,44 +51,14 @@
 \def\R{\ensuremath{\mathbb{R}}}
 \def\Z{\ensuremath{\mathbb{Z}}}
 \def\F{\ensuremath{\mathbb{F}}}
-% \def\H{\ensuremath{\mathbb{H}}}
 \def\K{\ensuremath{\mathbb{K}}}
-% \def\L{\ensuremath{\mathbb{L}}}
-% \def\A{\ensuremath{\mathbb{A}}}
-% \def\B{\ensuremath{\mathbb{B}}}
 \def\P{\ensuremath{\mathbb{P}}}
 \def\MM{\ensuremath{\mathsf{M}}}
 \def\MMM{\ensuremath{\mathsf{MM}}}
-% \def\MC{\ensuremath{\mathsf{C}}}
-% \def\PC{\ensuremath{\mathsf{PC}}}
-% \def\II{\ensuremath{\mathsf{I}}}
-% \def\QQ{\ensuremath{\mathsf{Q}}}
 \def\CC{\ensuremath{\mathsf{C}}}
-% \def\RR{\ensuremath{\mathsf{R}}}
-% \def\AA{\ensuremath{\mathsf{A}}}
-% \def\va{\ensuremath{\mathsf{a}}}
-% \def\vy{\ensuremath{\mathsf{y}}}
-% \def\vu{\ensuremath{\mathsf{u}}}
-% \def\vb{\ensuremath{\mathsf{b}}}
-% \def\vc{\ensuremath{\mathsf{c}}}
-% \def\mul{\ensuremath{\mathsf{mul}}}
-% \def\rem{\ensuremath{\mathsf{rem}}}
-% \def\cat{\ensuremath{\mathsf{cat}}}
-% \def\coeff{\ensuremath{\mathsf{coefficient}}}
-% \def\mulmod{\ensuremath{\mathsf{mulmod}}}
-% \def\x{\ensuremath{\mathbf{x}}}
-% \def\uu{\ensuremath{\mathbf{U}}}
-% \def\bb{\ensuremath{\mathbf{B}}}
-% \def\bxi{\boldsymbol{\xi}}
-% \def\bupsilon{\boldsymbol{\upsilon}}
-% \def\bzeta{\boldsymbol{\zeta}}
-% \def\blambda{\boldsymbol{\lambda}}
 \def\euler{\ensuremath{\varphi}}
 
 \newcommand{\D}{\Delta}
-\usepackage{tikz}
-\usetikzlibrary{matrix,arrows}
-
 \newcommand{\ph}{(\phi/f)}
 \newcommand{\m}{\mathfrak m}
 \newcommand{\g}{\mathfrak g}
@@ -131,50 +73,58 @@
 \newcommand{\ef}{\mathcal F}
 
 
-% \setlength{\parindent}{0mm}
+
+\title{Drinfeld Modules with Complex Multiplication, Hasse Invariants and Factoring Polynomials 
+over Finite Fields}
+
+% Authors: full names plus addresses.
+\author{
+	Javad Doliskani\thanks{Institute for Quantum Computing, University of Waterloo
+	(\email{javad.doliskani@uwaterloo.ca}).}
+	\and
+	Anand Kumar Narayanan\thanks{Laboratoire d'Informatique de Paris 6, Pierre et Marie Curie 
+	University (\email{Anand.Narayanan@lip6.fr})}
+	\and
+	\'Eric Schost\thanks{Cheriton School of Computer Science, University of Waterloo 
+	(\email{eschost@uwaterloo.ca})}
+}
+
+\headers{Hasse Invariants and Factoring Polynomials}{J. Doliskani, A. Narayanan, \'E. Schost}
 
 
 
-
-
-\title{Drinfeld Modules with Complex Multiplication, Hasse Invariants and Factoring Polynomials over Finite Fields}
-
-
-
-\author[1]{Javad Doliskani}
-\author[2]{Anand Kumar Narayanan}
-\author[3]{\'Eric Schost}
-
-\affil[1]{\small Institute for Quantum Computing, University of Waterloo}
-\affil[2]{\small Laboratoire d'Informatique de Paris 6, Pierre et Marie Curie University}
-\affil[3]{\small Cheriton Schoold of Computer Science, University of Waterloo}
-
-\date{}
-
-
+\sloppy
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-\noindent 
-We present a novel randomized algorithm to factor polynomials over a
-finite field $\F_q$ of odd characteristic using rank $2$ Drinfeld
-modules with complex multiplication. The main idea is to compute a
-lift of the Hasse invariant (modulo the polynomial $f \in \F_q[x]$
-to be factored) with respect to a random Drinfeld module $\phi$ with
-complex multiplication. Factors of $f$ supported on prime ideals
-with supersingular reduction at $\phi$ have vanishing Hasse invariant
-and can be separated from the rest.
-
-Incorporating a Drinfeld module analogue of Deligne's congruence, we
-devise an algorithm to compute the Hasse invariant lift, which
-turns out to be the crux of our algorithm. The resulting expected
-runtime of $n^{3/2+\varepsilon} (\log q)^{1+o(1)}+n^{1+\varepsilon} (\log
-q)^{2+o(1)}$ to factor polynomials of degree $n$ over $\F_q$ matches
-the fastest previously known algorithm, the Kedlaya-Umans
-implementation of the Kaltofen-Shoup algorithm.
+	We present a novel randomized algorithm to factor polynomials over a
+	finite field $\F_q$ of odd characteristic using rank $2$ Drinfeld
+	modules with complex multiplication. The main idea is to compute a
+	lift of the Hasse invariant (modulo the polynomial $f \in \F_q[x]$
+	to be factored) with respect to a random Drinfeld module $\phi$ with
+	complex multiplication. Factors of $f$ supported on prime ideals
+	with supersingular reduction at $\phi$ have vanishing Hasse invariant
+	and can be separated from the rest.
+	Incorporating a Drinfeld module analogue of Deligne's congruence, we
+	devise an algorithm to compute the Hasse invariant lift, which
+	turns out to be the crux of our algorithm. The resulting expected
+	runtime of $n^{3/2+\varepsilon} (\log q)^{1+o(1)}+n^{1+\varepsilon} (\log
+	q)^{2+o(1)}$ to factor polynomials of degree $n$ over $\F_q$ matches
+	the fastest previously known algorithm, the Kedlaya-Umans
+	implementation of the Kaltofen-Shoup algorithm.
 \end{abstract}
+
+\begin{keywords}
+	Elliptic modules, Drinfeld modules, Polynomial factorization, Hasse invariant, Complex 
+	multiplication
+\end{keywords}
+
+\begin{AMS}
+	11G09, 11Y16, 12Y05
+\end{AMS}
+
 
 \section{Introduction}
 
@@ -261,10 +211,8 @@ theorem.
   Let $\phi: \F_q[x] \to \F_q(x)\ang{\tau}$ be an elliptic
   module, such that $\phi(x)=x+ g_\phi \tau+\Delta_\phi \tau^2$, with
   $g_\phi$ and $\Delta_\phi$ in $\F_q[x]$.
-
   Given a squarefree polynomial $f$ of degree $n$, as well as $g_\phi
-  \bmod f$ and $\Delta_\phi \bmod f$, one can compute $h_{\phi,f}$
-  using
+  \bmod f$ and $\Delta_\phi \bmod f$, one can compute $h_{\phi,f}$ using
   \[O(n^{(1 - \beta)(\omega - 1) / 2 + (\omega + 1) / 2} + \MM(n^{1+\beta})\log qn)\] 
   operations in $\F_q$, for any $\beta \in (0,1)$, or using
   \[O( n^{3/2+\varepsilon} (\log q)^{1+o(1)} + n^{1+\varepsilon} (\log q)^{2+o(1)})\]
@@ -318,12 +266,11 @@ that this happens with non-vanishing probability.
   $H^*(n,q)$ bit operations. Suppose also that $H(n_1,q)+H(n_2,q) \le
   H(n_1+n_2,q)$, resp.\ $H^*(n_1,q)+H^*(n_2,q) \le H^*(n_1+n_2,q)$, holds for
   all $n_1,n_2 \ge 0$.
-
   Then there is a randomized algorithm that can factor degree $n$
   polynomials over $\F_q$ in an expected
-  \begin{itemize}
-\item $\tildO(H(n,q)  + n^{(\omega+1)/2} + \MM(n)\log q )$ operations in $\F_q$, or
-\item $\tildO(H^*(n,q)) + n^{1+\varepsilon}(\log q)^{2+o(1)}$ bit operations.
+  \begin{itemize}[leftmargin = \leftmargini]
+	\item $\tildO(H(n,q)  + n^{(\omega+1)/2} + \MM(n)\log q )$ operations in $\F_q$, or
+	\item $\tildO(H^*(n,q)) + n^{1+\varepsilon}(\log q)^{2+o(1)}$ bit operations.
   \end{itemize}
 \end{theorem}
 Combining the first item in Theorem~\ref{theo:1} with the result
@@ -1062,7 +1009,7 @@ be logarithmic in $n$.
   $y^2-f_i$. Depending on the values of $q$ and $k_1,k_2$, by
   quadratic reciprocity over function fields \cite{carlitz1932},
   one of the following alternative holds:
-  \begin{enumerate}
+  \begin{enumerate}[leftmargin = \leftmargini]
   \item[(a)] exactly one of $\langle f_1\rangle, \langle f_2\rangle$ splits
     in $\F_q(x)(\sqrt{x-a})$ if and only if $x-a$ splits in exactly
     one of $K_1, K_2$;
@@ -1183,7 +1130,7 @@ which is also irreducible. The complete factorization of $f$ is
 then \[ f(x) = (4 + 6x + x^2)(2 + 5x + x^2)(2 + 5x + 6x^2 + 3x^3 +
 6x^4 + 6x^5 + x^6).\]
 
-\bibliographystyle{plain}
+\bibliographystyle{siamplain}
 \bibliography{references}
 \end{document}
 

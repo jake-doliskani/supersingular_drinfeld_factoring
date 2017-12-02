@@ -15,6 +15,7 @@
 *-blx.aux
 *-blx.bib
 *.brf
+*.thm
 *.run.xml
 supersingular_drinfeld_factoring.pdf
 .cproject
