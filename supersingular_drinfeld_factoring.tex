@@ -399,8 +399,10 @@ $\Delta_\phi \neq 0 \mod f$, we have
 Hence $r_{\phi,k}$ is in a sense a lift to $\F_q[x]$ of all the Hasse
 invariants of $\phi$ at primes of degree $k$. Using the sequence
 $r_{\phi,k}$ allows us to define a generalization of $h_{\phi,f}$ to
-non-irreducible polynomials $f$, by setting $h_{\phi,f} =
-r_{\phi,\deg(f)} \bmod f$.  The following subsections give our
+non-irreducible polynomials $f$, by setting \[h_{\phi,f} :=
+\gcd\left(r_{\phi,\deg(f)}\bmod f,r_{\phi,\deg(f)+1}\bmod f\right).\] 
+Our definition will be justified in light of lemma \ref{lemma:split}.
+Unlike in the irreducible case, we define $h_{\phi,f}$ only up to a non zero $\F_q$ multiple, which will suffice for our purpose. The following subsections give our
 algorithm to compute $h_{\phi, f}$ for an arbitrary $f$, thereby
 proving Theorem~\ref{theo:1}.
 
@@ -535,8 +537,7 @@ in
 
 Given a squarefree $f$ in $\F_q[x]$ as above, with $\deg(f)=n$, and an
 elliptic module $\phi$ over $\F_q(x)$, we present an efficient
-algorithm to compute $h_{\phi,f} = r_{\phi,n} \bmod f$.  Our strategy
-is to first phrase the recurrence in matrix form with entries being
+algorithm to compute $r_{\phi,n} \bmod f$. Once $r_{\phi,n} \bmod f$ is computed, $r_{\phi,n+1}\bmod f$ is obtained through one more step in the recurrence thereby yielding  $h_{\phi,f} = \gcd(r_{\phi,n}\bmod f,r_{\phi,n+1}\bmod f)$. Our strategy to compute $r_{\phi,n} \bmod f$ is to first phrase the recurrence in matrix form with entries being
 polynomials modulo $f$. We then observe that solving the recurrence
 amounts to computing the product of a carefully constructed sequence
 of matrices twisted by the Frobenius action. The final step is to
@@ -808,29 +809,56 @@ module over $\F_q(x)$ and suppose that $\gcd(f,\Delta_\phi)=1$.
   reduction at $g$ if and only if $h_{\phi,f} \bmod g=0$.
 \end{lemma}
 \begin{proof}
-  First, note that by assumption, $\phi$ has good reduction at $g$. If
-  we write $k=\deg(g)$ and $n=\deg(f)$, we have $h_{\phi,g}=r_{\phi,k}
-  \bmod g$, where $r_{\phi,k}$ is as in~\eqref{eisenstein_recurrence},
-  and likewise $h_{\phi,f} = r_{\phi,n} \bmod f$. In particular,
-  since $g$ divides $f$, $r_{\phi,n} \bmod g = h_{\phi,f} \bmod g$. 
+	First, note that by assumption, $\phi$ has good reduction at $g$. Let $k:=\deg(g)$ and $n:=\deg(f)$ and let $r_{\phi,j}$ be the sequence as in recurrence ~\eqref{eisenstein_recurrence} with respect to $\phi$ and $f$.
+	
+	Assume $\phi$ has supersingular reduction at $g$, that is $h_{\phi,g}=0 \bmod g$. By Deligne's congruence, $r_{\phi,k} = 0 \bmod g$.	 Since $g$ divides
+$x^{q^k}-x$, the recurrence relation~\eqref{eisenstein_recurrence} implies $r_{\phi,k+1} = 0 \bmod g$. Since this recurrence has order~2, this further yields
+\begin{equation}\label{supersingular_zero}
+r_{\phi,j} = 0 \bmod g,\quad j \geq k,
+\end{equation}
+In particular, $r_{\phi,n} \bmod g= 0$ and $r_{\phi,n+1} \bmod g= 0$ which implies $h_{\phi,f} = 0 \mod g$ since $g$ divides $n$.
 
-  Then, $\phi$ having supersingular reduction at $g$ means that
-  $r_{\phi,k} \bmod g=0$. If this is the case, since $g$ divides
-  $x^{q^k}-x$, the recurrence relation~\eqref{eisenstein_recurrence} implies $r_{\phi,k+1} = 0 \mod
-  g$. Since this recurrence has order~2, this further yields
-  \begin{equation}\label{supersingular_zero}
-    r_{\phi,j} = 0 \bmod g,\quad j \geq k,
-  \end{equation}
-  and thus $r_{\phi,n}=0 \bmod g$. Since this quantity is equal to
-  $h_{\phi,f}\bmod g$, the latter vanishes.
-
-  On the other hand, if $\phi$ has ordinary reduction at $g$, then
-  by~\cite[Lemma~2.3]{cor}
-  \begin{equation}\label{supersingular_nonzero}
-    r_{\phi,j} \neq 0 \bmod g, \quad j \geq k;
-  \end{equation}
-  in particular, $r_{\phi,n} \bmod g = h_{\phi,f} \bmod g$ is nonzero.
+Conversely assume $h_{\phi,f} = 0 \mod g$. To prove $\phi$ has supersingular reduction at $g$, it suffices to show $r_{\phi,k} \mod g=0$, since by Deligne's congruence, $r_{\phi,k} \mod g=h_{\phi,g}$. To this end, we claim $r_{\phi,k} \mod g=0$.
+Let $m$ be the smallest positive integer greater than $k$ such that $r_{\phi,m} \bmod g = 0$ and $r_{\phi,m+1} \bmod g =0$. Such an $m$ exists since $h_{\phi,f} = 0 \mod g$ and 
+$g$ divides $f$ together imply $r_{\phi,n} \bmod g = 0$ and $r_{\phi,n+1} \bmod g=0$. From the recurrence \eqref{eisenstein_recurrence}, 
+\[
+r_{\phi,m+1} = g_\phi^{q^m} r_{\phi,m} - \left(x^{q^m}-x\right) \Delta_{\phi}^{q^{m-1}} r_{\phi,m-1} \mod g
+\]
+Hence 
+\[
+\left(x^{q^m}-x\right) \Delta_{\phi}^{q^{m-1}} r_{\phi,m-1} \mod g = 0
+\]
+Since $\phi$ has good reduction at $\phi$, we may conclude that either $r_{\phi,m-1}\mod  g=0$ or $k$ divides $m$. If $r_{\phi,m-1}=0$, then by the minimality of $m$, we may conclude $m-1=k$, that is, $r_{\phi,k}\mod g = 0$, proving our claim. If $k$ divides $m$, then $m-k \geq k$. By ~\cite[Lemma~2.3]{cor}, 
+\[
+r_{\phi,m+1} = r_{\phi,k} r_{\phi,m+1-k}^{q^k}, r_{\phi,m} = r_{\phi,k} r_{\phi,m-k}^{q^k}
+\]
+implying $r_{\phi,k} \mod g = 0$ (proving our claim) or $r_{\phi,m+1-k} \mod g =0$ and $r_{\phi,m-k} \mod g =0$. Since $m-k \geq k$, for the later case to not contradict the minimality of $m$, $m-k$ has to equal $k$, implying $r_{\phi,k} \mod g=0$ thereby proving our claim.  
 \end{proof}
+
+%\begin{proof}
+%  First, note that by assumption, $\phi$ has good reduction at $g$. If
+%  we write $k=\deg(g)$ and $n=\deg(f)$, we have $h_{\phi,g}=r_{\phi,k}
+%  \bmod g$, where $r_{\phi,k}$ is as in~\eqref{eisenstein_recurrence},
+%  and likewise $h_{\phi,f} = r_{\phi,n} \bmod f$. In particular,
+%  since $g$ divides $f$, $r_{\phi,n} \bmod g = h_{\phi,f} \bmod g$. 
+
+%  Then, $\phi$ having supersingular reduction at $g$ means that
+%  $r_{\phi,k} \bmod g=0$. If this is the case, since $g$ divides
+%  $x^{q^k}-x$, the recurrence relation~\eqref{eisenstein_recurrence} implies $r_{\phi,k+1} = 0 \mod
+%  g$. Since this recurrence has order~2, this further yields
+%  \begin{equation}\label{supersingular_zero}
+%    r_{\phi,j} = 0 \bmod g,\quad j \geq k,
+%  \end{equation}
+%  and thus $r_{\phi,n}=0 \bmod g$. Since this quantity is equal to
+%  $h_{\phi,f}\bmod g$, the latter vanishes.
+
+%  On the other hand, if $\phi$ has ordinary reduction at $g$, then
+%  by~\cite[Lemma~2.3]{cor}
+%  \begin{equation}\label{supersingular_nonzero}
+%    r_{\phi,j} \neq 0 \bmod g, \quad j \geq k;
+%  \end{equation}
+%  in particular, $r_{\phi,n} \bmod g = h_{\phi,f} \bmod g$ is nonzero.
+%\end{proof}
 
 This suggests that we could use a Drinfeld module $\phi$ in a
 polynomial factorization algorithm to separate supersingular primes
@@ -891,11 +919,11 @@ Since
 \[ g_\phi^{q+1} = J_{\phi^\prime}^2,\quad \D_{\phi}= J_{\phi^\prime}, \]
 we see that the $J$-invariants of $\phi$ and $\phi'$ are the same,
 that is that $\phi'$ and $\phi$ are isomorphic.  Further, we see that
-$\phi$ is defined over $\F_q[x]$. In summary, $\phi$ has complex
+$\phi$ is defined over $\F_q[x]$. Alternatively, we could have set 
+\[g_\phi = J_{\phi^\prime}, \quad  \D_\phi = J_{\phi^\prime}^{q} \]
+to the same effect. In summary, $\phi$ has complex
 multiplication by $\F_q(x)(\sqrt{d})$ and is defined over
-$\F_q[x]$.
-
-We now state our randomized algorithm to factor polynomials over
+$\F_q[x]$. We now state our randomized algorithm to factor polynomials over
 finite fields using elliptic modules with complex
 multiplication. 
 
@@ -917,7 +945,7 @@ multiplication.
     Compute $r_{\phi, n'} \bmod f$ as in recurrence 
     \eqref{eisenstein_recurrence}, with $n'=\deg(f)$
     \STATE\label{step:fac-split}
-    Compute $h := \gcd(r_{\phi,n} \bmod f, f)$ and recursively factor $h$ and $f/h$.
+    Compute $h := \gcd(\gcd(r_{\phi,n} \bmod f,r_{\phi,n+1} \bmod f), f)$ and recursively factor $h$ and $f/h$.
   \end{algorithmic}
 \end{algorithm}
 
