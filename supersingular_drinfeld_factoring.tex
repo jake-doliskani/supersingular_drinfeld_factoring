@@ -897,33 +897,43 @@ $L/\F_q(x)$ and compute $r_{\phi,n} \bmod f$, with $n=
 is a factor of $f$. Since for every degree, roughly half the primes of
 that degree are inert in $L/\F_q(x)$, the factorization thus obtained
 is likely to be non trivial. Repeating the process for the resulting
-factors leads to a complete factorization of $f$.
+factors leads to a complete factorization of $f$.\\
 
-It remains to construct elliptic modules with complex multiplication.
-Our strategy is to pick an $a \in \F_q$ at random and construct an
-elliptic module $\phi$ with complex multiplication by the imaginary
-quadratic extension $\F_q(x)(\sqrt{d})$ of discriminant $d:=x-a$. From
-\cite{dor}, the elliptic module $\phi^\prime$ with
+\noindent It remains to construct elliptic modules with complex multiplication.\\
+
+\noindent We first consider the case when q is odd. Our strategy is to pick an $a \in \F_q$ at random and construct an elliptic module $\phi$ with complex multiplication by the imaginary quadratic extension $\F_q(x)(\sqrt{d})$ of discriminant $d:=x-a$. From
+\cite{dor}(see also \cite{Schweizer97}[Thm 6]), the elliptic module $\phi^\prime$ with
 \[ g_{\phi^\prime}(x):=\sqrt{d}+\sqrt{d}^q,\quad \D_{\phi^\prime} := 1 \]
-has complex multiplication by $\F_q(x)(\sqrt{d})$. However, $\phi^\prime$ has the disadvantage 
-of not being defined over $\F_q[x]$, since $g_{\phi^\prime}$ is not in $\F_q[x]$. We construct an 
-alternate $\phi$ that is isomorphic to $\phi^\prime$ but defined over $\F_q[x]$. There
-is a notion of $J$-invariant for elliptic modules (see e.g.~\cite{gek});
-the  $J$-invariant
- of $\phi^\prime$  is 
+has complex multiplication by $\F_q(x)(\sqrt{d})$. However, $\phi^\prime$ has the disadvantage of not being defined over $\F_q[x]$, since $g_{\phi^\prime}$ is not in $\F_q[x]$. We construct an alternate $\phi$ that is isomorphic to $\phi^\prime$ but defined over $\F_q[x]$. There is a notion of $J$-invariant for elliptic modules (see e.g.~\cite{gek}); the  $J$-invariant of $\phi^\prime$  is 
 \[ J_{\phi^\prime} := \frac{g_{\phi^\prime}^{q+1}}{\D_{\phi^\prime}} = 
 d^{\frac{q+1}{2}}\left(1+d^{\frac{q-1}{2}}\right)^{q+1}. \]
-Now let $\phi$ be the elliptic module defined by
-\[g_\phi = d\left(1 + d^{\frac{q-1}{2}}\right)^2, \quad  \D_\phi = d^{\frac{q + 1}{2}}\left(1 + d^{\frac{q-1}{2}}\right)^{q+1}. \]
-Since 
-\[ g_\phi^{q+1} = J_{\phi^\prime}^2,\quad \D_{\phi}= J_{\phi^\prime}, \]
-we see that the $J$-invariants of $\phi$ and $\phi'$ are the same,
-that is that $\phi'$ and $\phi$ are isomorphic.  Further, we see that
-$\phi$ is defined over $\F_q[x]$. Alternatively, we could have set 
+%Now let $\phi$ be the elliptic module defined by
+%\[g_\phi = d\left(1 + d^{\frac{q-1}{2}}\right)^2, \quad  \D_\phi = d^{\frac{q + 1}{2}}\left(1 + d^{\frac{q-1}{2}}\right)^{q+1}. \]
+%Since 
+%\[ g_\phi^{q+1} = J_{\phi^\prime}^2,\quad \D_{\phi}= J_{\phi^\prime}, \]
+%we see that the $J$-invariants of $\phi$ and $\phi'$ are the same,
+%that is that $\phi'$ and $\phi$ are isomorphic.  Further, we see that
+%$\phi$ is defined over $\F_q[x]$.
+% Alternatively, we could have set
+Now let $\phi$ be the elliptic module defined by 
 \[g_\phi = J_{\phi^\prime}, \quad  \D_\phi = J_{\phi^\prime}^{q} \]
-to the same effect. In summary, $\phi$ has complex
+%to the same effect. 
+The $J$-invariants of $\phi$ and $\phi'$ are the same, hence $\phi'$ and $\phi$ are isomorphic. Further, $\phi$ is defined over $\F_q[x]$. In summary, $\phi$ has complex
 multiplication by $\F_q(x)(\sqrt{d})$ and is defined over
-$\F_q[x]$. We now state our randomized algorithm to factor polynomials over
+$\F_q[x]$.\\
+
+
+\begin{remark}
+When $q(=2^m)$ is even, the construction of Schweizer \cite{Schweizer97}[Thm. 6] gives the required elliptic modules with complex multiplication. Pick an $(a,b)\in \F_q^\times \times \F_q$ at random and set $d=ax+b$. The elliptic module (upto isomorphism) $\phi$ with j-invariant
+\[
+J_{\phi} = \left(1+d+\ldots+d^{2^{m-2}}+d^{2^{m-1}}\right)^{q+1}/a
+\]
+has complex multiplication by the ring $\F_q[x][w]$ in the Artin-Schreier extension $\F_q(x)(w)$ where $w^2+w=d$. Take $\phi$ to be the elliptic module defined by 
+\[g_\phi = J_{\phi}, \quad  \D_\phi = J_{\phi}^{q} \]
+ensuring $\phi$ is defined over $\F_q[x]$.
+\end{remark}
+
+\noindent We now state our randomized algorithm to factor polynomials over
 finite fields using elliptic modules with complex
 multiplication. 
 
@@ -938,9 +948,11 @@ multiplication.
     Remove the linear factors of $f$ and output them
     \STATE\label{step:fac-3}
     Pick $a \in \F_q$ uniformly at random and compute \\
-    $d := x - a$ \\
-    $\gamma := g_\phi \bmod f$, with $g_\phi:=d(1+d^{\frac{q-1}{2}})^2$ \\
-    $\delta := \Delta_\phi \bmod f$, with $\Delta_\phi:=d^{\frac{q+1}{2}}(1+d^{\frac{q-1}{2}})^{q+1}$
+    $d := x - a$,\\
+    $J:=d^{\frac{q+1}{2}}\left(1+d^{\frac{q-1}{2}}\right)^{q+1} \bmod f$, \\
+	$g_\phi:=J \bmod f$ and	$\Delta_\phi := J^q \bmod f$\\	
+%    $\gamma := g_\phi \bmod f$, with $g_\phi:=d(1+d^{\frac{q-1}{2}})^2$ \\
+%    $\delta := \Delta_\phi \bmod f$, with $\Delta_\phi:=d^{\frac{q+1}{2}}(1+d^{\frac{q-1}{2}})^{q+1}$
     \STATE\label{step:fac-4}
     Compute $r_{\phi, n'} \bmod f$ as in recurrence 
     \eqref{eisenstein_recurrence}, with $n'=\deg(f)$
@@ -1097,6 +1109,21 @@ N_{\rm (a)}, N_{\rm (b)} & \ge \frac 12 q - \left ( (4+g(K_1K_2)) q^{1/2} + 4 q^
   Since $12(n+2)  \le q^{1/2}$, this probability is at least $1/4$.
 \end{proof}
 
+\begin{remark} There is an obstruction to an even characteristic analogue of Lemma \ref{splitting_lemma} being true. Let $q$ be even and suppose $\phi$ is an elliptic module with complex multiplication by the ring $\F_q[x][w]$ in an Artin-Schreier extension, where $(a,b) \in \F_q^\times \times \F_q$ is chosen at random and $w^2+w=ax+b$. Let $f$ have distinct monic irreducible factors $f_1,f_2$ of respective degrees $k_1>1,k_2>1$. 	Since $k_1,k_2$ are greater than $1$, none of $\langle f_1\rangle,
+	\langle f_2\rangle$ ramify in $\F_q(x)(w)$. Therefore, the
+	probability that exactly one of $\langle f_1\rangle, \langle
+	f_2\rangle$ is supersingular with respect to $\phi$ is the same as
+	the probability that exactly one of them splits in
+	$\F_q(x)(w)/\F_q(x)$. The latter is equivalent to exactly one of the two equations
+	\begin{equation}\label{eq:char_2_congruence}
+	w^2+w = ax+b \bmod f_1(x),\ w^2+w = ax+b \bmod f_2(x)
+	\end{equation}
+	possessing a solution $w \in \F_q[x]$. Analogous to the proof of Lemma \ref{splitting_lemma}, one may look to reciprocity laws for Artin-Schreier extensions to phrase this condition in terms of polynomial congruences involving $f_1$ and $f_2$ modulo $ax+b$. However, the reciprocity law (due to Hasse \cite{Hasse34}, see also \cite{Conrad}[Thm 4.2]) dictates that the existence of solutions to the equations \eqref{eq:char_2_congruence} depends not on congruences modulo $ax+b$ but only on the $(k_1-1)^{th}$ degree (resp. $(k_2-1)^{th}$) coefficient of $f_1$ (resp. $f_2$) and the parity of the degrees $k_1$ and $k_2$. In particular, by \cite{Conrad}[Thm 4.2] or \cite{Conrad}[Ex. 4.1], if $k_1$ and $k_2$ have the same parity and the $(k_1-1)^{th}$ coefficient of $f_1$ equals the $(k_2-1)^{th}$ degree coefficient of $f_2$, then for no $(a,b) \in \F_q^\times \times \F_q$ does exactly one of the equations in \eqref{eq:char_2_congruence} has a solution. Hence, our algorithm cannot distinguish the factors $f_1$ and $f_2$. It remains an open question as to if our algorithmic framework can be modified to handle this situation. We next argue that this is the only obstruction. Say $f_1 = x^{k_1}+c_1x^{k_1-1}+\ldots$ and $f_2 = x^{k_2}+c_2x^{k_2-1}+\ldots$ where $c_1 \neq c_2$. Pick an elliptic module $\phi$ with complex multiplication by the ring $\F_q[x][w]$ in an Artin-Schreier extension, where $a \in \F_q^\times$ is chosen at random and $w^2+w=ax$. By \cite{Conrad}[Ex. 4.1], $w^2+w = x \bmod f_1(x)$ has a solution $w \in \F_q[x]$ if and only if $Tr_{\F_q/\F_2}(ac_1) = 0$, where $Tr_{\F_q/\F_2}$ is the trace from $\F_q$ to $\F_2$. Likewise, $w^2+w = x \bmod f_1(x)$ has a solution $w \in \F_q[x]$ if and only if $Tr_{\F_q/\F_2}(ac_2) = 0$. For our algorithm to separate $f_1$ and $f_2$, it suffices for $Tr_{\F_q/\F_2}(a(c_1+c_2))$ to equal $1$ with constant probability. Since $c_1 \neq c_2$, $c_1+c_2 \neq 0$ and $Tr_{\F_q/\F_2}(a(c_1+c_2))$ does equal $1$ with probability at least $1/2$. 
+\end{remark}
+
+
+
+
 %####################################################
 
 \section{Implementation and example}
@@ -1118,7 +1145,7 @@ In terms of runtime, our algorithm is slower that NTL's built-in
 factorization routine, by what is roughly a constant factor; this is
 not entirely surprising, since working with $2\times 2$ matrices
 induces a non-negligible overhead for our algorithm. To show the
-behavior of the algorithm in practice, we give in this section an
+behaviour of the algorithm in practice, we give in this section an
 example output of Algorithm \ref{alg:factoring} on input a small
 degree polynomial.
 
