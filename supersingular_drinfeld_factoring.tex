@@ -1,14 +1,26 @@
-\documentclass{siamonline1116}
+\documentclass[12pt]{article}
 
+\usepackage{bbm,fullpage}
+\usepackage{amsmath}
+\usepackage{alltt, amssymb, amsthm}
 \usepackage{amsfonts}              
-\usepackage{mathrsfs}
-\usepackage{algorithmic}
 \usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{mathrsfs}
+\usepackage[colorlinks=true,linkcolor=cyan]{hyperref}
+\usepackage{bm}
 \usepackage{enumitem}
 
 
-\numberwithin{theorem}{section}
-\newsiamremark{remark}{Remark}
+%% \numberwithin{theorem}{section}
+%% \newsiamremark{remark}{Remark}
+\newtheorem*{Example}{Example}
+\newtheorem{Coro}{Corollary}
+\newtheorem{Def}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
 
 
 
@@ -80,16 +92,16 @@ over Finite Fields}
 % Authors: full names plus addresses.
 \author{
 	Javad Doliskani\thanks{Institute for Quantum Computing, University of Waterloo
-	(\email{javad.doliskani@uwaterloo.ca}).}
+	(\tt{javad.doliskani@uwaterloo.ca}).}
 	\and
 	Anand Kumar Narayanan\thanks{Laboratoire d'Informatique de Paris 6, Pierre et Marie Curie 
-	University (\email{Anand.Narayanan@lip6.fr})}
+	University (\tt{Anand.Narayanan@lip6.fr})}
 	\and
 	\'Eric Schost\thanks{Cheriton School of Computer Science, University of Waterloo 
-	(\email{eschost@uwaterloo.ca})}
+	(\tt{eschost@uwaterloo.ca})}
 }
 
-\headers{Hasse Invariants and Factoring Polynomials}{J. Doliskani, A. Narayanan, \'E. Schost}
+%% \headers{Hasse Invariants and Factoring Polynomials}{J. Doliskani, A. Narayanan, \'E. Schost}
 
 
 
@@ -116,14 +128,13 @@ over Finite Fields}
 	implementation of the Kaltofen-Shoup algorithm.
 \end{abstract}
 
-\begin{keywords}
+\paragraph{Keywords}
 	Elliptic modules, Drinfeld modules, Polynomial factorization, Hasse invariant, Complex 
 	multiplication
-\end{keywords}
 
-\begin{AMS}
-	11G09, 11Y16, 12Y05
-\end{AMS}
+%% \begin{AMS}
+%% 	11G09, 11Y16, 12Y05
+%% \end{AMS}
 
 
 \section{Introduction}
@@ -840,21 +851,21 @@ module over $\F_q(x)$ and suppose that $\gcd(f,\Delta_\phi)=1$.
 	
   Assume $\phi$ has supersingular reduction at $g$, that is,
   $h_{\phi,g}=0$ (recall that this is a polynomial defined modulo
-  $g$). By Deligne's congruence, $r_{\phi,k} = 0 \bmod g$.  Since $g$
+  $g$). By Deligne's congruence, $r_{\phi,k} \bmod g = 0$.  Since $g$
   divides $x^{q^k}-x$, the recurrence
-  relation~\eqref{eisenstein_recurrence} implies $r_{\phi,k+1} = 0
-  \bmod g$. Since this recurrence has order~2, this further yields
+  relation~\eqref{eisenstein_recurrence} implies $r_{\phi,k+1} \bmod g
+  = 0$. Since this recurrence has order~2, this further yields
   \begin{equation}\label{supersingular_zero}
-    r_{\phi,j} = 0 \bmod g,\quad j \geq k.
+    r_{\phi,j}  \bmod g= 0,\quad j \geq k.
   \end{equation}
   In particular, $r_{\phi,n} \bmod g= 0$ and $r_{\phi,n+1} \bmod g= 0$;
-  this implies $\bar h_{\phi,f} = 0 \bmod g$, since $g$ divides $f$.
+  this implies $\bar h_{\phi,f} \bmod g = 0$, since $g$ divides $f$.
 
-  Conversely, assume $\bar h_{\phi,f} = 0 \bmod g$. To prove that
+  Conversely, assume $\bar h_{\phi,f}  \bmod g= 0$. To prove that
   $\phi$ has supersingular reduction at $g$, using Deligne's
   congruence, it suffices to show $r_{\phi,k} \bmod g=0$.  Since $\bar
-  h_{\phi,f} = 0 \bmod g$ and $g$ divides $f$, we have $r_{\phi,n}
-  \bmod g = 0$ and $r_{\phi,n+1} \bmod g=0$. In particular, if $g=f$,
+  h_{\phi,f} \bmod g = 0$ and $g$ divides $f$, we have $r_{\phi,n}
+  \bmod g = r_{\phi,n+1} \bmod g=0$. In particular, if $g=f$,
   we are done, since then $k=n$.
 
   Else, let $m$ be
@@ -863,9 +874,9 @@ module over $\F_q(x)$ and suppose that $\gcd(f,\Delta_\phi)=1$.
   since then $k < n$. From the
   recurrence \eqref{eisenstein_recurrence},
 \[
-r_{\phi,m+1} = g_\phi^{q^m} r_{\phi,m} - \left(x^{q^m}-x\right) \Delta_{\phi}^{q^{m-1}} r_{\phi,m-1} \mod g
+r_{\phi,m+1}  \mod g = g_\phi^{q^m} r_{\phi,m} - \left(x^{q^m}-x\right) \Delta_{\phi}^{q^{m-1}} r_{\phi,m-1} \mod g;
 \]
-Hence 
+hence,
 \[
 \left(x^{q^m}-x\right) \Delta_{\phi}^{q^{m-1}} r_{\phi,m-1} \mod g = 0.
 \]
@@ -873,9 +884,9 @@ Since $\phi$ has good reduction at $\phi$, we may conclude that either
 $r_{\phi,m-1}\mod g=0$ or $k$ divides $m$. If $r_{\phi,m-1}=0 \bmod g$, then
 by the minimality of $m$, we may conclude $m-1=k$, that is,
 $r_{\phi,k}\mod g = 0$, proving our claim. If $k$ divides $m$, then
-$m-k \geq k$. By~\cite[Lemma~2.3]{cor},
+$m-k \geq k$ (since $m > k$). By~\cite[Lemma~2.3]{cor},
 \[
-r_{\phi,m} = r_{\phi,k} r_{\phi,m-k}^{q^k} \bmod g,\quad r_{\phi,m+1} = r_{\phi,k} r_{\phi,m+1-k}^{q^k} \bmod g,
+r_{\phi,m}  \bmod g= r_{\phi,k} r_{\phi,m-k}^{q^k} \bmod g,\quad r_{\phi,m+1}  \bmod g = r_{\phi,k} r_{\phi,m+1-k}^{q^k} \bmod g,
 \]
 implying either $r_{\phi,k} \mod g = 0$ (proving our claim) or
 $r_{\phi,m+1-k} \mod g =r_{\phi,m-k} \mod g =0$. Since $m-k
@@ -1231,9 +1242,9 @@ Consider the randomly selected squarefree polynomial
 \[ f = 2 + 6x + 5x^3 + 4x^4 + 6x^5 + 2x^7 + 3x^8 + 3x^9 + x^{10} \]
 in $\F_7[x]$. The algorithm starts by checking for linear factors; $f$ has none. So, in the 
 next step it generates the random supersingular elliptic module $\phi$ given by
+choosing $d=1+x$ and computing
 \[
 \begin{array}{rll}
-	d & = & 1 + x, \\
 	g_\phi & = & 3 + 3x + 5x^3 + x^4 + x^5 + x^6 + 6x^7 + 5x^8 + 5x^9,\\
         \Delta_\phi&=&4x+4x^2+5x^3+3x^4+5x^5+6x^6+5x^7+4x^8+2x^9.
 \end{array}
@@ -1245,10 +1256,9 @@ find $\gamma = \gcd(\bar h_{\phi, f}, f) = 1 + 4x + x^2 + 4x^3 + x^4$; this is
 the product of the factors of $f$ that are supersingular with respect
 to $\phi$. Now, $\gamma$ does not pass the irreducibility check, so the
 process is repeated for $\gamma$. The next randomly generated supersingular
-elliptic module is
+elliptic module is built by choosing $d=5+x$ and computing
 \[
 \begin{array}{rll}
-	d & = & 5 + x, \\
 	g_{\tilde\phi} & = & 6 + x + 5x^2 + 5x^3,\\
 	\Delta_{\tilde \phi} & = & 4+x + 6x^2 + 4x^3.
 \end{array}
