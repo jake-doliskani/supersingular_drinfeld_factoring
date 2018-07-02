@@ -6,6 +6,7 @@
 *.out
 *.toc
 *.fmt
+*.mf
 *.fot
 *.cb
 *.cb2
@@ -25,3 +26,4 @@ supersingular_drinfeld_factoring.pdf
 nbproject/
 ss_drinfeld_impl/build/
 
+/ss_drinfeld_impl/dist/
