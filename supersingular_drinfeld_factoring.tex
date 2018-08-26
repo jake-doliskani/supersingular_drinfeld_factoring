@@ -1,10 +1,9 @@
 \documentclass[11pt]{article}
 
 
-\usepackage{bbm,fullpage}
+\usepackage[margin = 1in]{geometry}
 \usepackage{amsmath}
-\usepackage{alltt, amssymb, amsthm}
-\usepackage{amsfonts}              
+\usepackage{amssymb, amsthm}
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{mathrsfs}
@@ -25,15 +24,19 @@
 	pdfstartview = {FitH},
 }
 
-\newtheorem{Coro}{Corollary}
-\newtheorem{theorem}{Theorem}
-\newtheorem{proposition}{Proposition}
-\newtheorem{lemma}{Lemma}
+% theorem environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
 
 \theoremstyle{definition}
-\newtheorem{Def}{Definition}
-\newtheorem{remark}{Remark}
-\newtheorem{example}{Example}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{example}[theorem]{Example}
+\newtheorem*{remark}{Remark}
+\newtheorem{note}[theorem]{Note}
 \newtheorem*{example*}{Example}
 
 
