@@ -1,43 +1,27 @@
-\documentclass[11pt]{article}
+\documentclass[12pt]{article}
 
-
-\usepackage[margin = 1in]{geometry}
+\usepackage{bbm,fullpage}
 \usepackage{amsmath}
-\usepackage{amssymb, amsthm}
+\usepackage{alltt, amssymb, amsthm}
+\usepackage{amsfonts}              
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{mathrsfs}
-\usepackage{hyperref}
+\usepackage[colorlinks=true,linkcolor=cyan]{hyperref}
 \usepackage{bm}
 \usepackage{enumitem}
-\usepackage[dvipsnames]{xcolor}
 
 
-\definecolor{citecolor}{HTML}{00AA00}
-\hypersetup{
-	unicode = true,
-	colorlinks = true,
-	citecolor = citecolor,
-	filecolor = blue,
-	linkcolor = blue,
-	urlcolor = blue,
-	pdfstartview = {FitH},
-}
+%% \numberwithin{theorem}{section}
+%% \newsiamremark{remark}{Remark}
+\newtheorem*{Example}{Example}
+\newtheorem{Coro}{Corollary}
+\newtheorem{Def}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
 
-% theorem environments
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{proposition}[theorem]{Proposition}
-
-\theoremstyle{definition}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{conjecture}[theorem]{Conjecture}
-\newtheorem{example}[theorem]{Example}
-\newtheorem*{remark}{Remark}
-\newtheorem{note}[theorem]{Note}
-\newtheorem*{example*}{Example}
 
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
@@ -50,6 +34,7 @@
 \newcommand{\ang}[1]{\{#1\}}
 \newcommand{\abs}[1]{\left\vert#1\right\vert}
 \newcommand{\dual}[1]{\overline{#1}}
+\newcommand{\mapsfrom}{\ensuremath{\reflectbox{$\mapsto$}}}
 \newcommand{\tildO}{O\tilde{~}}
 % roman numerals
 \newcommand{\romnum}[1]{\romannumeral #1}
@@ -295,7 +280,7 @@ we obtain the following result.
   \le H^*(n_1+n_2,q)$, holds for all $n_1,n_2 \ge 0$.  Then there is a
   randomized algorithm that can factor degree $n$ polynomials over
   $\F_q$ in an expected
-  \begin{itemize}
+  \begin{itemize}[leftmargin = \leftmargini]
 	\item $\tildO(H(n,q)  + n^{(\omega+1)/2} + \MM(n)\log q )$ operations in $\F_q$, or
 	\item $\tildO(H^*(n,q)) + n^{1+\varepsilon}(\log q)^{2+o(1)}$ bit operations.
   \end{itemize}
@@ -348,6 +333,14 @@ our algorithm for their computation, proving Theorem~\ref{theo:1}.  In
 \S\ref{randomized_section}, we describe our factoring algorithm and
 prove Theorem~\ref{theo:main-factor}, using a few notions from
 function field arithmetic.
+
+ \paragraph*{Acknowledgements.} We thank the reviewer of a first version
+of this paper for useful remarks, which led us to this revised version. 
+Doliskani is partially supported by NSERC, CryptoWorks21, and Public
+Works and Government Services Canada. Narayanan is supported by NSF
+grant \#CCF-1423544, Chris Umans' Simons Foundation Investigator grant
+and European Union's H2020 Programme under grant agreement number
+ERC-669891.
 
 
 
@@ -1250,7 +1243,7 @@ behaviour of the algorithm in practice, we give in this section an
 example output of Algorithm \ref{alg:factoring} on input a small
 degree polynomial.
 
-\begin{example*}
+\paragraph{Example.}
 Consider the randomly selected squarefree polynomial 
 \[ f = 2 + 6x + 5x^3 + 4x^4 + 6x^5 + 2x^7 + 3x^8 + 3x^9 + x^{10} \]
 in $\F_7[x]$. The algorithm starts by checking for linear factors; $f$ has none. So, in the 
@@ -1284,14 +1277,6 @@ is supersingular and $\gamma/\tilde \gamma$ is ordinary with respect to $\tilde
 which is also irreducible. The complete factorization of $f$ is
 then \[ f(x) = (4 + 6x + x^2)(2 + 5x + x^2)(2 + 5x + 6x^2 + 3x^3 +
 6x^4 + 6x^5 + x^6).\]
-\end{example*}
-
-\paragraph*{Acknowledgements.} We thank the reviewer of a first version
-of this paper for useful remarks, which led us to this revised version. Doliskani is partially 
-supported by NSERC, CryptoWorks21, and Public Works and Government Services Canada. Narayanan is 
-supported by NSF grant \#CCF-1423544, Chris Umans' Simons Foundation Investigator grant and 
-European Union's H2020 Programme under grant agreement number ERC-669891.
-
 
 \bibliographystyle{siamplain}
 \bibliography{references}
